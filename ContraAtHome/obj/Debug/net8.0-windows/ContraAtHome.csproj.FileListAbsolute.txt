@@ -1,0 +1,17 @@
+D:\Git\ComPro2\ContraAtHome\bin\Debug\net8.0-windows\ContraAtHome.exe
+D:\Git\ComPro2\ContraAtHome\bin\Debug\net8.0-windows\ContraAtHome.deps.json
+D:\Git\ComPro2\ContraAtHome\bin\Debug\net8.0-windows\ContraAtHome.runtimeconfig.json
+D:\Git\ComPro2\ContraAtHome\bin\Debug\net8.0-windows\ContraAtHome.dll
+D:\Git\ComPro2\ContraAtHome\bin\Debug\net8.0-windows\ContraAtHome.pdb
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.Form1.resources
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.csproj.GenerateResource.cache
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.AssemblyInfoInputs.cache
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.AssemblyInfo.cs
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.csproj.CoreCompileInputs.cache
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.sourcelink.json
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.dll
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\refint\ContraAtHome.dll
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.pdb
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ContraAtHome.genruntimeconfig.cache
+D:\Git\ComPro2\ContraAtHome\obj\Debug\net8.0-windows\ref\ContraAtHome.dll

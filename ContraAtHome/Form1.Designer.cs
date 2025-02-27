@@ -20,6 +20,7 @@
             base.Dispose(disposing);
         }
 
+        Enemy enemy = new Soldier();
         #region Windows Form Designer generated code
 
         /// <summary>
