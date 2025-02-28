@@ -49,10 +49,10 @@
             // plf
             // 
             plf.BackColor = Color.IndianRed;
-            plf.Location = new Point(9, 302);
+            plf.Location = new Point(-6, 302);
             plf.Margin = new Padding(0);
             plf.Name = "plf";
-            plf.Size = new Size(760, 50);
+            plf.Size = new Size(1303, 50);
             plf.TabIndex = 0;
             plf.TabStop = false;
             plf.Tag = "platform";
@@ -128,7 +128,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightBlue;
-            ClientSize = new Size(784, 361);
+            ClientSize = new Size(1194, 361);
             Controls.Add(BGLv3);
             Controls.Add(BGLv2);
             Controls.Add(BGLv1);
