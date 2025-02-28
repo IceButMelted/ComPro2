@@ -34,10 +34,16 @@
             player = new PictureBox();
             enemyOne = new PictureBox();
             gameTimer = new System.Windows.Forms.Timer(components);
+            BGLv1 = new PictureBox();
+            BGLv2 = new PictureBox();
+            BGLv3 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)plf).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)player).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemyOne).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BGLv1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BGLv2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BGLv3).BeginInit();
             SuspendLayout();
             // 
             // plf
@@ -65,12 +71,13 @@
             // player
             // 
             player.BackColor = Color.Green;
-            player.Location = new Point(9, 252);
+            player.Location = new Point(264, 252);
             player.Margin = new Padding(0);
             player.Name = "player";
             player.Size = new Size(40, 50);
             player.TabIndex = 2;
             player.TabStop = false;
+            player.Click += player_Click;
             // 
             // enemyOne
             // 
@@ -89,12 +96,42 @@
             gameTimer.Interval = 60;
             gameTimer.Tick += MainGameTimerEvent;
             // 
+            // BGLv1
+            // 
+            BGLv1.BackColor = Color.Green;
+            BGLv1.Location = new Point(-6, 29);
+            BGLv1.Name = "BGLv1";
+            BGLv1.Size = new Size(400, 100);
+            BGLv1.TabIndex = 4;
+            BGLv1.TabStop = false;
+            // 
+            // BGLv2
+            // 
+            BGLv2.BackColor = Color.Chartreuse;
+            BGLv2.Location = new Point(43, 81);
+            BGLv2.Name = "BGLv2";
+            BGLv2.Size = new Size(300, 100);
+            BGLv2.TabIndex = 5;
+            BGLv2.TabStop = false;
+            // 
+            // BGLv3
+            // 
+            BGLv3.BackColor = Color.DarkSeaGreen;
+            BGLv3.Location = new Point(43, 125);
+            BGLv3.Name = "BGLv3";
+            BGLv3.Size = new Size(200, 100);
+            BGLv3.TabIndex = 6;
+            BGLv3.TabStop = false;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightBlue;
             ClientSize = new Size(784, 361);
+            Controls.Add(BGLv3);
+            Controls.Add(BGLv2);
+            Controls.Add(BGLv1);
             Controls.Add(enemyOne);
             Controls.Add(player);
             Controls.Add(pictureBox1);
@@ -107,6 +144,9 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)player).EndInit();
             ((System.ComponentModel.ISupportInitialize)enemyOne).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BGLv1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BGLv2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BGLv3).EndInit();
             ResumeLayout(false);
         }
 
@@ -117,5 +157,8 @@
         public PictureBox enemyOne;
         private System.Windows.Forms.Timer gameTimer;
         public PictureBox player;
+        public PictureBox BGLv1;
+        public PictureBox BGLv2;
+        public PictureBox BGLv3;
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ContraAtHome
 {
-    public abstract class Enemy
+    public abstract class Enemy : PictureBox
     {
         public int Health { get; protected set; }
         public int Damage { get; protected set; }
@@ -37,5 +37,8 @@ namespace ContraAtHome
         {
             Console.WriteLine("Enemy defeated!");
         }
+
+
+
     }
 }

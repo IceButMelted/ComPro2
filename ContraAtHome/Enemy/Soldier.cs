@@ -21,6 +21,8 @@ namespace ContraAtHome
             CanMoveAndShoot = canMoveNShoot;
         }
 
+
+
         protected override void Attack(Player p)
         {
             Console.WriteLine("Soldier shoots!");
