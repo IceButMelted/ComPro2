@@ -44,13 +44,26 @@ namespace ContraAtHome
                 jumping = false;
             }
 
-            if (goLeft == true)
+            if (goLeft == true && player.Left > 150)
             {
                 player.Left -= playerSpeed;
+                //Debug.WriteLine("Player Left : " + player.Left);
+                //Debug.WriteLine("Player Location : " + player.Location.X);
+                
             }
-            if (goRight == true)
+            if (goRight == true && player.Left + (player.Width + 150 ) < this.ClientSize.Width)
             {
                 player.Left += playerSpeed;
+            }
+
+            if (goLeft) {
+                MoveGameElements("Left");
+                ParallexBG();
+            }
+
+            if (goRight) {
+                MoveGameElements("Right");
+                ParallexBG();
             }
 
             if (jumping == true)
@@ -62,8 +75,7 @@ namespace ContraAtHome
             {
                 jumpSpeed = 10;
             }
-
-            ParallexBG();
+            
 
             player.Top += jumpSpeed;
 
@@ -79,6 +91,18 @@ namespace ContraAtHome
                     }
 
                     x.BringToFront(); // bring x to the front layer 
+                }
+            }
+        }
+
+        private void MoveGameElements(string Direction)
+        {
+            foreach (Control x in this.Controls) {
+                if (x is PictureBox && (string)x.Tag == "platform" || x is PictureBox && (string)x.Tag == "enemy") { 
+                    if(Direction == "Right")
+                        x.Left -= playerSpeed;
+                    if (Direction == "Left")
+                        x.Left += playerSpeed;
                 }
             }
         }
@@ -149,12 +173,12 @@ namespace ContraAtHome
         }
 
         private void ParallexBG() {
-            if (goRight) {
+            if (goLeft) {
                 BGLv1.Location = new Point(BGLv1.Location.X + factorParallexBG1, BGLv1.Location.Y);
                 BGLv2.Location = new Point(BGLv2.Location.X + factorParallexBG2, BGLv2.Location.Y);
                 BGLv3.Location = new Point(BGLv3.Location.X + factorParallexBG3, BGLv3.Location.Y);
             }
-            if (goLeft){
+            if (goRight){
                 BGLv1.Location = new Point(BGLv1.Location.X - factorParallexBG1, BGLv1.Location.Y);
                 BGLv2.Location = new Point(BGLv2.Location.X - factorParallexBG2, BGLv2.Location.Y);
                 BGLv3.Location = new Point(BGLv3.Location.X - factorParallexBG3, BGLv3.Location.Y);

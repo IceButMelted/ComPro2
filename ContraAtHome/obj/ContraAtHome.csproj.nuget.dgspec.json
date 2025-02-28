@@ -10,14 +10,14 @@
         "projectUniqueName": "D:\\Git\\ComPro2\\ContraAtHome\\ContraAtHome.csproj",
         "projectName": "ContraAtHome",
         "projectPath": "D:\\Git\\ComPro2\\ContraAtHome\\ContraAtHome.csproj",
-        "packagesPath": "C:\\Users\\IceButMelted\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\icepu\\.nuget\\packages\\",
         "outputPath": "D:\\Git\\ComPro2\\ContraAtHome\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\IceButMelted\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\icepu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
