@@ -11,6 +11,8 @@ namespace ContraAtHome
         public int Dmg { get; set; }
         public bool IsInvincible { get; set; }
 
+        
+
         // Constructor
         public Player(int hp, int jumpPower, int speed, int dmg, bool isInvincible)
         {
