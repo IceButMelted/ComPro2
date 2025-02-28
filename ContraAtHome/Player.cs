@@ -1,8 +1,9 @@
 using System;
+using System.Windows.Forms;
 
 namespace ContraAtHome
 {
-    public class Player
+    public class Player : PictureBox
     {
         // Properties
         public int Hp { get; set; }
@@ -10,8 +11,6 @@ namespace ContraAtHome
         public int Speed { get; set; }
         public int Dmg { get; set; }
         public bool IsInvincible { get; set; }
-
-        
 
         // Constructor
         public Player(int hp, int jumpPower, int speed, int dmg, bool isInvincible)

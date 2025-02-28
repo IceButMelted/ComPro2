@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace ContraAtHome
 {
@@ -20,9 +21,7 @@ namespace ContraAtHome
         int BGlv3_offset;
         int player_offset;
 
-        int factorParallexBG1 = 1;
-        int factorParallexBG2 = 3;
-        int factorParallexBG3 = 5;
+        Player player;
 
         //Enemy enemy1 = new Soldier();
         //Enemy[] enemies = new Enemy[10];
@@ -32,7 +31,10 @@ namespace ContraAtHome
         public Form1()
         {
             InitializeComponent();
-            SetZLevelBG();
+
+            SetUpPlayer();
+
+            SetupBG();
 
         }
 
@@ -46,24 +48,26 @@ namespace ContraAtHome
 
             if (goLeft == true && player.Left > 150)
             {
-                player.Left -= playerSpeed;
+                player.Left -= player.Speed;
                 //Debug.WriteLine("Player Left : " + player.Left);
                 //Debug.WriteLine("Player Location : " + player.Location.X);
-                
+
             }
-            if (goRight == true && player.Left + (player.Width + 150 ) < this.ClientSize.Width)
+            if (goRight == true && player.Left + (player.Width + 150) < this.ClientSize.Width)
             {
-                player.Left += playerSpeed;
+                player.Left += player.Speed;
             }
 
-            if (goLeft) {
+            if (goLeft && BorderLeft.Location.X < 150)
+            {
                 MoveGameElements("Left");
-                ParallexBG();
+                ParallexBG(1, 3, 5);
             }
 
-            if (goRight) {
+            if (goRight)
+            {
                 MoveGameElements("Right");
-                ParallexBG();
+                ParallexBG(1, 3, 5);
             }
 
             if (jumping == true)
@@ -75,7 +79,7 @@ namespace ContraAtHome
             {
                 jumpSpeed = 10;
             }
-            
+
 
             player.Top += jumpSpeed;
 
@@ -97,9 +101,11 @@ namespace ContraAtHome
 
         private void MoveGameElements(string Direction)
         {
-            foreach (Control x in this.Controls) {
-                if (x is PictureBox && (string)x.Tag == "platform" || x is PictureBox && (string)x.Tag == "enemy") { 
-                    if(Direction == "Right")
+            foreach (Control x in this.Controls)
+            {
+                if (x is PictureBox && (string)x.Tag == "platform" || x is PictureBox && (string)x.Tag == "enemy" || x is PictureBox && (string)x.Tag == "Tag_Border")
+                {
+                    if (Direction == "Right")
                         x.Left -= playerSpeed;
                     if (Direction == "Left")
                         x.Left += playerSpeed;
@@ -117,7 +123,7 @@ namespace ContraAtHome
             {
                 goRight = true;
             }
-            if (e.KeyCode == Keys.W && jumping == false)
+            if (e.KeyCode == Keys.Space && jumping == false)
             {
                 jumping = true;
             }
@@ -144,14 +150,13 @@ namespace ContraAtHome
 
         }
 
-        private void SetZLevelBG() {
+        protected void SetupBG()
+        {
             BGLv3.SendToBack();
             BGLv2.SendToBack();
             BGLv1.SendToBack();
-            SetDefulaToPlayer();
-        }
+            player.BringToFront();
 
-        private void SetDefulaToPlayer() {
             Debug.WriteLine($"BGLV1 x : {BGLv1.Location.X},y : {BGLv1.Location.Y}");
             Debug.WriteLine($"BGLV1 x : {BGLv2.Location.X},y : {BGLv2.Location.Y}");
             Debug.WriteLine($"Player x : {player.Location.X},y : {player.Location.Y}");
@@ -160,7 +165,7 @@ namespace ContraAtHome
             BGlv1_offset = BGLv1.Size.Width / 2;
             BGlv2_offset = BGLv2.Size.Width / 2;
             BGlv3_offset = BGLv3.Size.Width / 2;
-            player_offset = player.Size.Width /2;
+            player_offset = player.Size.Width / 2;
 
             BGLv1.Location = new Point(player.Location.X - BGlv1_offset + player_offset, BGLv1.Location.Y);
             BGLv2.Location = new Point(player.Location.X - BGlv2_offset + player_offset, BGLv2.Location.Y);
@@ -172,17 +177,36 @@ namespace ContraAtHome
             Debug.WriteLine($"Player x : {player.Location.X},y : {player.Location.Y}");
         }
 
-        private void ParallexBG() {
-            if (goLeft) {
+        protected void ParallexBG(int factorParallexBG1, int factorParallexBG2, int factorParallexBG3)
+        {
+            if (goLeft)
+            {
                 BGLv1.Location = new Point(BGLv1.Location.X + factorParallexBG1, BGLv1.Location.Y);
                 BGLv2.Location = new Point(BGLv2.Location.X + factorParallexBG2, BGLv2.Location.Y);
                 BGLv3.Location = new Point(BGLv3.Location.X + factorParallexBG3, BGLv3.Location.Y);
             }
-            if (goRight){
+            if (goRight)
+            {
                 BGLv1.Location = new Point(BGLv1.Location.X - factorParallexBG1, BGLv1.Location.Y);
                 BGLv2.Location = new Point(BGLv2.Location.X - factorParallexBG2, BGLv2.Location.Y);
                 BGLv3.Location = new Point(BGLv3.Location.X - factorParallexBG3, BGLv3.Location.Y);
             }
+
+        }
+
+        private void SetUpPlayer()
+        {
+            player = new Player(100, 10, 5, 10, false)
+            {
+                Size = new Size(50, 50), // Set the size of the player
+                BackColor = Color.FromArgb(255, 255, 121, 123), // Set the color of the player for visibility
+                Location = new Point(this.ClientSize.Width / 2, 250), // Set the location of the player
+            };
+            this.Controls.Add(player);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }
