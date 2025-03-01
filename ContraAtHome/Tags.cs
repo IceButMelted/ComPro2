@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ContraAtHome
+{
+    public abstract class Tags : PictureBox
+    {
+        public string[] tags { get; set; }
+        public IReadOnlyList<string> ReadOnlyTags => Array.AsReadOnly(tags);
+        public Tags(params string[] initialTags)
+        {
+            tags = new string[3];
+            for (int i = 0; i < 3; i++)
+            {
+                tags[i] = i < initialTags.Length ? initialTags[i] : $"DefaultTag{i + 1}";
+            }
+        }
+        public void DisplayTags()
+        {
+            Console.WriteLine("Tags: " + string.Join(", ", ReadOnlyTags));
+        }
+        public void ReplaceTag(int index, string newTag)
+        {
+            if (index < 0 || index >= tags.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), "Index must be within the range of the tags array.");
+            }
+            tags[index] = newTag;
+        }
+    }
+}

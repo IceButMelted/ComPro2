@@ -1,44 +1,63 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace ContraAtHome
 {
-    public abstract class Enemy : PictureBox
+    public abstract class Enemy : Tags
     {
-        public int Health { get; protected set; }
-        public int Damage { get; protected set; }
-        public float Speed { get; protected set; }
+        // Properties
+        public string[] tags { get; set; }
+        public IReadOnlyList<string> Tags => Array.AsReadOnly(tags);
+        public int Hp { get; set; }
+        public int Speed { get; set; }
+        public int Dmg { get; set; }
+        public bool IsAlive { get; set; }
 
-        public Enemy(int health, int damage, float speed)
+        // Constructor
+        public Enemy(int hp, int speed, int dmg, params string[] initialTags)
         {
-            Health = health;
-            Damage = damage;
+            Hp = hp;
             Speed = speed;
-        }
+            Dmg = dmg;
+            IsAlive = true;
+            Size = new Size(40, 50); // Default size, can be overridden
+            BackColor = Color.Red; // Default color, can be overridden
 
-        protected abstract void Attack(Player player);
-        protected virtual void Move()
-        {
-            Console.WriteLine("Enemy is moving...");
-        }
-        protected void TakeDamage(int amount)
-        {
-            Health -= amount;
-            if (Health <= 0)
+            tags = new string[3];
+            for (int i = 0; i < 3; i++)
             {
-                Die();
+                tags[i] = i < initialTags.Length ? initialTags[i] : $"DefaultTag{i + 1}";
             }
         }
 
-        protected void Die()
+        // Method to display enemy details
+        public void DisplayInfo()
         {
-            Console.WriteLine("Enemy defeated!");
+            Debug.WriteLine($"Name : {Name}, HP: {Hp}, Speed: {Speed}, Damage: {Dmg}, Is Alive: {IsAlive}");
+            DisplayTags();
         }
 
+        // Method to attack
+        public void Attack(Player player)
+        {
+            if (Bounds.IntersectsWith(player.Bounds))
+            {
+                player.Hp -= Dmg;
+                Console.WriteLine($"Player hit! Player HP: {player.Hp}");
+            }
+        }
 
-
+        // Method to take damage
+        public void TakeDamage(int damage)
+        {
+            Hp -= damage;
+            if (Hp <= 0)
+            {
+                IsAlive = false;
+                Console.WriteLine("Enemy defeated!");
+            }
+        }
     }
 }

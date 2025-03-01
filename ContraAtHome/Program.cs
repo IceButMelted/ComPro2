@@ -13,6 +13,9 @@ namespace ContraAtHome
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
+
+
+
     }
 
     

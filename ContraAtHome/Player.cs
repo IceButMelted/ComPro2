@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace ContraAtHome
@@ -11,6 +12,9 @@ namespace ContraAtHome
         public int Speed { get; set; }
         public int Dmg { get; set; }
         public bool IsInvincible { get; set; }
+        public bool goLeft { get; set; }
+        public bool goRight { get; set; }
+        public bool jumping { get; set; }
 
         // Constructor
         public Player(int hp, int jumpPower, int speed, int dmg, bool isInvincible)
@@ -25,7 +29,22 @@ namespace ContraAtHome
         // Method to display player details
         public void DisplayInfo()
         {
-            Console.WriteLine($"HP: {Hp}, Jump Power: {JumpPower}, Speed: {Speed}, Damage: {Dmg}, Is Invincible: {IsInvincible}");
+            Debug.WriteLine($"HP: {Hp}, Jump Power: {JumpPower}, Speed: {Speed}, Damage: {Dmg}, Is Invincible: {IsInvincible}");
+        }
+
+        public void MoveLeft()
+        {
+            Left -= Speed;
+        }
+
+        public void MoveRight()
+        {
+            Left += Speed;
+        }
+
+        public void Jump()
+        {
+            Top -= JumpPower;
         }
     }
 }
