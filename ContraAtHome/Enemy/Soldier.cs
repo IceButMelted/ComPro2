@@ -10,7 +10,7 @@ namespace ContraAtHome
     public class Soldier : Enemy
     {
         // Constructor
-        public Soldier(int hp, int speed, int dmg) : base(hp, speed, dmg, "enemy", "soldier")
+        public Soldier(int hp, int speed, int dmg) : base(hp, speed, dmg, "enemy")
         {
 
         }

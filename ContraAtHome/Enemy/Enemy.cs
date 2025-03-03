@@ -8,8 +8,6 @@ namespace ContraAtHome
     public abstract class Enemy : Tags
     {
         // Properties
-        public string[] tags { get; set; }
-        public IReadOnlyList<string> Tags => Array.AsReadOnly(tags);
         public int Hp { get; set; }
         public int Speed { get; set; }
         public int Dmg { get; set; }
@@ -25,10 +23,10 @@ namespace ContraAtHome
             Size = new Size(40, 50); // Default size, can be overridden
             BackColor = Color.Red; // Default color, can be overridden
 
-            tags = new string[3];
+           
             for (int i = 0; i < 3; i++)
             {
-                tags[i] = i < initialTags.Length ? initialTags[i] : $"DefaultTag{i + 1}";
+                this.ReplaceTag(i, i < initialTags.Length ? initialTags[i] : $"DefaultTag{i + 1}");
             }
         }
 

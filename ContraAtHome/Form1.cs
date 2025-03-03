@@ -3,6 +3,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace ContraAtHome
 {
@@ -17,6 +18,8 @@ namespace ContraAtHome
         int BGlv3_offset;
         int player_offset;
 
+        Dictionary<Enemy, Platform> dictEnemyPlatform = new Dictionary<Enemy, Platform>();
+
         Player player;
 
         public Form1()
@@ -25,9 +28,15 @@ namespace ContraAtHome
             SetUpEnemies();
             SetUpPlatform();
             SetUpPlayer();
+            DebugCheckTags();
             SetupBG();
+            PairPlatformAndEnemy();
+            DebugCheckTags();
+            DebugVisualColorPair();
+            DebugDict();
         }
 
+        // Main game timer event handler
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
             if (player.jumping && force < 0)
@@ -81,8 +90,11 @@ namespace ContraAtHome
                     x.BringToFront();
                 }
             }
+
+            EnemyMove();
         }
 
+        // Move game elements based on direction
         public void MoveGameElements(string direction)
         {
             foreach (Control x in this.Controls)
@@ -97,6 +109,7 @@ namespace ContraAtHome
             }
         }
 
+        // Key down event handler
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.A)
@@ -113,6 +126,7 @@ namespace ContraAtHome
             }
         }
 
+        // Key up event handler
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.A)
@@ -129,15 +143,13 @@ namespace ContraAtHome
             }
         }
 
+        // Player click event handler
         private void player_Click(object sender, EventArgs e)
         {
             // Handle player click event if needed
         }
 
-        private void MovingEnemy() { 
-            
-        }
-
+        // Setup background elements
         protected void SetupBG()
         {
             BGLv3.SendToBack();
@@ -155,6 +167,7 @@ namespace ContraAtHome
             BGLv3.Location = new Point(player.Location.X - BGlv3_offset + player_offset, BGLv3.Location.Y);
         }
 
+        // Parallax background effect
         public void ParallexBG(int factorParallexBG1, int factorParallexBG2, int factorParallexBG3)
         {
             if (player.goLeft)
@@ -171,6 +184,7 @@ namespace ContraAtHome
             }
         }
 
+        // Setup player
         private void SetUpPlayer()
         {
             player = new Player(100, 10, 5, 10, false)
@@ -182,8 +196,10 @@ namespace ContraAtHome
             this.Controls.Add(player);
         }
 
+        // Setup enemies
         private void SetUpEnemies()
         {
+            Debug.WriteLine("\n---------Enemies are setting up--------");
             int numberEnemies = 1;
             foreach (Control x in this.Controls)
             {
@@ -196,19 +212,20 @@ namespace ContraAtHome
                         Location = x.Location,
                         BackColor = Color.Orange,
                         Tag = x.Tag
-                        //Tag = new List<string> { x.Tag.ToString(), "Tag_Border" }
                     };
-                    enemy.DisplayTags();
                     this.Controls.Remove(x);
                     this.Controls.Add(enemy);
                     enemy.BringToFront();
                     enemy.DisplayInfo(); //Check enemy details
                 }
             }
+            Debug.WriteLine("---------Enemies set up--------");
         }
 
+        // Setup platforms
         private void SetUpPlatform()
         {
+            Debug.WriteLine("\n---------Platforms are setting up--------");
             int numberPlatforms = 1;
             foreach (Control x in this.Controls)
             {
@@ -228,11 +245,163 @@ namespace ContraAtHome
                     platform.BringToFront();
                 }
             }
+            Debug.WriteLine("---------Platforms set up--------");
         }
 
+        // Form load event handler
         private void Form1_Load(object sender, EventArgs e)
         {
             // Handle form load event if needed
         }
+
+        // Pair each enemy with the nearest platform
+        private void PairPlatformAndEnemy()
+        {
+            Debug.WriteLine("\n----- SetUp Pair -----");
+            int pairNumber = 1;
+            List<Platform> platforms = new List<Platform>();
+            List<Enemy> enemies = new List<Enemy>();
+
+            // Collect all platforms and enemies
+            foreach (Control x in this.Controls)
+            {
+                if (x is Platform platform)
+                {
+                    platforms.Add(platform);
+                }
+                else if (x is Enemy enemy)
+                {
+                    enemies.Add(enemy);
+                }
+            }
+
+            // Pair each enemy with the nearest platform
+            foreach (var enemy in enemies)
+            {
+                Platform nearestPlatform = null;
+                double nearestDistance = double.MaxValue;
+
+                foreach (var platform in platforms)
+                {
+                    // Calculate the distance with priority to the X-axis
+                    double distance = Math.Abs(enemy.Location.X - platform.Location.X) * 2 + Math.Abs(enemy.Location.Y - platform.Location.Y);
+                    if (distance < nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        nearestPlatform = platform;
+                    }
+                }
+
+                if (nearestPlatform != null)
+                {
+                    enemy.ReplaceTag(1, $"P_E_{pairNumber:D2}");
+                    nearestPlatform.ReplaceTag(1, $"P_E_{pairNumber++:D2}");
+                    SetDictEnemyPlatform(enemy, nearestPlatform);
+                    Debug.WriteLine($"Paired {enemy.Name} with {nearestPlatform.Name} as {enemy.GetTags(1)}\n");
+                }
+            }
+            Debug.WriteLine("----- End Set UP -----");
+        }
+
+        // Debug check tags
+        private void DebugCheckTags()
+        {
+            Debug.WriteLine("\n---------Checking Tags--------");
+            foreach (Control x in this.Controls)
+            {
+                if (x is PictureBox && ((string)x.Tag == "platform" || (string)x.Tag == "enemy"))
+                {
+                    Debug.WriteLine($"Name: {x.Name}");
+                    Debug.WriteLine($"PictureBox Tag: {x.Tag}");
+                }
+
+                if (x is Tags tag)
+                {
+                    tag.DisplayTags();
+                }
+            }
+            Debug.WriteLine("---------Tags Checked--------");
+        }
+
+        // Generate a random color
+        private Color GetRandomColor()
+        {
+            Random random = new Random();
+            int r = random.Next(256);
+            int g = random.Next(256);
+            int b = random.Next(256);
+            return Color.FromArgb(r, g, b);
+        }
+
+        // Debug visual color pair
+        private void DebugVisualColorPair()
+        {
+            Debug.WriteLine("\n----- Visual Pair -----");
+            Dictionary<string, Color> tagColorMap = new Dictionary<string, Color>();
+
+            foreach (var pair in dictEnemyPlatform)
+            {
+                Enemy enemy = pair.Key;
+                Platform platform = pair.Value;
+
+                string tag = enemy.GetTags(1); // Get the tag at position 2 (index 1)
+                if (!string.IsNullOrEmpty(tag) && tag != "DefaultTag2")
+                {
+                    if (!tagColorMap.ContainsKey(tag))
+                    {
+                        tagColorMap[tag] = GetRandomColor();
+                    }
+                    enemy.BackColor = tagColorMap[tag];
+                    platform.BackColor = tagColorMap[tag];
+                }
+            }
+
+            // Debug output to verify the color assignment
+            foreach (var entry in tagColorMap)
+            {
+                Debug.WriteLine($"Tag: {entry.Key}, Color: {entry.Value}");
+            }
+            Debug.WriteLine("----- End Visual Pair -----");
+        }
+
+
+        // Set dictionary entry for enemy and platform
+        private void SetDictEnemyPlatform(Enemy enemy, Platform plf)
+        {
+            dictEnemyPlatform.Add(enemy, plf);
+        }
+
+        // Debug dictionary entries
+        private void DebugDict()
+        {
+            Debug.WriteLine("\n----- Debugging Dict -----");
+            foreach (KeyValuePair<Enemy, Platform> P_E_p in dictEnemyPlatform)
+            {
+                Debug.WriteLine($"Key = {P_E_p.Key}, Value = {P_E_p.Value}");
+                Debug.WriteLine($"Enemy : {P_E_p.Key.Name}, Platform : {P_E_p.Value.Name}");
+                Debug.WriteLine($"Tags ene : {P_E_p.Key.GetTags(1)}, Tag plf : {P_E_p.Value.GetTags(1)}\n");
+            }
+            Debug.WriteLine("----- End Debugging Dict -----");
+        }
+
+        private void EnemyMove()
+        {
+            foreach (var pair in dictEnemyPlatform)
+            {
+                Enemy enemy = pair.Key;
+                Platform platform = pair.Value;
+
+                // Check if the enemy is out of the platform bounds
+                if (enemy.Left < platform.Left || enemy.Left + enemy.Width > platform.Left + platform.Width)
+                {
+                    enemy.Speed = -enemy.Speed; // Reverse the enemy's speed
+                }
+
+                // Move the enemy
+                enemy.Left += enemy.Speed;
+            }
+        }
+
+
     }
 }

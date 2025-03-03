@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace ContraAtHome
 {
     public abstract class Tags : PictureBox
     {
-        public string[] tags { get; set; }
+        private string[] tags { get; set; }
         public IReadOnlyList<string> ReadOnlyTags => Array.AsReadOnly(tags);
         public Tags(params string[] initialTags)
         {
@@ -20,7 +21,7 @@ namespace ContraAtHome
         }
         public void DisplayTags()
         {
-            Console.WriteLine("Tags: " + string.Join(", ", ReadOnlyTags));
+            Debug.WriteLine("Tags: " + string.Join(", ", ReadOnlyTags) + "\n");
         }
         public void ReplaceTag(int index, string newTag)
         {
@@ -29,6 +30,17 @@ namespace ContraAtHome
                 throw new ArgumentOutOfRangeException(nameof(index), "Index must be within the range of the tags array.");
             }
             tags[index] = newTag;
+        }
+
+        public void GetTags()
+        {
+            foreach (var tag in tags)
+            {
+                Debug.WriteLine(tag);
+            }
+        }
+        public string GetTags(int index) { 
+            return (string)tags[index];
         }
     }
 }

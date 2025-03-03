@@ -154,7 +154,7 @@
             // plf3
             // 
             plf3.BackColor = Color.IndianRed;
-            plf3.Location = new Point(472, 162);
+            plf3.Location = new Point(354, 315);
             plf3.Margin = new Padding(0);
             plf3.Name = "plf3";
             plf3.Size = new Size(100, 10);

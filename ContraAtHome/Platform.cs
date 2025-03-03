@@ -13,6 +13,7 @@ namespace ContraAtHome
 
         public void DisplayPlatformInfo() { 
             Debug.WriteLine($"Platform: {Name}, Postion: ({Location.X},{Location.Y}), Size: {Size}");
+            DisplayTags();
         }
     }
 
