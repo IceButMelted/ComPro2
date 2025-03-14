@@ -16,6 +16,9 @@ namespace ContraAtHome
         public bool goRight { get; set; }
         public bool jumping { get; set; }
 
+        private string facingDirecttion = "right";
+
+
         // Constructor
         public Player(int hp, int jumpPower, int speed, int dmg, bool isInvincible)
         {
@@ -46,5 +49,14 @@ namespace ContraAtHome
         {
             Top -= JumpPower;
         }
+
+        public string GetFacing()
+        {
+            return facingDirecttion;
+        }
+        public void SetFacing(string direction)
+        {
+            facingDirecttion = direction;
+        }   
     }
 }
