@@ -39,6 +39,23 @@ namespace ContraAtHome
 
         }
 
+        public void MakeEnemyBullet(Form f)
+        {
+            bullet.BackColor = Color.DarkRed;
+            bullet.Size = new Size(10, 10);
+            bullet.Left = bulletLeft;
+            bullet.Top = bulletTop;
+            bullet.Tag = "EnemyBullet";
+            bullet.Name = "bullet";
+
+            f.Controls.Add(bullet);
+            bullet.BringToFront();
+
+            bulletTimer.Interval = bulletSpeed;
+            bulletTimer.Tick += new EventHandler(BulletTimerEvent);
+            bulletTimer.Start();
+        }
+
         private void BulletTimerEvent(object sender, EventArgs e)
         {
             if (direction == "left")

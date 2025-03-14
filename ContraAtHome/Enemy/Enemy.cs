@@ -12,6 +12,9 @@ namespace ContraAtHome
         public int Speed { get; set; }
         public int Dmg { get; set; }
         public bool IsAlive { get; set; }
+        protected string facing = "left";
+
+        enum enemyType { EnemyMoving, EnemyShooting }
 
         // Constructor
         public Enemy(int hp, int speed, int dmg, params string[] initialTags)
@@ -23,8 +26,9 @@ namespace ContraAtHome
             Size = new Size(40, 50); // Default size, can be overridden
             BackColor = Color.Red; // Default color, can be overridden
 
-           
-            for (int i = 0; i < 3; i++)
+            // Set initial tags
+            //this.ReplaceTag(0, );
+            for (int i = 1; i < 3; i++)
             {
                 this.ReplaceTag(i, i < initialTags.Length ? initialTags[i] : $"DefaultTag{i + 1}");
             }
@@ -57,5 +61,19 @@ namespace ContraAtHome
                 Console.WriteLine("Enemy defeated!");
             }
         }
+
+        public void SetFacing(string direction)
+        {
+            facing = direction;
+        }
+        public string GetFacing()
+        {
+            return facing;
+        }
+
+        public abstract void EnemyAction(Form f);
+
+
+
     }
 }

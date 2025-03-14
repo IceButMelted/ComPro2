@@ -17,6 +17,8 @@ namespace ContraAtHome
         int BGlv2_offset;
         int BGlv3_offset;
         int player_offset;
+        int screenWidth;
+        int screenHeight;
 
         Dictionary<Enemy, Platform> dictEnemyPlatform = new Dictionary<Enemy, Platform>();
 
@@ -25,20 +27,24 @@ namespace ContraAtHome
         public Form1()
         {
             InitializeComponent();
+            screenWidth = this.ClientSize.Width;
+            screenHeight = this.ClientSize.Height;
             SetUpEnemies();
             SetUpPlatform();
             SetUpPlayer();
-            DebugCheckTags();
+            ContraToolUtility.DebugCheckTagsAllObject(this);
             SetupBG();
             PairPlatformAndEnemy();
-            DebugCheckTags();
-            DebugVisualColorPair();
-            DebugDict();
+            ContraToolUtility.DebugCheckTagsAllObject(this);
+            ContraToolUtility.DebugVisualColorPair(dictEnemyPlatform);
+            ContraToolUtility.DebugDict(dictEnemyPlatform);
+            
         }
 
         // Main game timer event handler
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
+            ContraToolUtility.DebugEnemyBulletLocation(this);
             //Player movement
             if (player.jumping && force < 0)
             {
@@ -54,7 +60,7 @@ namespace ContraAtHome
                 player.Left += player.Speed;
             }
 
-            if (player.goLeft && BorderLeft.Location.X < 300)
+            if (player.goLeft && BorderLeft.Location.X < screenWidth /2 )
             {
                 MoveGameElements("Left");
                 ParallexBG(1, 3, 5);
@@ -98,8 +104,6 @@ namespace ContraAtHome
 
             EnemyMove();
         }
-
-        
 
         // Key down event handler
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -190,14 +194,17 @@ namespace ContraAtHome
                 Enemy enemy = pair.Key;
                 Platform platform = pair.Value;
 
-                // Check if the enemy is out of the platform bounds
-                if (enemy.Left < platform.Left || enemy.Left + enemy.Width > platform.Left + platform.Width)
+                if (enemy.Location.X+enemy.Width > 0 && enemy.Location.X < screenWidth)
                 {
-                    enemy.Speed = -enemy.Speed; // Reverse the enemy's speed
+                    // Check if the enemy is out of the platform bounds
+                    if (enemy.Left < platform.Left || enemy.Left + enemy.Width > platform.Left + platform.Width)
+                    {
+                        enemy.Speed = -enemy.Speed; // Reverse the enemy's speed
+                    }
+                    // Move the enemy
+                    enemy.EnemyAction(this);
                 }
-
-                // Move the enemy
-                enemy.Left += enemy.Speed;
+                
             }
         }
 
@@ -245,7 +252,7 @@ namespace ContraAtHome
         {
             player = new Player(100, 10, 5, 10, false)
             {
-                Size = new Size(50, 50),
+                Size = new Size(60, 75),
                 BackColor = Color.FromArgb(255, 255, 121, 123),
                 Location = new Point(this.ClientSize.Width / 2, 250),
             };
@@ -261,14 +268,32 @@ namespace ContraAtHome
             {
                 if (x is PictureBox && (string)x.Tag == "enemy")
                 {
-                    Enemy enemy = new Soldier(50, 3, 5)
+                    Enemy enemy;
+                    int randNum = ContraToolUtility.RandomNumberRange(1, 11);
+                    if (randNum < 5)
                     {
-                        Name = "Enemy" + (numberEnemies++).ToString("D2"),
-                        Size = x.Size,
-                        Location = x.Location,
-                        BackColor = Color.Orange,
-                        Tag = x.Tag
-                    };
+                        enemy = new ShootingSoldier(50, 3, 5)
+                        {
+                            Name = "Enemy" + (numberEnemies++).ToString("D2"),
+                            Size = x.Size,
+                            Location = x.Location,
+                            BackColor = Color.Orange,
+                            Tag = x.Tag
+                        };
+                        enemy.ReplaceTag(0, "ShootingSoldier");
+                    }
+                    else
+                    {
+                        enemy = new RunningSoldier(50, 3, 5)
+                        {
+                            Name = "Enemy" + (numberEnemies++).ToString("D2"),
+                            Size = x.Size,
+                            Location = x.Location,
+                            BackColor = Color.Orange,
+                            Tag = x.Tag
+                        };
+                        enemy.ReplaceTag(0, "RunningSoldier");
+                    }
                     this.Controls.Remove(x);
                     this.Controls.Add(enemy);
                     enemy.BringToFront();
@@ -352,6 +377,7 @@ namespace ContraAtHome
                 {
                     enemy.ReplaceTag(1, $"P_E_{pairNumber:D2}");
                     nearestPlatform.ReplaceTag(1, $"P_E_{pairNumber++:D2}");
+                    nearestPlatform.ReplaceTag(0,"PlatformEnemy");
                     SetDictEnemyPlatform(enemy, nearestPlatform);
                     Debug.WriteLine($"Paired {enemy.Name} with {nearestPlatform.Name} as {enemy.GetTags(1)}\n");
                 }
@@ -368,83 +394,7 @@ namespace ContraAtHome
         #endregion
         //-----------------------------------------------------//
 
-        #region Debugging Methods
-        // Debug dictionary entries
-        private void DebugDict()
-        {
-            Debug.WriteLine("\n----- Debugging Dict -----");
-            foreach (KeyValuePair<Enemy, Platform> P_E_p in dictEnemyPlatform)
-            {
-                Debug.WriteLine($"Key = {P_E_p.Key}, Value = {P_E_p.Value}");
-                Debug.WriteLine($"Enemy : {P_E_p.Key.Name}, Platform : {P_E_p.Value.Name}");
-                Debug.WriteLine($"Tags ene : {P_E_p.Key.GetTags(1)}, Tag plf : {P_E_p.Value.GetTags(1)}\n");
-            }
-            Debug.WriteLine("----- End Debugging Dict -----");
-        }
-
-        // Debug visual color pair
-        private void DebugVisualColorPair()
-        {
-            Debug.WriteLine("\n----- Visual Pair -----");
-            Dictionary<string, Color> tagColorMap = new Dictionary<string, Color>();
-
-            foreach (var pair in dictEnemyPlatform)
-            {
-                Enemy enemy = pair.Key;
-                Platform platform = pair.Value;
-
-                string tag = enemy.GetTags(1); // Get the tag at position 2 (index 1)
-                if (!string.IsNullOrEmpty(tag) && tag != "DefaultTag2")
-                {
-                    if (!tagColorMap.ContainsKey(tag))
-                    {
-                        tagColorMap[tag] = GetRandomColor();
-                    }
-                    enemy.BackColor = tagColorMap[tag];
-                    platform.BackColor = tagColorMap[tag];
-                }
-            }
-
-            // Debug output to verify the color assignment
-            foreach (var entry in tagColorMap)
-            {
-                Debug.WriteLine($"Tag: {entry.Key}, Color: {entry.Value}");
-            }
-            Debug.WriteLine("----- End Visual Pair -----");
-        }
-
-        // Debug check tags
-        private void DebugCheckTags()
-        {
-            Debug.WriteLine("\n---------Checking Tags--------");
-            foreach (Control x in this.Controls)
-            {
-                if (x is PictureBox && ((string)x.Tag == "platform" || (string)x.Tag == "enemy"))
-                {
-                    Debug.WriteLine($"Name: {x.Name}");
-                    Debug.WriteLine($"PictureBox Tag: {x.Tag}");
-                }
-
-                if (x is Tags tag)
-                {
-                    tag.DisplayTags();
-                }
-            }
-            Debug.WriteLine("---------Tags Checked--------");
-        }
-
-        // Generate a random color
-        private Color GetRandomColor()
-        {
-            Random random = new Random();
-            int r = random.Next(256);
-            int g = random.Next(256);
-            int b = random.Next(256);
-            return Color.FromArgb(r, g, b);
-        }
-
-        #endregion
-        //-----------------------------------------------------//
+        
 
 
     }

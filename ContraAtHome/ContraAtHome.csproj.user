@@ -7,7 +7,10 @@
     <Compile Update="Enemy\Enemy.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Enemy\Soldier.cs">
+    <Compile Update="Enemy\RunningSoldier.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Enemy\ShootingSoldier.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Form1.cs">
