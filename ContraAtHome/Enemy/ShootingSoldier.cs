@@ -15,6 +15,8 @@ namespace ContraAtHome
     {
         int coolDown = 45;
         int currentCoolDown = 0;
+        int bulletSpeec = 7;
+        bool _canShooting = true;
         // Constructor
         public ShootingSoldier(int hp, int speed, params string[] initialTags) : base(hp, speed, initialTags)
         {
@@ -28,8 +30,7 @@ namespace ContraAtHome
             {
                 if (currentCoolDown > coolDown)
                 {
-                    Shoot(f);
-                    Debug.WriteLine("Shooting");
+                    _canShooting = true;
                 }
                 else
                 {
@@ -38,23 +39,21 @@ namespace ContraAtHome
             }
         }
 
-        public void Shoot(Form f)
+        public bool CanShooting
         {
-
-            // Shoot bullet
-            this.facing = "right";
-            Bullet bullet = new Bullet();
-
-            bullet.direction = this.facing;
-            bullet.bulletLeft = this.Left + (this.Width / 2);
-            bullet.bulletTop = this.Top + (this.Height / 2);
-
-            bullet.MakeEnemyBullet(f);
-            //Debug.WriteLine(bullet);
-            currentCoolDown = 0;
-            
+            get { return _canShooting; }
+            set { _canShooting = value; }
+        }
+        public int BulletSpeed
+        {
+            get { return bulletSpeec; }
+            set { bulletSpeec = value; }
         }
 
+        public void ResetShootCooldown()
+        {
+            currentCoolDown = 0;
+        }
 
     }
 }

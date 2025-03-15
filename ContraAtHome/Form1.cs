@@ -1,545 +1,607 @@
 using System;
-using System.Threading;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace ContraAtHome
 {
     public partial class Form1 : Form
     {
-        int jumpSpeed;
-        int force;
-        int PlatformSpeed = 7;
+        // Constants
+        private const int PLAYER_JUMP_FORCE = 10;
+        private const int PLAYER_JUMP_SPEED = 10;
 
-        int maxCDShoot = 10;
-        int currentCDShoot = 0;
+        private const int PLATFORM_SPEED = 7;
+        private const int SHOOT_COOLDOWN = 10;
 
-        int BGlv1_offset;
-        int BGlv2_offset;
-        int BGlv3_offset;
-        int player_offset;
-        int screenWidth;
-        int screenHeight;
+        // Game state
+        private int force;
+        private int currentShootCooldown = 0;
 
-        Dictionary<Enemy, Platform> dictEnemyPlatform = new Dictionary<Enemy, Platform>();
+        // Background parallax
+        private int bgLayer1Offset;
+        private int bgLayer2Offset;
+        private int bgLayer3Offset;
+        private int playerOffset;
+        private readonly int screenWidth;
+        private readonly int screenHeight;
 
-        Player player;
+        //flags to track when collections need updating
+        private bool needsPlayerBulletUpdate = true;
+        private bool needsEnemyUpdate = true;
+        private bool needsEnemyBulletUpdate = true;
+        private bool needsMovableElementUpdate = true;
+
+        // Game objects
+        private readonly Dictionary<Enemy, Platform> enemyPlatformPairs = new Dictionary<Enemy, Platform>();
+        private List<Platform> playerPlatforms = new List<Platform>();
+        private Player player;
+
+        //List for better performance
+        private List<PictureBox> playerBullets = new List<PictureBox>();
+        private List<Enemy> activeEnemies = new List<Enemy>();
+        private List<PictureBox> enemyBullets = new List<PictureBox>();
+        private List<Control> movableElements = new List<Control>();
+
+        private HashSet<Keys> keysPressed = new HashSet<Keys>();
 
         public Form1()
         {
             InitializeComponent();
-            screenWidth = this.ClientSize.Width;
-            screenHeight = this.ClientSize.Height;
-            //-----Set upObject-----------------//
-            //SetUpEnemies();
-            //SetUpPlatform();
-            //PairPlatformAndEnemy();
+            screenWidth = ClientSize.Width;
+            screenHeight = ClientSize.Height;
+
+            // Initialize game
             SetUpGameObjects();
-            //---------------------------------//
-
             SetUpPlayer();
-            ContraToolUtility.DebugCheckTagsAllObject(this);
-            SetupBG();
-            
-            ContraToolUtility.DebugCheckTagsAllObject(this);
-            ContraToolUtility.DebugVisualColorPair(dictEnemyPlatform);
-            ContraToolUtility.DebugDict(dictEnemyPlatform);
+            SetupBackground();
 
+            // Debug info
+            ContraToolUtility.DebugCheckTagsAllObject(this);
+            ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
+            ContraToolUtility.DebugDict(enemyPlatformPairs);
         }
 
-        // Main game timer event handler
+        // Main game loop
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
-            //ContraToolUtility.DebugEnemyBulletLocation(this);
-            //ContraToolUtility.DebugPlayerBulletLocation(this);
-            //Player movement
+            // Only update collections when needed
+            UpdateCachedCollectionsIfNeeded();
+
+            HandlePlayerMovement();
+            HandleCollisions();
+            ProcessEnemyActions();
+
+            // Update shoot cooldown
+            if (currentShootCooldown <= SHOOT_COOLDOWN)
+                currentShootCooldown++;
+        }
+
+        #region Cache Methods
+        private void UpdateCachedCollectionsIfNeeded()
+        {
+            if (needsPlayerBulletUpdate)
+            {
+                playerBullets.Clear();
+                foreach (Control control in Controls)
+                {
+                    if (control is PictureBox pictureBox && control.Tag?.ToString() == "PlayerBullet")
+                    {
+                        playerBullets.Add(pictureBox);
+                    }
+                }
+                needsPlayerBulletUpdate = false;
+            }
+
+            if (needsEnemyUpdate)
+            {
+                activeEnemies.Clear();
+                foreach (Control control in Controls)
+                {
+                    if (control is Enemy enemy && control.Tag?.ToString() == "enemy" && enemy.IsAlive)
+                    {
+                        activeEnemies.Add(enemy);
+                    }
+                }
+                needsEnemyUpdate = false;
+            }
+
+            if (needsEnemyBulletUpdate)
+            {
+                enemyBullets.Clear();
+                foreach (Control control in Controls)
+                {
+                    if (control is PictureBox pictureBox && control.Tag?.ToString() == "EnemyBullet")
+                    {
+                        enemyBullets.Add(pictureBox);
+                    }
+                }
+                needsEnemyBulletUpdate = false;
+            }
+
+            if (needsMovableElementUpdate)
+            {
+                movableElements.Clear();
+                foreach (Control control in Controls)
+                {
+                    string tag = control.Tag?.ToString();
+                    if (control is PictureBox && (
+                        tag == "platform" ||
+                        tag == "enemy" ||
+                        tag == "Tag_Border" ||
+                        tag == "EnemyBullet"))
+                    {
+                        movableElements.Add(control);
+                    }
+                }
+                needsMovableElementUpdate = false;
+            }
+        }
+
+        private void AddControlWithCacheUpdate(Control control)
+        {
+            Controls.Add(control);
+
+            // Invalidate relevant cache based on control type
+            string tag = control.Tag?.ToString();
+            if (control is PictureBox && tag == "PlayerBullet")
+                needsPlayerBulletUpdate = true;
+            else if (control is Enemy && tag == "enemy")
+                needsEnemyUpdate = true;
+            else if (control is PictureBox && tag == "EnemyBullet")
+                needsEnemyBulletUpdate = true;
+
+            if (control is PictureBox && (
+                tag == "platform" ||
+                tag == "enemy" ||
+                tag == "Tag_Border" ||
+                tag == "EnemyBullet"))
+            {
+                needsMovableElementUpdate = true;
+            }
+        }
+
+        private void RemoveControlWithCacheUpdate(Control control)
+        {
+            Controls.Remove(control);
+
+            // Invalidate relevant cache based on control type
+            string tag = control.Tag?.ToString();
+            if (control is PictureBox && tag == "PlayerBullet")
+                needsPlayerBulletUpdate = true;
+            else if (control is Enemy && tag == "enemy")
+            {
+                needsEnemyUpdate = true;
+                enemyPlatformPairs.Remove(control as Enemy);
+            }
+            else if (control is PictureBox && tag == "EnemyBullet")
+                needsEnemyBulletUpdate = true;
+
+            if (control is PictureBox && (
+                tag == "platform" ||
+                tag == "enemy" ||
+                tag == "Tag_Border" ||
+                tag == "EnemyBullet"))
+            {
+                needsMovableElementUpdate = true;
+            }
+
+            control.Dispose();
+        }
+        #endregion
+
+        #region Player Movement & Controls
+
+        private void HandlePlayerMovement()
+        {
+            // Platform collision
+            foreach (Platform platform in playerPlatforms)
+            {
+                if (player.Bounds.IntersectsWith(platform.Bounds) && !player.jumping)
+                {
+                    force = PLAYER_JUMP_FORCE;
+                    player.Top = platform.Top - player.Height;
+                }
+            }
+
+            // Handle jumping
             if (player.jumping && force < 0)
             {
                 player.jumping = false;
             }
 
-            //Optimize player movement
+            // Vertical movement
+            if (player.jumping)
+                force -= 1;
+            int jumpSpeed = player.jumping ? -PLAYER_JUMP_SPEED : PLAYER_JUMP_SPEED;
+
+            player.Top += jumpSpeed;
+
+            // Horizontal movement
             if (player.goLeft)
             {
-                if (player.Left > 300) player.Left -= player.Speed;
-                else if (BorderLeft.Location.X < screenWidth / 2)
+                if (player.Left > screenWidth)
+                    player.Left -= player.Speed;
+                else if (BorderLeft.Location.X < screenWidth / 3)
                 {
-                    MoveGameElements("Left");
-                    ParallexBG(1, 3, 5);
+                    MoveGameElements(Direction.Left);
+                    UpdateParallaxBackground(1, 3, 5);
                 }
             }
 
             if (player.goRight)
             {
-                MoveGameElements("Right");
-                ParallexBG(1, 3, 5);
-            }
-
-            if (player.jumping)
-            {
-                jumpSpeed = -10;
-                force -= 1;
-            }
-            else
-            {
-                jumpSpeed = 10;
-            }
-
-            if (currentCDShoot <= maxCDShoot) currentCDShoot++;
-            player.Top += jumpSpeed;
-            //Player movement
-
-            //Check if player is colliding with platforms
-            //To keep player on top of the platform
-            foreach (Control x in this.Controls)
-            {
-                if (x is PictureBox && (string)x.Tag == "platform")
+                if (player.Right > screenWidth)
+                    player.Left += player.Speed;
+                else if (BorderRight.Location.X > screenWidth - screenWidth / 3)
                 {
-                    if (player.Bounds.IntersectsWith(x.Bounds) && !player.jumping)
-                    {
-                        force = 10;
-                        player.Top = x.Top - player.Height;
-                    }
-
-                    x.BringToFront();
-                }
-                if ((string)x.Tag == "enemy")
-                {
-                    if (player.Bounds.IntersectsWith(x.Bounds))
-                    {
-                        // gameTimer.Stop();
-                        Debug.WriteLine("You were killed in your journey");
-                    }
+                    MoveGameElements(Direction.Right);
+                    UpdateParallaxBackground(1, 3, 5);
                 }
             }
-            //End of player and platform collision|
-
-            List<Control> toRemove = new List<Control>();
-
-            foreach (Control x in this.Controls.OfType<PictureBox>().ToList())
-            {
-                if (x.Tag?.ToString() == "PlayerBullet")
-                {
-                    foreach (Control y in this.Controls.OfType<PictureBox>().ToList())
-                    {
-                        if (y.Tag?.ToString() == "enemy" && x.Bounds.IntersectsWith(y.Bounds))
-                        {
-                            //Debug.WriteLine("Enemy was killed");
-                            if (y is Enemy enemy)
-                            {
-                                enemy.TakeDamage();
-                                if (!enemy.IsAlive)
-                                {
-                                    toRemove.Add(y);
-                                }
-                                toRemove.Add(x);
-                            }
-                        }
-                    }
-                }
-                if (x.Tag?.ToString() == "EnemyBullet")
-                {
-                    foreach (Control y in this.Controls.OfType<PictureBox>().ToList())
-                    {
-                        if (x.Bounds.IntersectsWith(player.Bounds))
-                        {
-                            //Debug.WriteLine("Player was killed");
-                            toRemove.Add(x);
-                        }
-                    }
-                }
-            }
-
-            // Remove objects after the loop
-            foreach (Control c in toRemove)
-            {
-                this.Controls.Remove(c);
-                if (c is Enemy)
-                {
-                    dictEnemyPlatform.Remove((Enemy)c);
-                }
-                c.Dispose();
-            }
-
-            EnemyMove();
         }
 
-        // Key down event handler
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.A)
-            {
-                player.goLeft = true;
-                player.SetFacing("left");
-            }
-            if (e.KeyCode == Keys.D)
-            {
-                player.goRight = true;
-                player.SetFacing("right");
-            }
-            if (e.KeyCode == Keys.W)
-            {
-                player.SetFacing("up");
-            }
-            if (e.KeyCode == Keys.K && !player.jumping)
+            keysPressed.Add(e.KeyCode);
+            HandleKeyPresses();
+        }
+
+        private void KeyIsUp(object sender, KeyEventArgs e)
+        {
+            keysPressed.Remove(e.KeyCode);
+            HandleKeyPresses();
+        }
+
+        private void HandleKeyPresses()
+        {
+            if (keysPressed.Contains(Keys.K) && !player.jumping && force > 0)
             {
                 player.jumping = true;
             }
-            if (e.KeyCode == Keys.J && currentCDShoot > maxCDShoot)
+
+            if (keysPressed.Contains(Keys.J) && currentShootCooldown > SHOOT_COOLDOWN)
             {
-                ShootBullet(player.GetFacing());
-                currentCDShoot = 0;
+                ShootBullet(player);
+                currentShootCooldown = 0;
             }
-        }
 
-        // Key up event handler
-        private void KeyIsUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.A)
+            if (keysPressed.Contains(Keys.W))
             {
-                player.goLeft = false;
+                player.SetFacing(Direction.Up);
+                Debug.WriteLine("Facing up");
             }
-            if (e.KeyCode == Keys.D)
+
+            player.goLeft = keysPressed.Contains(Keys.A);
+            player.goRight = keysPressed.Contains(Keys.D);
+
+            //go up and left or right But Facing up Multi key press
+            if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.A))
             {
-                player.goRight = false;
+                player.SetFacing(Direction.Up);
+                Debug.WriteLine("Facing UP");
+                return;
             }
-            if (e.KeyCode == Keys.K)
+            else if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.D))
             {
-                player.jumping = false;
-                force = -1;
+                player.SetFacing(Direction.Up);
+                Debug.WriteLine("Facing UP");
+                return;
             }
-            if (player.jumping)
+
+            //Go Left or Right single key press
+            if (player.goLeft && player.goRight)
             {
-                player.jumping = false;
+                player.goLeft = player.goRight = false;
+                return;
             }
-        }
-
-        // Player click event handler
-        private void player_Click(object sender, EventArgs e)
-        {
-            // Handle player click event if needed
-        }
-
-        //-----------------------------------------------------//
-
-        #region Moving Objects
-        //Shoot bullet
-        private void ShootBullet(string direction)
-        {
-            Bullet shootBullet = new Bullet();
-            shootBullet.direction = direction;
-            shootBullet.bulletLeft = player.Left + (player.Width / 2);
-            shootBullet.bulletTop = player.Top + (player.Height / 2);
-            this.BringToFront();
-            shootBullet.MakeBullet(this);
-        }
-
-        // Move game elements based on direction
-        public void MoveGameElements(string direction)
-        {
-            foreach (Control x in this.Controls)
-            {
-                if (x is PictureBox && ((string)x.Tag == "platform" || (string)x.Tag == "enemy" || (string)x.Tag == "Tag_Border") || (string)x.Tag == "EnemyBullet")
-                {
-                    if (direction == "Right")
-                        x.Left -= PlatformSpeed;
-                    if (direction == "Left")
-                        x.Left += PlatformSpeed;
-                }
-            }
-        }
-
-        //Mack Enemy Move
-        private void EnemyMove()
-        {
-            foreach (var pair in dictEnemyPlatform)
-            {
-                Enemy enemy = pair.Key;
-                Platform platform = pair.Value;
-
-                if (enemy.Location.X + enemy.Width > 0 && enemy.Location.X < screenWidth)
-                {
-                    // Check if the enemy is out of the platform bounds
-                    if (enemy.Left < platform.Left || enemy.Left + enemy.Width > platform.Left + platform.Width)
-                    {
-                        enemy.Speed = -enemy.Speed; // Reverse the enemy's speed
-                    }
-                    // Move the enemy
-                    enemy.EnemyAction(this);
-                }
-
-            }
-        }
-
-        // Parallax background effect
-        public void ParallexBG(int factorParallexBG1, int factorParallexBG2, int factorParallexBG3)
-        {
             if (player.goLeft)
             {
-                BGLv1.Location = new Point(BGLv1.Location.X + factorParallexBG1, BGLv1.Location.Y);
-                BGLv2.Location = new Point(BGLv2.Location.X + factorParallexBG2, BGLv2.Location.Y);
-                BGLv3.Location = new Point(BGLv3.Location.X + factorParallexBG3, BGLv3.Location.Y);
+                player.SetFacing(Direction.Left);
+                Debug.WriteLine("Facing left");
+                return;
             }
-            if (player.goRight)
+            else if (player.goRight)
             {
-                BGLv1.Location = new Point(BGLv1.Location.X - factorParallexBG1, BGLv1.Location.Y);
-                BGLv2.Location = new Point(BGLv2.Location.X - factorParallexBG2, BGLv2.Location.Y);
-                BGLv3.Location = new Point(BGLv3.Location.X - factorParallexBG3, BGLv3.Location.Y);
+                player.SetFacing(Direction.Right);
+                Debug.WriteLine("Facing right");
+                return;
+            }
+
+            
+        }
+
+        #endregion
+
+        #region Game Logic
+
+        private void HandleCollisions()
+        {
+            List<Control> controlsToRemove = new List<Control>();
+
+            // Check player bullet collisions with enemies
+            foreach (var bullet in playerBullets)
+            {
+                foreach (var enemy in activeEnemies)
+                {
+                    if (bullet.Bounds.IntersectsWith(enemy.Bounds))
+                    {
+                        enemy.TakeDamage();
+                        if (!enemy.IsAlive)
+                        {
+                            controlsToRemove.Add(enemy);
+                        }
+                        controlsToRemove.Add(bullet);
+                        break;
+                    }
+                }
+            }
+
+            // Check enemy bullet collisions with player
+            foreach (var bullet in enemyBullets)
+            {
+                if (bullet.Bounds.IntersectsWith(player.Bounds))
+                {
+                    controlsToRemove.Add(bullet);
+                    // Player hit logic here
+                }
+            }
+
+            // Remove objects outside the loop
+            foreach (Control control in controlsToRemove)
+            {
+                RemoveControlWithCacheUpdate(control);
+            }
+        }
+
+        // Process enemy actions with optimized collections
+        private void ProcessEnemyActions()
+        {
+            foreach (var enemy in activeEnemies)
+            {
+                if (enemyPlatformPairs.TryGetValue(enemy, out Platform platform))
+                {
+                    // Skip if enemy is off-screen
+                    if (enemy.Right <= 0 || enemy.Left >= screenWidth)
+                        continue;
+
+                    // Check platform bounds
+                    if (enemy.Left < platform.Left || enemy.Right > platform.Right)
+                        enemy.Speed = -enemy.Speed;
+
+                    // Process enemy actions
+                    enemy.EnemyAction(this);
+
+                    // Handle shooting enemies
+                    if (enemy is ShootingSoldier shooter && shooter.CanShooting)
+                    {
+                        // Face the player
+                        shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
+                        shooter.CanShooting = false;
+                        ShootBullet(shooter, shooter.BulletSpeed);
+                        shooter.ResetShootCooldown();
+                    }
+                }
             }
         }
 
         #endregion
-        //-----------------------------------------------------//
+
+        #region Game Elements
+        // Move game elements with optimized collection
+        private void MoveGameElements(string direction)
+        {
+            int moveAmount = direction == Direction.Right ? -PLATFORM_SPEED : PLATFORM_SPEED;
+
+            foreach (var element in movableElements)
+            {
+                element.Left += moveAmount;
+            }
+        }
+
+        private void UpdateParallaxBackground(int layer1Factor, int layer2Factor, int layer3Factor)
+        {
+            int directionMultiplier = player.goRight ? -1 : 1;
+
+            if (player.goLeft || player.goRight)
+            {
+                BGLv1.Left += directionMultiplier * layer1Factor;
+                BGLv2.Left += directionMultiplier * layer2Factor;
+                BGLv3.Left += directionMultiplier * layer3Factor;
+            }
+        }
+
+        // Modified ShootBullet method to use the new AddControlWithCacheUpdate
+        private void ShootBullet(Enemy shooter, int bulletSpeed, string bulletType = "basic")
+        {
+            if (shooter == null || !shooter.IsAlive) return;
+
+            Color bulletColor = bulletType == "explosive" ? Color.Red : Color.Yellow;
+
+            Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
+                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), bulletColor)
+            {
+                Direction = shooter.GetFacing()
+            };
+
+            bullet.BackColor = Color.Purple;
+
+            AddControlWithCacheUpdate(bullet);
+            bullet.BringToFront();
+        }
+
+        private void ShootBullet(Player shooter)
+        {
+            if (shooter == null) return;
+
+            Bullet bullet = new Bullet("PlayerBullet", 10,
+                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), Color.Yellow)
+            {
+                Direction = shooter.GetFacing()
+            };
+
+            AddControlWithCacheUpdate(bullet);
+            bullet.BringToFront();
+        }
+
+        #endregion
 
         #region Setup Methods
-        // Setup background elements
-        protected void SetupBG()
+
+        private void SetUpPlayer()
         {
+            player = new Player(100, 10, 7, 10, false)
+            {
+                Size = new Size(60, 75),
+                BackColor = Color.FromArgb(255, 255, 121, 123),
+                Location = new Point(ClientSize.Width / 2, 430),
+            };
+            Controls.Add(player);
+        }
+
+        private void SetupBackground()
+        {
+            // Set proper z-order
             BGLv3.SendToBack();
             BGLv2.SendToBack();
             BGLv1.SendToBack();
             player.BringToFront();
 
-            BGlv1_offset = BGLv1.Size.Width / 2;
-            BGlv2_offset = BGLv2.Size.Width / 2;
-            BGlv3_offset = BGLv3.Size.Width / 2;
-            player_offset = player.Size.Width / 2;
+            // Calculate offsets
+            bgLayer1Offset = BGLv1.Width / 2;
+            bgLayer2Offset = BGLv2.Width / 2;
+            bgLayer3Offset = BGLv3.Width / 2;
+            playerOffset = player.Width / 2;
 
-            BGLv1.Location = new Point(player.Location.X - BGlv1_offset + player_offset, BGLv1.Location.Y);
-            BGLv2.Location = new Point(player.Location.X - BGlv2_offset + player_offset, BGLv2.Location.Y);
-            BGLv3.Location = new Point(player.Location.X - BGlv3_offset + player_offset, BGLv3.Location.Y);
-        }
-
-        // Setup player
-        private void SetUpPlayer()
-        {
-            player = new Player(100, 10, 5, 10, false)
-            {
-                Size = new Size(60, 75),
-                BackColor = Color.FromArgb(255, 255, 121, 123),
-                Location = new Point(this.ClientSize.Width / 2, 250),
-            };
-            this.Controls.Add(player);
-        }
-
-        // Setup enemies 
-        //----------------not used----------------
-        private void SetUpEnemies()
-        {
-            Debug.WriteLine("\n---------Enemies are setting up--------");
-            int numberEnemies = 1;
-            foreach (Control x in this.Controls)
-            {
-                if (x is PictureBox && (string)x.Tag == "enemy")
-                {
-                    Enemy enemy;
-                    int randNum = ContraToolUtility.RandomNumberRange(1, 11);
-                    if (randNum < 5)
-                    {
-                        enemy = new ShootingSoldier(3, 3)
-                        {
-                            Name = "Enemy" + (numberEnemies++).ToString("D2"),
-                            Size = x.Size,
-                            Location = x.Location,
-                            BackColor = Color.Orange,
-                            Tag = x.Tag
-                        };
-                        enemy.ReplaceTag(0, "ShootingSoldier");
-                    }
-                    else
-                    {
-                        enemy = new RunningSoldier(5, 3)
-                        {
-                            Name = "Enemy" + (numberEnemies++).ToString("D2"),
-                            Size = x.Size,
-                            Location = x.Location,
-                            BackColor = Color.Orange,
-                            Tag = x.Tag
-                        };
-                        enemy.ReplaceTag(0, "RunningSoldier");
-                    }
-                    this.Controls.Remove(x);
-                    this.Controls.Add(enemy);
-                    enemy.BringToFront();
-                    enemy.DisplayInfo(); //Check enemy details
-                }
-            }
-            Debug.WriteLine("---------Enemies set up--------");
-        }
-
-        // Setup platforms 
-        //----------------not used----------------
-        private void SetUpPlatform()
-        {
-            Debug.WriteLine("\n---------Platforms are setting up--------");
-            int numberPlatforms = 1;
-            foreach (Control x in this.Controls)
-            {
-                if (x is PictureBox && (string)x.Tag == "platform")
-                {
-                    Platform platform = new Platform()
-                    {
-                        Name = "Platform" + (numberPlatforms++).ToString("D2"),
-                        Size = x.Size,
-                        Location = x.Location,
-                        BackColor = Color.Brown,
-                        Tag = x.Tag
-                    };
-                    this.Controls.Remove(x);
-                    this.Controls.Add(platform);
-                    platform.DisplayPlatformInfo();
-                    platform.BringToFront();
-                }
-            }
-            Debug.WriteLine("---------Platforms set up--------");
-        }
-
-        // Form load event handler
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            // Handle form load event if needed
-        }
-
-        // Pair each enemy with the nearest platform 
-        //----------------not used----------------
-        private void PairPlatformAndEnemy()
-        {
-            Debug.WriteLine("\n----- SetUp Pair -----");
-            int pairNumber = 1;
-            List<Platform> platforms = new List<Platform>();
-            List<Enemy> enemies = new List<Enemy>();
-
-            // Collect all platforms and enemies
-            foreach (Control x in this.Controls)
-            {
-                if (x is Platform platform)
-                {
-                    platforms.Add(platform);
-                }
-                else if (x is Enemy enemy)
-                {
-                    enemies.Add(enemy);
-                }
-            }
-
-            // Pair each enemy with the nearest platform
-            foreach (var enemy in enemies)
-            {
-                Platform nearestPlatform = null;
-                double nearestDistance = double.MaxValue;
-
-                foreach (var platform in platforms)
-                {
-                    // Calculate the distance with priority to the X-axis
-                    double distance = Math.Abs(enemy.Location.X - platform.Location.X) * 2 + Math.Abs(enemy.Location.Y - platform.Location.Y);
-                    if (distance < nearestDistance)
-                    {
-                        nearestDistance = distance;
-                        nearestPlatform = platform;
-                    }
-                }
-
-                if (nearestPlatform != null)
-                {
-                    enemy.ReplaceTag(1, $"P_E_{pairNumber:D2}");
-                    nearestPlatform.ReplaceTag(1, $"P_E_{pairNumber++:D2}");
-                    nearestPlatform.ReplaceTag(0, "PlatformEnemy");
-                    SetDictEnemyPlatform(enemy, nearestPlatform);
-                    Debug.WriteLine($"Paired {enemy.Name} with {nearestPlatform.Name} as {enemy.GetTags(1)}\n");
-                }
-            }
-            Debug.WriteLine("----- End Set UP -----");
-        } 
-
-        // Set dictionary entry for enemy and platform
-        private void SetDictEnemyPlatform(Enemy enemy, Platform plf)
-        {
-            dictEnemyPlatform.Add(enemy, plf);
+            // Position background layers
+            BGLv1.Location = new Point(player.Left - bgLayer1Offset + playerOffset, BGLv1.Top);
+            BGLv2.Location = new Point(player.Left - bgLayer2Offset + playerOffset, BGLv2.Top);
+            BGLv3.Location = new Point(player.Left - bgLayer3Offset + playerOffset, BGLv3.Top);
         }
 
         private void SetUpGameObjects()
         {
             Debug.WriteLine("\n---------Setting up game objects--------");
-
             List<Enemy> enemies = new List<Enemy>();
             List<Platform> platforms = new List<Platform>();
-
+            playerPlatforms.Clear();
             int enemyCount = 1;
             int platformCount = 1;
             int pairNumber = 1;
 
-            // Single pass over controls to replace PictureBoxes with Enemies/Platforms
-            foreach (Control x in this.Controls.OfType<PictureBox>().ToList())
+            // Replace PictureBoxes with game objects
+            foreach (Control control in Controls.OfType<PictureBox>().ToList())
             {
-                if (x.Tag?.ToString() == "enemy")
+                string tag = control.Tag?.ToString();
+                if (tag == "enemy")
                 {
-                    Enemy enemy;
-                    if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
-                    {
-                        enemy = new ShootingSoldier(3, 3) { Name = $"Enemy{enemyCount++:D2}" };
-                    }
-                    else
-                    {
-                        enemy = new RunningSoldier(5, 3) { Name = $"Enemy{enemyCount++:D2}" };
-                    }
-
-                    enemy.Size = x.Size;
-                    enemy.Location = x.Location;
-                    enemy.BackColor = Color.Orange;
-                    enemy.Tag = "enemy";
-
-                    this.Controls.Remove(x);
-                    this.Controls.Add(enemy);
-                    enemy.BringToFront();
-
-                    //Add enemy to the list
+                    // Create appropriate enemy type
+                    Enemy enemy = CreateEnemy(control, enemyCount++);
                     enemies.Add(enemy);
                 }
-                else if (x.Tag?.ToString() == "platform")
+                else if (tag == "platform")
                 {
+                    // Create platform
                     Platform platform = new Platform()
                     {
                         Name = $"Platform{platformCount++:D2}",
-                        Size = x.Size,
-                        Location = x.Location,
+                        Size = control.Size,
+                        Location = control.Location,
                         BackColor = Color.Brown,
                         Tag = "platform"
                     };
-
-                    this.Controls.Remove(x);
-                    this.Controls.Add(platform);
+                    Controls.Remove(control);
+                    Controls.Add(platform);
                     platform.BringToFront();
-
-                    //Add platform to the list
                     platforms.Add(platform);
+                    playerPlatforms.Add(platform);
                 }
             }
 
-            // Pair each enemy with the nearest platform (in the same loop)
-            foreach (var enemy in enemies)
-            {
-                Platform nearestPlatform = platforms.OrderBy(p => Math.Abs(enemy.Left - p.Left) * 2 + Math.Abs(enemy.Top - p.Top)).FirstOrDefault();
-                if (nearestPlatform != null)
-                {
-                    enemy.ReplaceTag(1, $"P_E_{pairNumber:D2}");
-                    nearestPlatform.ReplaceTag(1, $"P_E_{pairNumber++:D2}");
-                    nearestPlatform.ReplaceTag(0, "PlatformEnemy");
-                    dictEnemyPlatform[enemy] = nearestPlatform;
-                    Debug.WriteLine($"Paired {enemy.Name} with {nearestPlatform.Name}");
-                }
-            }
-
+            // Pair enemies with platforms
+            PairEnemiesWithPlatforms(enemies, platforms, pairNumber);
             Debug.WriteLine("---------Game objects setup complete--------");
         }
 
+        private void PairEnemiesWithPlatforms(List<Enemy> enemies, List<Platform> platforms, int startPairNumber)
+        {
+            int pairNumber = startPairNumber;
+
+            foreach (var enemy in enemies)
+            {
+                // Calculate enemy position
+                int enemyCenterX = enemy.Left + (enemy.Width / 2);
+                int enemyBottom = enemy.Bottom;
+
+                // Find platforms that are below the enemy
+                var platformsBelow = platforms
+                    .Where(p => p.Top >= enemyBottom) // Ensure platform is below enemy
+                    .OrderBy(p => p.Top) // Prioritize closest platform in Y direction
+                    .ThenBy(p => Math.Abs((p.Left + (p.Width / 2)) - enemyCenterX)) // Then sort by closest X
+                    .ToList();
+
+                Platform selectedPlatform = platformsBelow.FirstOrDefault();
+
+                if (selectedPlatform == null)
+                {
+                    // If no platform is below, select the nearest platform overall (fallback)
+                    selectedPlatform = platforms
+                        .OrderBy(p => Math.Abs(p.Top - enemyBottom)) // Sort by Y distance first
+                        .ThenBy(p => Math.Abs((p.Left + (p.Width / 2)) - enemyCenterX)) // Then by X distance
+                        .FirstOrDefault();
+
+                    Debug.WriteLine($"No platform directly below enemy {enemy.Name}, using nearest available platform: {selectedPlatform?.Name}");
+                }
+
+                if (selectedPlatform != null)
+                {
+                    string tagId = $"P_E_{pairNumber++:D2}";
+                    enemy.ReplaceTag(1, tagId);
+                    selectedPlatform.ReplaceTag(1, tagId);
+                    selectedPlatform.ReplaceTag(0, "PlatformEnemy");
+                    enemyPlatformPairs[enemy] = selectedPlatform;
+
+                    Debug.WriteLine($"Paired {enemy.Name} with {selectedPlatform.Name} - " +
+                        $"X distance: {Math.Abs((selectedPlatform.Left + (selectedPlatform.Width / 2)) - enemyCenterX)}, " +
+                        $"Y distance: {Math.Abs(selectedPlatform.Top - enemyBottom)}, " +
+                        $"Y relation: {(selectedPlatform.Top >= enemyBottom ? "below" : "above")} enemy");
+                }
+            }
+        }
+
+        private Enemy CreateEnemy(Control control, int enemyNumber)
+        {
+            Enemy enemy;
+
+            // Create appropriate enemy type
+            if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
+                enemy = new ShootingSoldier(3, 3) { Name = $"Enemy{enemyNumber:D2}" };
+            else
+                enemy = new RunningSoldier(5, 3) { Name = $"Enemy{enemyNumber:D2}" };
+
+            enemy.Size = control.Size;
+            enemy.Location = control.Location;
+            enemy.BackColor = Color.Orange;
+            enemy.Tag = "enemy";
+
+            Controls.Remove(control);
+            Controls.Add(enemy);
+            enemy.BringToFront();
+
+            return enemy;
+        }
+
         #endregion
-        //-----------------------------------------------------//
+    }
 
-
-
-
+    // Static class for direction constants
+    public static class Direction
+    {
+        public const string Left = "left";
+        public const string Right = "right";
+        public const string Up = "up";
+        public const string Down = "down";
     }
 }
