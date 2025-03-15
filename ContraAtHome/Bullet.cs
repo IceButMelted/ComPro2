@@ -20,7 +20,7 @@ namespace ContraAtHome
         {
             Tag = tag;
             BulletSpeed = speed;
-            Size = new Size(10, 5);
+            Size = new Size(10, 10);
             Location = location;
             BackColor = color;
 

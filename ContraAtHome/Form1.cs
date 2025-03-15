@@ -28,10 +28,24 @@ namespace ContraAtHome
         private readonly int screenWidth;
         private readonly int screenHeight;
 
+        //flags to track when collections need updating
+        private bool needsPlayerBulletUpdate = true;
+        private bool needsEnemyUpdate = true;
+        private bool needsEnemyBulletUpdate = true;
+        private bool needsMovableElementUpdate = true;
+
         // Game objects
         private readonly Dictionary<Enemy, Platform> enemyPlatformPairs = new Dictionary<Enemy, Platform>();
         private List<Platform> playerPlatforms = new List<Platform>();
         private Player player;
+
+        //List for better performance
+        private List<PictureBox> playerBullets = new List<PictureBox>();
+        private List<Enemy> activeEnemies = new List<Enemy>();
+        private List<PictureBox> enemyBullets = new List<PictureBox>();
+        private List<Control> movableElements = new List<Control>();
+
+        private HashSet<Keys> keysPressed = new HashSet<Keys>();
 
         public Form1()
         {
@@ -53,12 +67,9 @@ namespace ContraAtHome
         // Main game loop
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
-            // Vertical movement
-            if (player.jumping)
-                force -= 1;
-            int jumpSpeed = player.jumping ? -PLAYER_JUMP_SPEED : PLAYER_JUMP_SPEED;
+            // Only update collections when needed
+            UpdateCachedCollectionsIfNeeded();
 
-            player.Top += jumpSpeed;
             HandlePlayerMovement();
             HandleCollisions();
             ProcessEnemyActions();
@@ -68,12 +79,123 @@ namespace ContraAtHome
                 currentShootCooldown++;
         }
 
+        #region Cache Methods
+        private void UpdateCachedCollectionsIfNeeded()
+        {
+            if (needsPlayerBulletUpdate)
+            {
+                playerBullets.Clear();
+                foreach (Control control in Controls)
+                {
+                    if (control is PictureBox pictureBox && control.Tag?.ToString() == "PlayerBullet")
+                    {
+                        playerBullets.Add(pictureBox);
+                    }
+                }
+                needsPlayerBulletUpdate = false;
+            }
+
+            if (needsEnemyUpdate)
+            {
+                activeEnemies.Clear();
+                foreach (Control control in Controls)
+                {
+                    if (control is Enemy enemy && control.Tag?.ToString() == "enemy" && enemy.IsAlive)
+                    {
+                        activeEnemies.Add(enemy);
+                    }
+                }
+                needsEnemyUpdate = false;
+            }
+
+            if (needsEnemyBulletUpdate)
+            {
+                enemyBullets.Clear();
+                foreach (Control control in Controls)
+                {
+                    if (control is PictureBox pictureBox && control.Tag?.ToString() == "EnemyBullet")
+                    {
+                        enemyBullets.Add(pictureBox);
+                    }
+                }
+                needsEnemyBulletUpdate = false;
+            }
+
+            if (needsMovableElementUpdate)
+            {
+                movableElements.Clear();
+                foreach (Control control in Controls)
+                {
+                    string tag = control.Tag?.ToString();
+                    if (control is PictureBox && (
+                        tag == "platform" ||
+                        tag == "enemy" ||
+                        tag == "Tag_Border" ||
+                        tag == "EnemyBullet"))
+                    {
+                        movableElements.Add(control);
+                    }
+                }
+                needsMovableElementUpdate = false;
+            }
+        }
+
+        private void AddControlWithCacheUpdate(Control control)
+        {
+            Controls.Add(control);
+
+            // Invalidate relevant cache based on control type
+            string tag = control.Tag?.ToString();
+            if (control is PictureBox && tag == "PlayerBullet")
+                needsPlayerBulletUpdate = true;
+            else if (control is Enemy && tag == "enemy")
+                needsEnemyUpdate = true;
+            else if (control is PictureBox && tag == "EnemyBullet")
+                needsEnemyBulletUpdate = true;
+
+            if (control is PictureBox && (
+                tag == "platform" ||
+                tag == "enemy" ||
+                tag == "Tag_Border" ||
+                tag == "EnemyBullet"))
+            {
+                needsMovableElementUpdate = true;
+            }
+        }
+
+        private void RemoveControlWithCacheUpdate(Control control)
+        {
+            Controls.Remove(control);
+
+            // Invalidate relevant cache based on control type
+            string tag = control.Tag?.ToString();
+            if (control is PictureBox && tag == "PlayerBullet")
+                needsPlayerBulletUpdate = true;
+            else if (control is Enemy && tag == "enemy")
+            {
+                needsEnemyUpdate = true;
+                enemyPlatformPairs.Remove(control as Enemy);
+            }
+            else if (control is PictureBox && tag == "EnemyBullet")
+                needsEnemyBulletUpdate = true;
+
+            if (control is PictureBox && (
+                tag == "platform" ||
+                tag == "enemy" ||
+                tag == "Tag_Border" ||
+                tag == "EnemyBullet"))
+            {
+                needsMovableElementUpdate = true;
+            }
+
+            control.Dispose();
+        }
+        #endregion
+
         #region Player Movement & Controls
 
         private void HandlePlayerMovement()
         {
-            
-
             // Platform collision
             foreach (Platform platform in playerPlatforms)
             {
@@ -82,7 +204,6 @@ namespace ContraAtHome
                     force = PLAYER_JUMP_FORCE;
                     player.Top = platform.Top - player.Height;
                 }
-                
             }
 
             // Handle jumping
@@ -91,12 +212,19 @@ namespace ContraAtHome
                 player.jumping = false;
             }
 
+            // Vertical movement
+            if (player.jumping)
+                force -= 1;
+            int jumpSpeed = player.jumping ? -PLAYER_JUMP_SPEED : PLAYER_JUMP_SPEED;
+
+            player.Top += jumpSpeed;
+
             // Horizontal movement
             if (player.goLeft)
             {
-                if (player.Left > screenWidth / 2)
+                if (player.Left > screenWidth)
                     player.Left -= player.Speed;
-                else if (BorderLeft.Location.X < screenWidth / 2)
+                else if (BorderLeft.Location.X < screenWidth / 3)
                 {
                     MoveGameElements(Direction.Left);
                     UpdateParallaxBackground(1, 3, 5);
@@ -105,56 +233,84 @@ namespace ContraAtHome
 
             if (player.goRight)
             {
-                MoveGameElements(Direction.Right);
-                UpdateParallaxBackground(1, 3, 5);
+                if (player.Right > screenWidth)
+                    player.Left += player.Speed;
+                else if (BorderRight.Location.X > screenWidth - screenWidth / 3)
+                {
+                    MoveGameElements(Direction.Right);
+                    UpdateParallaxBackground(1, 3, 5);
+                }
             }
-            
         }
 
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.A:
-                    player.goLeft = true;
-                    player.SetFacing(Direction.Left);
-                    break;
-                case Keys.D:
-                    player.goRight = true;
-                    player.SetFacing(Direction.Right);
-                    break;
-                case Keys.W:
-                    player.SetFacing(Direction.Up);
-                    break;
-                case Keys.K:
-                    if (!player.jumping)
-                        player.jumping = true;
-                    break;
-                case Keys.J:
-                    if (currentShootCooldown > SHOOT_COOLDOWN)
-                    {
-                        ShootBullet(player);
-                        currentShootCooldown = 0;
-                    }
-                    break;
-            }
+            keysPressed.Add(e.KeyCode);
+            HandleKeyPresses();
         }
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            keysPressed.Remove(e.KeyCode);
+            HandleKeyPresses();
+        }
+
+        private void HandleKeyPresses()
+        {
+            if (keysPressed.Contains(Keys.K) && !player.jumping && force > 0)
             {
-                case Keys.A:
-                    player.goLeft = false;
-                    break;
-                case Keys.D:
-                    player.goRight = false;
-                    break;
-                case Keys.K:
-                    player.jumping = false;
-                    force = -1;
-                    break;
+                player.jumping = true;
             }
+
+            if (keysPressed.Contains(Keys.J) && currentShootCooldown > SHOOT_COOLDOWN)
+            {
+                ShootBullet(player);
+                currentShootCooldown = 0;
+            }
+
+            if (keysPressed.Contains(Keys.W))
+            {
+                player.SetFacing(Direction.Up);
+                Debug.WriteLine("Facing up");
+            }
+
+            player.goLeft = keysPressed.Contains(Keys.A);
+            player.goRight = keysPressed.Contains(Keys.D);
+
+            //go up and left or right But Facing up Multi key press
+            if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.A))
+            {
+                player.SetFacing(Direction.Up);
+                Debug.WriteLine("Facing UP");
+                return;
+            }
+            else if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.D))
+            {
+                player.SetFacing(Direction.Up);
+                Debug.WriteLine("Facing UP");
+                return;
+            }
+
+            //Go Left or Right single key press
+            if (player.goLeft && player.goRight)
+            {
+                player.goLeft = player.goRight = false;
+                return;
+            }
+            if (player.goLeft)
+            {
+                player.SetFacing(Direction.Left);
+                Debug.WriteLine("Facing left");
+                return;
+            }
+            else if (player.goRight)
+            {
+                player.SetFacing(Direction.Right);
+                Debug.WriteLine("Facing right");
+                return;
+            }
+
+            
         }
 
         #endregion
@@ -165,30 +321,17 @@ namespace ContraAtHome
         {
             List<Control> controlsToRemove = new List<Control>();
 
-            // Use LINQ to efficiently process collisions
-            var playerBullets = Controls.OfType<PictureBox>()
-                .Where(x => x.Tag?.ToString() == "PlayerBullet");
-
-            var enemies = Controls.OfType<PictureBox>()
-                .Where(x => x.Tag?.ToString() == "enemy");
-
-            var enemyBullets = Controls.OfType<PictureBox>()
-                .Where(x => x.Tag?.ToString() == "EnemyBullet");
-
             // Check player bullet collisions with enemies
             foreach (var bullet in playerBullets)
             {
-                foreach (var enemy in enemies)
+                foreach (var enemy in activeEnemies)
                 {
                     if (bullet.Bounds.IntersectsWith(enemy.Bounds))
                     {
-                        if (enemy is Enemy targetEnemy)
+                        enemy.TakeDamage();
+                        if (!enemy.IsAlive)
                         {
-                            targetEnemy.TakeDamage();
-                            if (!targetEnemy.IsAlive)
-                            {
-                                controlsToRemove.Add(enemy);
-                            }
+                            controlsToRemove.Add(enemy);
                         }
                         controlsToRemove.Add(bullet);
                         break;
@@ -209,38 +352,37 @@ namespace ContraAtHome
             // Remove objects outside the loop
             foreach (Control control in controlsToRemove)
             {
-                Controls.Remove(control);
-                if (control is Enemy enemy)
-                {
-                    enemyPlatformPairs.Remove(enemy);
-                }
-                control.Dispose();
+                RemoveControlWithCacheUpdate(control);
             }
         }
 
+        // Process enemy actions with optimized collections
         private void ProcessEnemyActions()
         {
-            foreach (var (enemy, platform) in enemyPlatformPairs)
+            foreach (var enemy in activeEnemies)
             {
-                // Skip if enemy is off-screen
-                if (enemy.Right <= 0 || enemy.Left >= screenWidth)
-                    continue;
-
-                // Check platform bounds
-                if (enemy.Left < platform.Left || enemy.Right > platform.Right)
-                    enemy.Speed = -enemy.Speed;
-
-                // Process enemy actions
-                enemy.EnemyAction(this);
-
-                // Handle shooting enemies
-                if (enemy is ShootingSoldier shooter && shooter.CanShooting)
+                if (enemyPlatformPairs.TryGetValue(enemy, out Platform platform))
                 {
-                    // Face the player
-                    shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
-                    shooter.CanShooting = false;
-                    ShootBullet(shooter, shooter.BulletSpeed);
-                    shooter.ResetShootCooldown();
+                    // Skip if enemy is off-screen
+                    if (enemy.Right <= 0 || enemy.Left >= screenWidth)
+                        continue;
+
+                    // Check platform bounds
+                    if (enemy.Left < platform.Left || enemy.Right > platform.Right)
+                        enemy.Speed = -enemy.Speed;
+
+                    // Process enemy actions
+                    enemy.EnemyAction(this);
+
+                    // Handle shooting enemies
+                    if (enemy is ShootingSoldier shooter && shooter.CanShooting)
+                    {
+                        // Face the player
+                        shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
+                        shooter.CanShooting = false;
+                        ShootBullet(shooter, shooter.BulletSpeed);
+                        shooter.ResetShootCooldown();
+                    }
                 }
             }
         }
@@ -248,18 +390,10 @@ namespace ContraAtHome
         #endregion
 
         #region Game Elements
-
+        // Move game elements with optimized collection
         private void MoveGameElements(string direction)
         {
             int moveAmount = direction == Direction.Right ? -PLATFORM_SPEED : PLATFORM_SPEED;
-
-            // Use LINQ to get all movable elements
-            var movableElements = Controls.OfType<Control>()
-                .Where(x => x is PictureBox &&
-                           (x.Tag?.ToString() == "platform" ||
-                            x.Tag?.ToString() == "enemy" ||
-                            x.Tag?.ToString() == "Tag_Border" ||
-                            x.Tag?.ToString() == "EnemyBullet"));
 
             foreach (var element in movableElements)
             {
@@ -279,6 +413,7 @@ namespace ContraAtHome
             }
         }
 
+        // Modified ShootBullet method to use the new AddControlWithCacheUpdate
         private void ShootBullet(Enemy shooter, int bulletSpeed, string bulletType = "basic")
         {
             if (shooter == null || !shooter.IsAlive) return;
@@ -291,7 +426,9 @@ namespace ContraAtHome
                 Direction = shooter.GetFacing()
             };
 
-            Controls.Add(bullet);
+            bullet.BackColor = Color.Purple;
+
+            AddControlWithCacheUpdate(bullet);
             bullet.BringToFront();
         }
 
@@ -305,7 +442,7 @@ namespace ContraAtHome
                 Direction = shooter.GetFacing()
             };
 
-            Controls.Add(bullet);
+            AddControlWithCacheUpdate(bullet);
             bullet.BringToFront();
         }
 
@@ -319,7 +456,7 @@ namespace ContraAtHome
             {
                 Size = new Size(60, 75),
                 BackColor = Color.FromArgb(255, 255, 121, 123),
-                Location = new Point(ClientSize.Width / 2, 250),
+                Location = new Point(ClientSize.Width / 2, 430),
             };
             Controls.Add(player);
         }
@@ -347,12 +484,9 @@ namespace ContraAtHome
         private void SetUpGameObjects()
         {
             Debug.WriteLine("\n---------Setting up game objects--------");
-
             List<Enemy> enemies = new List<Enemy>();
             List<Platform> platforms = new List<Platform>();
-
             playerPlatforms.Clear();
-
             int enemyCount = 1;
             int platformCount = 1;
             int pairNumber = 1;
@@ -361,7 +495,6 @@ namespace ContraAtHome
             foreach (Control control in Controls.OfType<PictureBox>().ToList())
             {
                 string tag = control.Tag?.ToString();
-
                 if (tag == "enemy")
                 {
                     // Create appropriate enemy type
@@ -379,7 +512,6 @@ namespace ContraAtHome
                         BackColor = Color.Brown,
                         Tag = "platform"
                     };
-
                     Controls.Remove(control);
                     Controls.Add(platform);
                     platform.BringToFront();
@@ -391,6 +523,52 @@ namespace ContraAtHome
             // Pair enemies with platforms
             PairEnemiesWithPlatforms(enemies, platforms, pairNumber);
             Debug.WriteLine("---------Game objects setup complete--------");
+        }
+
+        private void PairEnemiesWithPlatforms(List<Enemy> enemies, List<Platform> platforms, int startPairNumber)
+        {
+            int pairNumber = startPairNumber;
+
+            foreach (var enemy in enemies)
+            {
+                // Calculate enemy position
+                int enemyCenterX = enemy.Left + (enemy.Width / 2);
+                int enemyBottom = enemy.Bottom;
+
+                // Find platforms that are below the enemy
+                var platformsBelow = platforms
+                    .Where(p => p.Top >= enemyBottom) // Ensure platform is below enemy
+                    .OrderBy(p => p.Top) // Prioritize closest platform in Y direction
+                    .ThenBy(p => Math.Abs((p.Left + (p.Width / 2)) - enemyCenterX)) // Then sort by closest X
+                    .ToList();
+
+                Platform selectedPlatform = platformsBelow.FirstOrDefault();
+
+                if (selectedPlatform == null)
+                {
+                    // If no platform is below, select the nearest platform overall (fallback)
+                    selectedPlatform = platforms
+                        .OrderBy(p => Math.Abs(p.Top - enemyBottom)) // Sort by Y distance first
+                        .ThenBy(p => Math.Abs((p.Left + (p.Width / 2)) - enemyCenterX)) // Then by X distance
+                        .FirstOrDefault();
+
+                    Debug.WriteLine($"No platform directly below enemy {enemy.Name}, using nearest available platform: {selectedPlatform?.Name}");
+                }
+
+                if (selectedPlatform != null)
+                {
+                    string tagId = $"P_E_{pairNumber++:D2}";
+                    enemy.ReplaceTag(1, tagId);
+                    selectedPlatform.ReplaceTag(1, tagId);
+                    selectedPlatform.ReplaceTag(0, "PlatformEnemy");
+                    enemyPlatformPairs[enemy] = selectedPlatform;
+
+                    Debug.WriteLine($"Paired {enemy.Name} with {selectedPlatform.Name} - " +
+                        $"X distance: {Math.Abs((selectedPlatform.Left + (selectedPlatform.Width / 2)) - enemyCenterX)}, " +
+                        $"Y distance: {Math.Abs(selectedPlatform.Top - enemyBottom)}, " +
+                        $"Y relation: {(selectedPlatform.Top >= enemyBottom ? "below" : "above")} enemy");
+                }
+            }
         }
 
         private Enemy CreateEnemy(Control control, int enemyNumber)
@@ -413,31 +591,6 @@ namespace ContraAtHome
             enemy.BringToFront();
 
             return enemy;
-        }
-
-        private void PairEnemiesWithPlatforms(List<Enemy> enemies, List<Platform> platforms, int startPairNumber)
-        {
-            int pairNumber = startPairNumber;
-
-            foreach (var enemy in enemies)
-            {
-                // Find nearest platform
-                Platform nearestPlatform = platforms
-                    .OrderBy(p => Math.Abs(enemy.Left - p.Left) * 2 + Math.Abs(enemy.Top - p.Top))
-                    .FirstOrDefault();
-
-                if (nearestPlatform != null)
-                {
-                    string tagId = $"P_E_{pairNumber++:D2}";
-
-                    enemy.ReplaceTag(1, tagId);
-                    nearestPlatform.ReplaceTag(1, tagId);
-                    nearestPlatform.ReplaceTag(0, "PlatformEnemy");
-                    enemyPlatformPairs[enemy] = nearestPlatform;
-
-                    Debug.WriteLine($"Paired {enemy.Name} with {nearestPlatform.Name}");
-                }
-            }
         }
 
         #endregion
