@@ -8,7 +8,7 @@ namespace ContraAtHome
 {
     class RunningSoldier : Enemy
     {
-        public RunningSoldier(int hp, int speed, int dmg, params string[] initialTags) : base(hp, speed, dmg, initialTags)
+        public RunningSoldier(int hp, int speed, params string[] initialTags) : base(hp, speed, initialTags)
         {
 
         }

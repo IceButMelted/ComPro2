@@ -3,22 +3,6 @@
   "WorkspaceRootPath": "D:\\Git\\ComPro2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\runningsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\runningsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\shootingsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\shootingsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -27,12 +11,32 @@
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\shootingsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\shootingsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\contratoolutility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\contratoolutility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\tags.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\tags.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\runningsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\runningsoldier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|",
@@ -50,20 +54,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Form1.cs [Design]",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
-              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs [Design]",
-              "RelativeToolTip": "ContraAtHome\\Form1.cs [Design]",
+              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
+              "RelativeToolTip": "ContraAtHome\\Form1.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAqwCcAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T17:33:40.479Z",
+              "WhenOpened": "2025-03-14T19:32:37.667Z",
               "IsPinned": true,
-              "EditorCaption": " [Design]"
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -71,67 +76,66 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Form1.cs",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Design]",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
-              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
-              "RelativeToolTip": "ContraAtHome\\Form1.cs",
-              "ViewState": "AgIAAKwAAAAAAAAAAAAswMwAAAAqAAAAAAAAAA==",
+              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs [Design]",
+              "RelativeToolTip": "ContraAtHome\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T03:34:33.919Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-14T19:32:20.076Z",
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "ContraToolUtility.cs",
+              "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\ContraToolUtility.cs",
+              "RelativeDocumentMoniker": "ContraAtHome\\ContraToolUtility.cs",
+              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\ContraToolUtility.cs",
+              "RelativeToolTip": "ContraAtHome\\ContraToolUtility.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAuwFgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-14T18:57:03.085Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Bullet.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Bullet.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Bullet.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Bullet.cs",
               "RelativeToolTip": "ContraAtHome\\Bullet.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAuwDEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwCsAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T06:58:21.356Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ShootingSoldier.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\ShootingSoldier.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\ShootingSoldier.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\ShootingSoldier.cs",
               "RelativeToolTip": "ContraAtHome\\Enemy\\ShootingSoldier.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAowBsAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-28T04:16:57.068Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Enemy.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\Enemy.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\Enemy.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\Enemy.cs",
               "RelativeToolTip": "ContraAtHome\\Enemy\\Enemy.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB4AAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-27T18:41:26.423Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "RunningSoldier.cs",
-              "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\RunningSoldier.cs",
-              "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\RunningSoldier.cs",
-              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\RunningSoldier.cs",
-              "RelativeToolTip": "ContraAtHome\\Enemy\\RunningSoldier.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-14T09:06:52.559Z",
               "EditorCaption": ""
             },
             {
@@ -142,10 +146,22 @@
               "RelativeDocumentMoniker": "ContraAtHome\\Player.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Player.cs",
               "RelativeToolTip": "ContraAtHome\\Player.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAgwBIAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T06:27:44.402Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "RunningSoldier.cs",
+              "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\RunningSoldier.cs",
+              "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\RunningSoldier.cs",
+              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\RunningSoldier.cs",
+              "RelativeToolTip": "ContraAtHome\\Enemy\\RunningSoldier.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-14T09:06:52.559Z"
             },
             {
               "$type": "Document",
@@ -155,14 +171,13 @@
               "RelativeDocumentMoniker": "ContraAtHome\\Tags.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Tags.cs",
               "RelativeToolTip": "ContraAtHome\\Tags.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwCAAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-01T08:06:27.267Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-01T08:06:27.267Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Program.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Program.cs",
@@ -174,7 +189,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "ClassDiagram1.cd",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\ClassDiagram1.cd",
               "RelativeDocumentMoniker": "ContraAtHome\\ClassDiagram1.cd",

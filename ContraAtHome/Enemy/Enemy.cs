@@ -10,18 +10,16 @@ namespace ContraAtHome
         // Properties
         public int Hp { get; set; }
         public int Speed { get; set; }
-        public int Dmg { get; set; }
-        public bool IsAlive { get; set; }
+        public bool IsAlive = true;
         protected string facing = "left";
 
         enum enemyType { EnemyMoving, EnemyShooting }
 
         // Constructor
-        public Enemy(int hp, int speed, int dmg, params string[] initialTags)
+        public Enemy(int hp, int speed, params string[] initialTags)
         {
             Hp = hp;
             Speed = speed;
-            Dmg = dmg;
             IsAlive = true;
             Size = new Size(40, 50); // Default size, can be overridden
             BackColor = Color.Red; // Default color, can be overridden
@@ -37,7 +35,7 @@ namespace ContraAtHome
         // Method to display enemy details
         public void DisplayInfo()
         {
-            Debug.WriteLine($"Name : {Name}, HP: {Hp}, Speed: {Speed}, Damage: {Dmg}, Is Alive: {IsAlive}");
+            Debug.WriteLine($"Name : {Name}, HP: {Hp}, Speed: {Speed}, Is Alive: {IsAlive}");
             DisplayTags();
         }
 
@@ -46,19 +44,18 @@ namespace ContraAtHome
         {
             if (Bounds.IntersectsWith(player.Bounds))
             {
-                player.Hp -= Dmg;
                 Console.WriteLine($"Player hit! Player HP: {player.Hp}");
             }
         }
 
         // Method to take damage
-        public void TakeDamage(int damage)
+        public void TakeDamage()
         {
-            Hp -= damage;
+            Hp -= 1;
             if (Hp <= 0)
             {
                 IsAlive = false;
-                Console.WriteLine("Enemy defeated!");
+                Debug.WriteLine("Enemy defeated!");
             }
         }
 

@@ -85,11 +85,26 @@ namespace ContraAtHome
             Debug.WriteLine("----- End Visual Pair -----");
         }
 
-        public static void DebugEnemyBulletLocation(Form f) {
+        public static void DebugEnemyBulletLocation(Form f)
+        {
             Debug.WriteLine("\n---------Checking Tags--------");
             foreach (Control x in f.Controls)
             {
                 if (x is PictureBox && ((string)x.Tag == "EnemyBullet"))
+                {
+                    Debug.WriteLine($"Name: {x.Name}");
+                    Debug.WriteLine($"Location: {x.Location.X}, {x.Location.Y}");
+                }
+            }
+            Debug.WriteLine("---------Tags Checked--------");
+        }
+
+        public static void DebugPlayerBulletLocation(Form f)
+        {
+            Debug.WriteLine("\n---------Checking Tags--------");
+            foreach (Control x in f.Controls)
+            {
+                if (x is PictureBox && ((string)x.Tag == "PlayerBullet"))
                 {
                     Debug.WriteLine($"Name: {x.Name}");
                     Debug.WriteLine($"Location: {x.Location.X}, {x.Location.Y}");

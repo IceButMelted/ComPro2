@@ -40,6 +40,7 @@
             BorderLeft = new PictureBox();
             enemy2 = new PictureBox();
             plf3 = new PictureBox();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)plf).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy1).BeginInit();
@@ -50,6 +51,7 @@
             ((System.ComponentModel.ISupportInitialize)BorderLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // plf
@@ -58,7 +60,7 @@
             plf.Location = new Point(0, 302);
             plf.Margin = new Padding(0);
             plf.Name = "plf";
-            plf.Size = new Size(1300, 10);
+            plf.Size = new Size(1300, 20);
             plf.TabIndex = 0;
             plf.TabStop = false;
             plf.Tag = "platform";
@@ -69,7 +71,7 @@
             plf1.Location = new Point(472, 143);
             plf1.Margin = new Padding(0);
             plf1.Name = "plf1";
-            plf1.Size = new Size(300, 10);
+            plf1.Size = new Size(300, 20);
             plf1.TabIndex = 1;
             plf1.TabStop = false;
             plf1.Tag = "platform";
@@ -154,7 +156,7 @@
             // plf3
             // 
             plf3.BackColor = Color.IndianRed;
-            plf3.Location = new Point(354, 315);
+            plf3.Location = new Point(354, 322);
             plf3.Margin = new Padding(0);
             plf3.Name = "plf3";
             plf3.Size = new Size(100, 10);
@@ -162,12 +164,24 @@
             plf3.TabStop = false;
             plf3.Tag = "platform";
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.IndianRed;
+            pictureBox1.Location = new Point(124, 228);
+            pictureBox1.Margin = new Padding(0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(100, 74);
+            pictureBox1.TabIndex = 11;
+            pictureBox1.TabStop = false;
+            pictureBox1.Tag = "platform";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightBlue;
             ClientSize = new Size(784, 561);
+            Controls.Add(pictureBox1);
             Controls.Add(plf3);
             Controls.Add(enemy2);
             Controls.Add(BorderLeft);
@@ -193,6 +207,7 @@
             ((System.ComponentModel.ISupportInitialize)BorderLeft).EndInit();
             ((System.ComponentModel.ISupportInitialize)enemy2).EndInit();
             ((System.ComponentModel.ISupportInitialize)plf3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -209,6 +224,6 @@
         public PictureBox BGLv2;
         public PictureBox BGLv3;
         private PictureBox BorderLeft;
-        
+        private PictureBox pictureBox1;
     }
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ContraAtHome
 {
@@ -12,6 +13,9 @@ namespace ContraAtHome
         int jumpSpeed;
         int force;
         int PlatformSpeed = 7;
+
+        int maxCDShoot = 10;
+        int currentCDShoot = 0;
 
         int BGlv1_offset;
         int BGlv2_offset;
@@ -29,41 +33,43 @@ namespace ContraAtHome
             InitializeComponent();
             screenWidth = this.ClientSize.Width;
             screenHeight = this.ClientSize.Height;
-            SetUpEnemies();
-            SetUpPlatform();
+            //-----Set upObject-----------------//
+            //SetUpEnemies();
+            //SetUpPlatform();
+            //PairPlatformAndEnemy();
+            SetUpGameObjects();
+            //---------------------------------//
+
             SetUpPlayer();
             ContraToolUtility.DebugCheckTagsAllObject(this);
             SetupBG();
-            PairPlatformAndEnemy();
+            
             ContraToolUtility.DebugCheckTagsAllObject(this);
             ContraToolUtility.DebugVisualColorPair(dictEnemyPlatform);
             ContraToolUtility.DebugDict(dictEnemyPlatform);
-            
+
         }
 
         // Main game timer event handler
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
-            ContraToolUtility.DebugEnemyBulletLocation(this);
+            //ContraToolUtility.DebugEnemyBulletLocation(this);
+            //ContraToolUtility.DebugPlayerBulletLocation(this);
             //Player movement
             if (player.jumping && force < 0)
             {
                 player.jumping = false;
             }
 
-            if (player.goLeft && player.Left > 300)
+            //Optimize player movement
+            if (player.goLeft)
             {
-                player.Left -= player.Speed;
-            }
-            if (player.goLeft && player.Left + (player.Width + 300) < this.ClientSize.Width)
-            {
-                player.Left += player.Speed;
-            }
-
-            if (player.goLeft && BorderLeft.Location.X < screenWidth /2 )
-            {
-                MoveGameElements("Left");
-                ParallexBG(1, 3, 5);
+                if (player.Left > 300) player.Left -= player.Speed;
+                else if (BorderLeft.Location.X < screenWidth / 2)
+                {
+                    MoveGameElements("Left");
+                    ParallexBG(1, 3, 5);
+                }
             }
 
             if (player.goRight)
@@ -82,6 +88,7 @@ namespace ContraAtHome
                 jumpSpeed = 10;
             }
 
+            if (currentCDShoot <= maxCDShoot) currentCDShoot++;
             player.Top += jumpSpeed;
             //Player movement
 
@@ -99,8 +106,63 @@ namespace ContraAtHome
 
                     x.BringToFront();
                 }
+                if ((string)x.Tag == "enemy")
+                {
+                    if (player.Bounds.IntersectsWith(x.Bounds))
+                    {
+                        // gameTimer.Stop();
+                        Debug.WriteLine("You were killed in your journey");
+                    }
+                }
             }
-            //End of player and platform collision
+            //End of player and platform collision|
+
+            List<Control> toRemove = new List<Control>();
+
+            foreach (Control x in this.Controls.OfType<PictureBox>().ToList())
+            {
+                if (x.Tag?.ToString() == "PlayerBullet")
+                {
+                    foreach (Control y in this.Controls.OfType<PictureBox>().ToList())
+                    {
+                        if (y.Tag?.ToString() == "enemy" && x.Bounds.IntersectsWith(y.Bounds))
+                        {
+                            //Debug.WriteLine("Enemy was killed");
+                            if (y is Enemy enemy)
+                            {
+                                enemy.TakeDamage();
+                                if (!enemy.IsAlive)
+                                {
+                                    toRemove.Add(y);
+                                }
+                                toRemove.Add(x);
+                            }
+                        }
+                    }
+                }
+                if (x.Tag?.ToString() == "EnemyBullet")
+                {
+                    foreach (Control y in this.Controls.OfType<PictureBox>().ToList())
+                    {
+                        if (x.Bounds.IntersectsWith(player.Bounds))
+                        {
+                            //Debug.WriteLine("Player was killed");
+                            toRemove.Add(x);
+                        }
+                    }
+                }
+            }
+
+            // Remove objects after the loop
+            foreach (Control c in toRemove)
+            {
+                this.Controls.Remove(c);
+                if (c is Enemy)
+                {
+                    dictEnemyPlatform.Remove((Enemy)c);
+                }
+                c.Dispose();
+            }
 
             EnemyMove();
         }
@@ -118,15 +180,18 @@ namespace ContraAtHome
                 player.goRight = true;
                 player.SetFacing("right");
             }
-            if (e.KeyCode == Keys.W) { 
+            if (e.KeyCode == Keys.W)
+            {
                 player.SetFacing("up");
             }
             if (e.KeyCode == Keys.K && !player.jumping)
             {
                 player.jumping = true;
             }
-            if (e.KeyCode == Keys.J) { 
+            if (e.KeyCode == Keys.J && currentCDShoot > maxCDShoot)
+            {
                 ShootBullet(player.GetFacing());
+                currentCDShoot = 0;
             }
         }
 
@@ -141,8 +206,9 @@ namespace ContraAtHome
             {
                 player.goRight = false;
             }
-            if (e.KeyCode == Keys.K) { 
-                player.jumping = false; 
+            if (e.KeyCode == Keys.K)
+            {
+                player.jumping = false;
                 force = -1;
             }
             if (player.jumping)
@@ -169,14 +235,14 @@ namespace ContraAtHome
             shootBullet.bulletTop = player.Top + (player.Height / 2);
             this.BringToFront();
             shootBullet.MakeBullet(this);
-        }   
+        }
 
         // Move game elements based on direction
         public void MoveGameElements(string direction)
         {
             foreach (Control x in this.Controls)
             {
-                if (x is PictureBox && ((string)x.Tag == "platform" || (string)x.Tag == "enemy" || (string)x.Tag == "Tag_Border"))
+                if (x is PictureBox && ((string)x.Tag == "platform" || (string)x.Tag == "enemy" || (string)x.Tag == "Tag_Border") || (string)x.Tag == "EnemyBullet")
                 {
                     if (direction == "Right")
                         x.Left -= PlatformSpeed;
@@ -194,7 +260,7 @@ namespace ContraAtHome
                 Enemy enemy = pair.Key;
                 Platform platform = pair.Value;
 
-                if (enemy.Location.X+enemy.Width > 0 && enemy.Location.X < screenWidth)
+                if (enemy.Location.X + enemy.Width > 0 && enemy.Location.X < screenWidth)
                 {
                     // Check if the enemy is out of the platform bounds
                     if (enemy.Left < platform.Left || enemy.Left + enemy.Width > platform.Left + platform.Width)
@@ -204,7 +270,7 @@ namespace ContraAtHome
                     // Move the enemy
                     enemy.EnemyAction(this);
                 }
-                
+
             }
         }
 
@@ -259,7 +325,8 @@ namespace ContraAtHome
             this.Controls.Add(player);
         }
 
-        // Setup enemies
+        // Setup enemies 
+        //----------------not used----------------
         private void SetUpEnemies()
         {
             Debug.WriteLine("\n---------Enemies are setting up--------");
@@ -272,7 +339,7 @@ namespace ContraAtHome
                     int randNum = ContraToolUtility.RandomNumberRange(1, 11);
                     if (randNum < 5)
                     {
-                        enemy = new ShootingSoldier(50, 3, 5)
+                        enemy = new ShootingSoldier(3, 3)
                         {
                             Name = "Enemy" + (numberEnemies++).ToString("D2"),
                             Size = x.Size,
@@ -284,7 +351,7 @@ namespace ContraAtHome
                     }
                     else
                     {
-                        enemy = new RunningSoldier(50, 3, 5)
+                        enemy = new RunningSoldier(5, 3)
                         {
                             Name = "Enemy" + (numberEnemies++).ToString("D2"),
                             Size = x.Size,
@@ -303,7 +370,8 @@ namespace ContraAtHome
             Debug.WriteLine("---------Enemies set up--------");
         }
 
-        // Setup platforms
+        // Setup platforms 
+        //----------------not used----------------
         private void SetUpPlatform()
         {
             Debug.WriteLine("\n---------Platforms are setting up--------");
@@ -335,7 +403,8 @@ namespace ContraAtHome
             // Handle form load event if needed
         }
 
-        // Pair each enemy with the nearest platform
+        // Pair each enemy with the nearest platform 
+        //----------------not used----------------
         private void PairPlatformAndEnemy()
         {
             Debug.WriteLine("\n----- SetUp Pair -----");
@@ -377,13 +446,13 @@ namespace ContraAtHome
                 {
                     enemy.ReplaceTag(1, $"P_E_{pairNumber:D2}");
                     nearestPlatform.ReplaceTag(1, $"P_E_{pairNumber++:D2}");
-                    nearestPlatform.ReplaceTag(0,"PlatformEnemy");
+                    nearestPlatform.ReplaceTag(0, "PlatformEnemy");
                     SetDictEnemyPlatform(enemy, nearestPlatform);
                     Debug.WriteLine($"Paired {enemy.Name} with {nearestPlatform.Name} as {enemy.GetTags(1)}\n");
                 }
             }
             Debug.WriteLine("----- End Set UP -----");
-        }
+        } 
 
         // Set dictionary entry for enemy and platform
         private void SetDictEnemyPlatform(Enemy enemy, Platform plf)
@@ -391,10 +460,85 @@ namespace ContraAtHome
             dictEnemyPlatform.Add(enemy, plf);
         }
 
+        private void SetUpGameObjects()
+        {
+            Debug.WriteLine("\n---------Setting up game objects--------");
+
+            List<Enemy> enemies = new List<Enemy>();
+            List<Platform> platforms = new List<Platform>();
+
+            int enemyCount = 1;
+            int platformCount = 1;
+            int pairNumber = 1;
+
+            // Single pass over controls to replace PictureBoxes with Enemies/Platforms
+            foreach (Control x in this.Controls.OfType<PictureBox>().ToList())
+            {
+                if (x.Tag?.ToString() == "enemy")
+                {
+                    Enemy enemy;
+                    if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
+                    {
+                        enemy = new ShootingSoldier(3, 3) { Name = $"Enemy{enemyCount++:D2}" };
+                    }
+                    else
+                    {
+                        enemy = new RunningSoldier(5, 3) { Name = $"Enemy{enemyCount++:D2}" };
+                    }
+
+                    enemy.Size = x.Size;
+                    enemy.Location = x.Location;
+                    enemy.BackColor = Color.Orange;
+                    enemy.Tag = "enemy";
+
+                    this.Controls.Remove(x);
+                    this.Controls.Add(enemy);
+                    enemy.BringToFront();
+
+                    //Add enemy to the list
+                    enemies.Add(enemy);
+                }
+                else if (x.Tag?.ToString() == "platform")
+                {
+                    Platform platform = new Platform()
+                    {
+                        Name = $"Platform{platformCount++:D2}",
+                        Size = x.Size,
+                        Location = x.Location,
+                        BackColor = Color.Brown,
+                        Tag = "platform"
+                    };
+
+                    this.Controls.Remove(x);
+                    this.Controls.Add(platform);
+                    platform.BringToFront();
+
+                    //Add platform to the list
+                    platforms.Add(platform);
+                }
+            }
+
+            // Pair each enemy with the nearest platform (in the same loop)
+            foreach (var enemy in enemies)
+            {
+                Platform nearestPlatform = platforms.OrderBy(p => Math.Abs(enemy.Left - p.Left) * 2 + Math.Abs(enemy.Top - p.Top)).FirstOrDefault();
+                if (nearestPlatform != null)
+                {
+                    enemy.ReplaceTag(1, $"P_E_{pairNumber:D2}");
+                    nearestPlatform.ReplaceTag(1, $"P_E_{pairNumber++:D2}");
+                    nearestPlatform.ReplaceTag(0, "PlatformEnemy");
+                    dictEnemyPlatform[enemy] = nearestPlatform;
+                    Debug.WriteLine($"Paired {enemy.Name} with {nearestPlatform.Name}");
+                }
+            }
+
+            Debug.WriteLine("---------Game objects setup complete--------");
+        }
+
         #endregion
         //-----------------------------------------------------//
 
-        
+
 
 
     }

@@ -13,24 +13,28 @@ namespace ContraAtHome
 {
     public class ShootingSoldier : Enemy
     {
-        int coolDown = 30;
+        int coolDown = 45;
         int currentCoolDown = 0;
         // Constructor
-        public ShootingSoldier(int hp, int speed, int dmg, params string[] initialTags) : base(hp, speed, dmg, "enemy")
+        public ShootingSoldier(int hp, int speed, params string[] initialTags) : base(hp, speed, initialTags)
         {
 
         }
 
         public override void EnemyAction(Form f)
         {
-            if (currentCoolDown > coolDown)
+            //Debug.WriteLine($"Shooting Soldier Action {this.IsAlive}");
+            if (IsAlive == true)
             {
-                Shoot(f);
-                Debug.WriteLine("Shooting");
-            }
-            else
-            {
-                currentCoolDown++;
+                if (currentCoolDown > coolDown)
+                {
+                    Shoot(f);
+                    Debug.WriteLine("Shooting");
+                }
+                else
+                {
+                    currentCoolDown++;
+                }
             }
         }
 
@@ -38,7 +42,7 @@ namespace ContraAtHome
         {
 
             // Shoot bullet
-
+            this.facing = "right";
             Bullet bullet = new Bullet();
 
             bullet.direction = this.facing;
@@ -46,6 +50,7 @@ namespace ContraAtHome
             bullet.bulletTop = this.Top + (this.Height / 2);
 
             bullet.MakeEnemyBullet(f);
+            //Debug.WriteLine(bullet);
             currentCoolDown = 0;
             
         }
