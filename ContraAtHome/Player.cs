@@ -35,21 +35,6 @@ namespace ContraAtHome
             Debug.WriteLine($"HP: {Hp}, Jump Power: {JumpPower}, Speed: {Speed}, Damage: {Dmg}, Is Invincible: {IsInvincible}");
         }
 
-        public void MoveLeft()
-        {
-            Left -= Speed;
-        }
-
-        public void MoveRight()
-        {
-            Left += Speed;
-        }
-
-        public void Jump()
-        {
-            Top -= JumpPower;
-        }
-
         public string GetFacing()
         {
             return facingDirecttion;

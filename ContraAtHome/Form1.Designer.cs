@@ -194,7 +194,7 @@
             Controls.Add(plf);
             Name = "Form1";
             Text = "Form1";
-            Load += Form1_Load;
+            //Load += Form1_Load;
             KeyDown += KeyIsDown;
             KeyUp += KeyIsUp;
             ((System.ComponentModel.ISupportInitialize)plf).EndInit();

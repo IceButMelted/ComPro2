@@ -10,79 +10,60 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace ContraAtHome
 {
-    class Bullet : PictureBox
+    public class Bullet : PictureBox
     {
-        public string direction = "right";
-        public int bulletLeft;
-        public int bulletTop;
+        public int BulletSpeed { get; set; }
+        public string Direction { get; set; }
+        private Timer bulletTimer;
 
-        private int bulletSpeed = 10;
-        private PictureBox bullet = new PictureBox();
-        private Timer bulletTimer = new Timer();
-
-        public void MakeBullet(Form form)
+        public Bullet(string tag, int speed, Point location, Color color)
         {
-            bullet.BackColor = Color.Black;
-            bullet.Size = new Size(10, 10);
-            bullet.Tag = "PlayerBullet";
-            bullet.Name = "playerBullet";
-            bullet.Left = bulletLeft;
-            bullet.Top = bulletTop;
+            Tag = tag;
+            BulletSpeed = speed;
+            Size = new Size(10, 5);
+            Location = location;
+            BackColor = color;
 
-
-            form.Controls.Add(bullet);
-
-            bullet.BringToFront();
-
-            bulletTimer.Interval = bulletSpeed;
-            bulletTimer.Tick += new EventHandler(BulletTimerEvent);
-            bulletTimer.Start();
-
-        }
-
-        public void MakeEnemyBullet(Form f)
-        {
-            bulletSpeed = 7;
-            bullet.BackColor = Color.DarkRed;
-            bullet.Size = new Size(10, 10);
-            bullet.Left = bulletLeft;
-            bullet.Top = bulletTop;
-            bullet.Tag = "EnemyBullet";
-            bullet.Name = "enneBullet";
-
-            f.Controls.Add(bullet);
-            bullet.BringToFront();
-
-            bulletTimer.Interval = bulletSpeed;
-            bulletTimer.Tick += new EventHandler(BulletTimerEvent);
+            bulletTimer = new Timer { Interval = 16 }; // ~60 FPS
+            bulletTimer.Tick += BulletTimer_Tick;
             bulletTimer.Start();
         }
 
-        private void BulletTimerEvent(object sender, EventArgs e)
+        private void BulletTimer_Tick(object sender, EventArgs e)
         {
-            if (direction == "left")
+            MoveBullet();
+
+            if (Left < 0 || Right > 800 || Top < 0 || Bottom > 600)
             {
-                bullet.Left -= bulletSpeed;
-            }
-            if (direction == "right")
-            {
-                bullet.Left += bulletSpeed;
-            }
-            if (direction == "up")
-            {
-                bullet.Top -= bulletSpeed;
-            }
-            if (bullet.Left < 16 || bullet.Left > 860 || bullet.Top < 10 || bullet.Top > 616)
-            {
-                bulletTimer.Stop();
-                bulletTimer.Dispose();
-                bullet.Dispose();
-                bulletTimer = null;
-                bullet = null;
+                DisposeBullet();
             }
         }
 
+        public void MoveBullet()
+        {
+            switch (Direction)
+            {
+                case "left":
+                    Left -= BulletSpeed;
+                    break;
+                case "right":
+                    Left += BulletSpeed;
+                    break;
+                case "up":
+                    Top -= BulletSpeed;
+                    break;
+                case "down":
+                    Top += BulletSpeed;
+                    break;
+            }
+        }
 
-
+        private void DisposeBullet()
+        {
+            bulletTimer.Stop();
+            bulletTimer.Dispose();
+            Parent?.Controls.Remove(this);
+            Dispose();
+        }
     }
 }
