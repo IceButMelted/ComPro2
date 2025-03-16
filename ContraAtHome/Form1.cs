@@ -675,9 +675,9 @@ namespace ContraAtHome
 
             foreach (var enemy in enemies)
             {
-                // Calculate enemy position
-                int enemyCenterX = enemy.Left + (enemy.Width / 2);
-                int enemyBottom = enemy.Bottom;
+                // Calculate enemy position using Location.X and Location.Y
+                int enemyCenterX = enemy.Location.X + (enemy.Width / 2);
+                int enemyBottom = enemy.Location.Y + enemy.Height;
 
                 // Find platforms that are below the enemy (without LINQ)
                 Platform selectedPlatform = null;
@@ -688,10 +688,10 @@ namespace ContraAtHome
                 // First pass: find platforms below the enemy
                 foreach (Platform platform in platforms)
                 {
-                    if (platform.Top >= enemyBottom)
+                    if (platform.Location.Y >= enemyBottom)
                     {
-                        int platformCenterX = platform.Left + (platform.Width / 2);
-                        int verticalDistance = platform.Top - enemyBottom;
+                        int platformCenterX = platform.Location.X + (platform.Width / 2);
+                        int verticalDistance = platform.Location.Y - enemyBottom;
                         int horizontalDistance = Math.Abs(platformCenterX - enemyCenterX);
 
                         // Check if this platform is better than the current best
@@ -732,8 +732,8 @@ namespace ContraAtHome
 
                     foreach (Platform platform in platforms)
                     {
-                        int platformCenterX = platform.Left + (platform.Width / 2);
-                        int verticalDistance = Math.Abs(platform.Top - enemyBottom);
+                        int platformCenterX = platform.Location.X + (platform.Width / 2);
+                        int verticalDistance = Math.Abs(platform.Location.Y - enemyBottom);
                         int horizontalDistance = Math.Abs(platformCenterX - enemyCenterX);
 
                         // Check if this platform is better than the current best
@@ -775,11 +775,11 @@ namespace ContraAtHome
                     selectedPlatform.ReplaceTag(0, "PlatformEnemy");
                     enemyPlatformPairs[enemy] = selectedPlatform;
 
-                    int platformCenterX = selectedPlatform.Left + (selectedPlatform.Width / 2);
+                    int platformCenterX = selectedPlatform.Location.X + (selectedPlatform.Width / 2);
                     Debug.WriteLine($"Paired {enemy.Name} with {selectedPlatform.Name} - " +
                         $"X distance: {Math.Abs(platformCenterX - enemyCenterX)}, " +
-                        $"Y distance: {Math.Abs(selectedPlatform.Top - enemyBottom)}, " +
-                        $"Y relation: {(selectedPlatform.Top >= enemyBottom ? "below" : "above")} enemy");
+                        $"Y distance: {Math.Abs(selectedPlatform.Location.Y - enemyBottom)}, " +
+                        $"Y relation: {(selectedPlatform.Location.Y >= enemyBottom ? "below" : "above")} enemy");
                 }
             }
         }
