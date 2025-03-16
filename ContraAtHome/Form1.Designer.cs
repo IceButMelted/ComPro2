@@ -258,7 +258,7 @@
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.LightBlue;
-            ClientSize = new Size(800, 600);
+            ClientSize = new Size(780, 557);
             Controls.Add(pictureBox5);
             Controls.Add(pictureBox8);
             Controls.Add(pictureBox7);

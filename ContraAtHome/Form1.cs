@@ -28,11 +28,11 @@ namespace ContraAtHome
 
         //Sprites List Load
         private string lastFacingDirection = Direction.Right;
-        // 1:Idle-left 2:Idle-right 3:Running-left 4:Runnning-Right
-        // 5:Runnning-left-up 6:Running-right-up 7:Facing-Up
-        // 8:Jumping-left 9:Jumping-right
-        // 10:Falling-left 11:Falling-right
-        private Bitmap[][] player_Frames = new Bitmap[11][];
+        // 1:Idle // 2:Running // 3:Runnning // 4:Facing // 5:Jumping // 6:Falling
+        private Bitmap[][] playerSpriteRight = new Bitmap[6][];
+        private Bitmap[][] playerSpriteLeft = new Bitmap[6][];
+        // 1: Running-Rigt 2: Running-Left 3:Shooting-Right 4: Shoothn-Left
+        private Bitmap[][] EnemySprite = new Bitmap[4][];
 
 
         // Background parallax
@@ -223,30 +223,37 @@ namespace ContraAtHome
 
         private void PlayerSpriteLoader()
         {
-            player_Frames[0] = new Bitmap[6];
-            player_Frames[1] = new Bitmap[6];
-            player_Frames[2] = new Bitmap[6];
-            player_Frames[3] = new Bitmap[6];
-            player_Frames[4] = new Bitmap[6];
-            player_Frames[6] = new Bitmap[6];
-            player_Frames[7] = new Bitmap[6];
+            // 1:Idle // 2:Running // 3:Running Face Up // 4:Facing Up // 5:Jumping // 6:Falling
 
+            // Array holding different animation states for the player
+            string[] animationTypes = { "Idle", "Running", "RunFaceUp", "FaceUp", "Jumping", "Falling" };
 
-            for (int i = 0; i < player_Frames[0].Length; i++)
+            // Loop to initialize sprite arrays for both left and right directions
+            for (int animIndex = 0; animIndex < animationTypes.Length; animIndex++)
             {
-                //loop for load image in bin/Debug/
-                player_Frames[0][i] = new Bitmap("./Sprites/Player/Idle/Idle_00" + i + ".png");
-            }
-            for (int i = 0; i < player_Frames[0].Length; i++)
-            {
-                player_Frames[1][i] = player_Frames[0][i];
-                player_Frames[1][i].RotateFlip(RotateFlipType.RotateNoneFlipX);
+                playerSpriteRight[animIndex] = new Bitmap[6];
+                playerSpriteLeft[animIndex] = new Bitmap[6];
+
+                for (int frameIndex = 0; frameIndex < 6; frameIndex++)
+                {
+                    string framePath = $"./Sprites/Player/{animationTypes[animIndex]}/{animationTypes[animIndex]}_00{frameIndex}.png";
+
+                    playerSpriteRight[animIndex][frameIndex] = new Bitmap(framePath);
+                    playerSpriteLeft[animIndex][frameIndex] = (Bitmap)playerSpriteRight[animIndex][frameIndex].Clone();
+                    playerSpriteLeft[animIndex][frameIndex].RotateFlip(RotateFlipType.RotateNoneFlipX);
+                }
             }
 
-
-            player.Image = player_Frames[0][0];
+            // Set the initial player image to the first frame of the idle animation
+            // This ensures that when the game starts, the player appears in a neutral state
+            player.Image = playerSpriteRight[0][0];
             player.SizeMode = PictureBoxSizeMode.StretchImage;
-            //player.BackgroundImageLayout = ImageLayout.Stretch;
+        }
+
+        private void EnemySpriteLoader()
+        {
+            string[] animationType = { "RunningSoldier", "ShootingSoldier" };
+
         }
 
         private void playerSpriteLoaderCache (){}
@@ -267,7 +274,7 @@ namespace ContraAtHome
                 }
 
                 // Create a new copy of the original image
-                Bitmap originalImage = player_Frames[state][player.GetCurrentFrame()];
+                Bitmap originalImage = playerSpriteRight[state][player.GetCurrentFrame()];
                 Bitmap flippedImage = new Bitmap(originalImage);
 
                 // Only flip if facing left
@@ -286,11 +293,11 @@ namespace ContraAtHome
             // Player animation
             if (player.GetState() == PlayerState.Idle)
             {
-                player.Image = player_Frames[0][0];
+                player.Image = playerSpriteRight[0][0];
             }
             else if (player.GetState() == PlayerState.Running)
             {
-                player.Image = player_Frames[1][player.GetCurrentFrame()];
+                player.Image = playerSpriteRight[1][player.GetCurrentFrame()];
                 player.Image.RotateFlip(player.GetFacing() == Direction.Left ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
                 player.SetCurrentFrame(player.GetCurrentFrame() + 1);
                 if (player.GetCurrentFrame() > 3)
@@ -300,11 +307,11 @@ namespace ContraAtHome
             }
             else if (player.GetState() == PlayerState.Jumping)
             {
-                player.Image = player_Frames[2][0];
+                player.Image = playerSpriteRight[2][0];
             }
             else if (player.GetState() == PlayerState.Falling)
             {
-                player.Image = player_Frames[3][0];
+                player.Image = playerSpriteRight[3][0];
             }
         }
 
