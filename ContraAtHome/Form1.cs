@@ -231,7 +231,11 @@ namespace ContraAtHome
                 //loop for load image in bin/Debug/
                 player_Frames[0][i] = new Bitmap("./Sprites/Player/Idle/Idle_00" + i + ".png");
             }
-            //for (int 1 = 0; int < )
+            for (int i = 0; i < player_Frames[0].Length; i++)
+            {
+                player_Frames[1][i] = player_Frames[0][i];
+                player_Frames[1][i].RotateFlip(RotateFlipType.RotateNoneFlipX);
+            }
 
 
             player.Image = player_Frames[0][0];
