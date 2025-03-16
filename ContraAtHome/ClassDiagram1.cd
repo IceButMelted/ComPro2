@@ -3,53 +3,38 @@
   <Class Name="ContraAtHome.Player">
     <Position X="2.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAAAAggIDEAAAAAAAAAABAAAAAAAIQAAgAAAAQAA=</HashCode>
+      <HashCode>CAAABEAAgAIDEAAACAAAAAABBAGQAAgEAAAoQAAAQAA=</HashCode>
       <FileName>Player.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ContraAtHome.Form1" Collapsed="true">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QIgoABACQCQAAUgAQISAAAACAAIAAQABABQRQJgAEIA=</HashCode>
+      <HashCode>YaooIiKCACFIIUyAwLDARAECCCICCgwBApAlQJBAAJI=</HashCode>
       <FileName>Form1.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ContraAtHome.Enemy">
     <Position X="8" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAgAAAEAAAAAAAAAABAIAAAEAAAABAgAAAQAA=</HashCode>
+      <HashCode>AQAABFAAgAAAEgAAAAAAAAABBIGQAAgEAAAAgAAAQAA=</HashCode>
       <FileName>Enemy\Enemy.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="ContraAtHome.Soldier">
-    <Position X="5.25" Y="0.5" Width="1.5" />
-    <InheritanceLine Type="ContraAtHome.Enemy" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="8" Y="2" />
-        <Point X="7.625" Y="2" />
-        <Point X="7.625" Y="1.188" />
-        <Point X="6.75" Y="1.188" />
-      </Path>
-    </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Enemy\Soldier.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ContraAtHome.Tags" Collapsed="true">
     <Position X="10" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAgAAA=</HashCode>
+      <HashCode>AAAAAARAQAAAAAAAAAAAAAAAAAAAAAAAAABAAAAgAAA=</HashCode>
       <FileName>Tags.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ContraAtHome.Platform" Collapsed="true">
-    <Position X="8" Y="4" Width="1.5" />
+    <Position X="8.75" Y="4.75" Width="1.5" />
     <InheritanceLine Type="ContraAtHome.Tags" FixedToPoint="true">
       <Path>
         <Point X="10.75" Y="2.441" />
-        <Point X="10.75" Y="4.375" />
-        <Point X="9.5" Y="4.375" />
+        <Point X="10.75" Y="5.125" />
+        <Point X="10.25" Y="5.125" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>

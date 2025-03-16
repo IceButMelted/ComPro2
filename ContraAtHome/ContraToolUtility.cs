@@ -41,6 +41,21 @@ namespace ContraAtHome
         }
 
         #region Debugging Methods
+
+        //
+        public static void DebugLocationPlatform(List<Platform> plf)
+        {
+            foreach (Platform p in plf) {
+                Debug.WriteLine($"Name {p.Name} | X : {p.Location.X} Y { p.Location.Y}" );
+            } 
+        }
+
+        public static void DebugLocationEnemy(List<Enemy> enmey) { 
+            foreach (Enemy e in enmey)
+                Debug.WriteLine($"Name {e.Name} | X : {e.Location.X} Y {e.Location.Y}");
+        }
+
+
         // Debug dictionary entries
         public static void DebugDict(Dictionary<Enemy,Platform> dictEnemyPlatform)
         {

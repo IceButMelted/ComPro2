@@ -71,6 +71,7 @@ namespace ContraAtHome
 
             // Initialize game
             SetUpGameObjects();
+            ContraToolUtility.DebugLocationPlatform(playerPlatforms);
             SetUpPlayer();
             SetupBackground();
 
@@ -81,6 +82,11 @@ namespace ContraAtHome
             ContraToolUtility.DebugCheckTagsAllObject(this);
             ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
             ContraToolUtility.DebugDict(enemyPlatformPairs);
+            Debug.WriteLine($" width :{screenWidth}");
+            Debug.WriteLine($" height : {screenHeight}");
+
+
+
         }
 
         // Main game loop
@@ -400,7 +406,7 @@ namespace ContraAtHome
         {
             if (keysPressed.Contains(Keys.K) && !player.jumping && !_isFalling && _isOnGround)
             {
-                Debug.WriteLine("Jumping");
+                //Debug.WriteLine("Jumping");
                 player.jumping = true;
             }
 
@@ -413,7 +419,7 @@ namespace ContraAtHome
             if (keysPressed.Contains(Keys.W))
             {
                 player.SetFacing(Direction.Up);
-                Debug.WriteLine("Facing up");
+                //Debug.WriteLine("Facing up");
             }
 
             player.goLeft = keysPressed.Contains(Keys.A);
@@ -423,13 +429,13 @@ namespace ContraAtHome
             if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.A))
             {
                 player.SetFacing(Direction.Up);
-                Debug.WriteLine("Facing UP");
+                //Debug.WriteLine("Facing UP");
                 return;
             }
             else if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.D))
             {
                 player.SetFacing(Direction.Up);
-                Debug.WriteLine("Facing UP");
+                //Debug.WriteLine("Facing UP");
                 return;
             }
 
@@ -442,13 +448,13 @@ namespace ContraAtHome
             if (player.goLeft)
             {
                 player.SetFacing(Direction.Left);
-                Debug.WriteLine("Facing left");
+                //Debug.WriteLine("Facing left");
                 return;
             }
             else if (player.goRight)
             {
                 player.SetFacing(Direction.Right);
-                Debug.WriteLine("Facing right");
+                //Debug.WriteLine("Facing right");
                 return;
             }
 
@@ -563,7 +569,7 @@ namespace ContraAtHome
             Color bulletColor = bulletType == "explosive" ? Color.Red : Color.Yellow;
 
             Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
-                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), bulletColor)
+                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), bulletColor, screenWidth, screenHeight)
             {
                 Direction = shooter.GetFacing()
             };
@@ -579,7 +585,7 @@ namespace ContraAtHome
             if (shooter == null) return;
 
             Bullet bullet = new Bullet("PlayerBullet", 10,
-                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), Color.Yellow)
+                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), Color.Yellow, screenWidth, screenHeight)
             {
                 Direction = shooter.GetFacing()
             };
@@ -663,6 +669,8 @@ namespace ContraAtHome
                     playerPlatforms.Add(platform);
                 }
             }
+
+            ContraToolUtility.DebugLocationEnemy(enemies);
 
             // Pair enemies with platforms
             PairEnemiesWithPlatforms(enemies, platforms, pairNumber);

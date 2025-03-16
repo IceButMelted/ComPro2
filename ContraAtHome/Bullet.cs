@@ -14,9 +14,11 @@ namespace ContraAtHome
     {
         public int BulletSpeed { get; set; }
         public string Direction { get; set; }
+        int screenWidth;
+        int screenHeight;
         private Timer bulletTimer;
 
-        public Bullet(string tag, int speed, Point location, Color color)
+        public Bullet(string tag, int speed, Point location, Color color, int ScreenWith, int ScreenHeight)
         {
             Tag = tag;
             BulletSpeed = speed;
@@ -33,7 +35,7 @@ namespace ContraAtHome
         {
             MoveBullet();
 
-            if (Left < 0 || Right > 800 || Top < 0 || Bottom > 600)
+            if (Left < 0 || Right > screenWidth || Top < 0 || Bottom > screenHeight)
             {
                 DisposeBullet();
             }
