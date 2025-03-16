@@ -28,8 +28,11 @@ namespace ContraAtHome
 
         //Sprites List Load
         private string lastFacingDirection = Direction.Right;
-        // 1 : idle, 2 : running, 3 : jumping, 4 : falling
-        private Bitmap[][] player_Frames = new Bitmap[4][];
+        // 1:Idle-left 2:Idle-right 3:Running-left 4:Runnning-Right
+        // 5:Runnning-left-up 6:Running-right-up 7:Facing-Up
+        // 8:Jumping-left 9:Jumping-right
+        // 10:Falling-left 11:Falling-right
+        private Bitmap[][] player_Frames = new Bitmap[11][];
 
 
         // Background parallax
@@ -218,13 +221,17 @@ namespace ContraAtHome
             player_Frames[1] = new Bitmap[6];
             player_Frames[2] = new Bitmap[6];
             player_Frames[3] = new Bitmap[6];
+            player_Frames[4] = new Bitmap[6];
+            player_Frames[6] = new Bitmap[6];
+            player_Frames[7] = new Bitmap[6];
+
 
             for (int i = 0; i < player_Frames[0].Length; i++)
             {
                 //loop for load image in bin/Debug/
                 player_Frames[0][i] = new Bitmap("./Sprites/Player/Idle/Idle_00" + i + ".png");
-
             }
+            //for (int 1 = 0; int < )
 
 
             player.Image = player_Frames[0][0];
