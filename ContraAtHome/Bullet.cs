@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;   
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
+using System.Diagnostics;
 
 namespace ContraAtHome
 {
@@ -25,6 +26,8 @@ namespace ContraAtHome
             Size = new Size(10, 10);
             Location = location;
             BackColor = color;
+            this.screenHeight = ScreenHeight;
+            this.screenWidth = ScreenHeight;
 
             bulletTimer = new Timer { Interval = 16 }; // ~60 FPS
             bulletTimer.Tick += BulletTimer_Tick;
@@ -35,9 +38,10 @@ namespace ContraAtHome
         {
             MoveBullet();
 
-            if (Left < 0 || Right > screenWidth || Top < 0 || Bottom > screenHeight)
+            if (Left < 0 || Right > 800 || Top < 0 || Bottom > 600)
             {
                 DisposeBullet();
+                Debug.WriteLine("Bullet dispose");
             }
         }
 

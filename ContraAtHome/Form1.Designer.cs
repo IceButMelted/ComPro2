@@ -256,10 +256,9 @@
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.LightBlue;
-            ClientSize = new Size(784, 561);
+            ClientSize = new Size(800, 600);
             Controls.Add(pictureBox5);
             Controls.Add(pictureBox8);
             Controls.Add(pictureBox7);
@@ -277,7 +276,11 @@
             Controls.Add(enemy1);
             Controls.Add(plf1);
             Controls.Add(plf);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             KeyDown += KeyIsDown;
             KeyUp += KeyIsUp;
