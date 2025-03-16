@@ -679,22 +679,90 @@ namespace ContraAtHome
                 int enemyCenterX = enemy.Left + (enemy.Width / 2);
                 int enemyBottom = enemy.Bottom;
 
-                // Find platforms that are below the enemy
-                var platformsBelow = platforms
-                    .Where(p => p.Top >= enemyBottom) // Ensure platform is below enemy
-                    .OrderBy(p => p.Top) // Prioritize closest platform in Y direction
-                    .ThenBy(p => Math.Abs((p.Left + (p.Width / 2)) - enemyCenterX)) // Then sort by closest X
-                    .ToList();
+                // Find platforms that are below the enemy (without LINQ)
+                Platform selectedPlatform = null;
+                int closestVerticalDistance = int.MaxValue;
+                int closestHorizontalDistance = int.MaxValue;
+                bool foundPlatformBelow = false;
 
-                Platform selectedPlatform = platformsBelow.FirstOrDefault();
-
-                if (selectedPlatform == null)
+                // First pass: find platforms below the enemy
+                foreach (Platform platform in platforms)
                 {
-                    // If no platform is below, select the nearest platform overall (fallback)
-                    selectedPlatform = platforms
-                        .OrderBy(p => Math.Abs(p.Top - enemyBottom)) // Sort by Y distance first
-                        .ThenBy(p => Math.Abs((p.Left + (p.Width / 2)) - enemyCenterX)) // Then by X distance
-                        .FirstOrDefault();
+                    if (platform.Top >= enemyBottom)
+                    {
+                        int platformCenterX = platform.Left + (platform.Width / 2);
+                        int verticalDistance = platform.Top - enemyBottom;
+                        int horizontalDistance = Math.Abs(platformCenterX - enemyCenterX);
+
+                        // Check if this platform is better than the current best
+                        bool isBetterPlatform = false;
+
+                        // If we found no platform yet, this one is better
+                        if (selectedPlatform == null)
+                        {
+                            isBetterPlatform = true;
+                        }
+                        // If this platform is closer vertically, it's better
+                        else if (verticalDistance < closestVerticalDistance)
+                        {
+                            isBetterPlatform = true;
+                        }
+                        // If vertical distance is the same, compare horizontal distance
+                        else if (verticalDistance == closestVerticalDistance &&
+                                 horizontalDistance < closestHorizontalDistance)
+                        {
+                            isBetterPlatform = true;
+                        }
+
+                        if (isBetterPlatform)
+                        {
+                            selectedPlatform = platform;
+                            closestVerticalDistance = verticalDistance;
+                            closestHorizontalDistance = horizontalDistance;
+                            foundPlatformBelow = true;
+                        }
+                    }
+                }
+
+                // If no platform is below, find the nearest platform overall (fallback)
+                if (!foundPlatformBelow)
+                {
+                    closestVerticalDistance = int.MaxValue;
+                    closestHorizontalDistance = int.MaxValue;
+
+                    foreach (Platform platform in platforms)
+                    {
+                        int platformCenterX = platform.Left + (platform.Width / 2);
+                        int verticalDistance = Math.Abs(platform.Top - enemyBottom);
+                        int horizontalDistance = Math.Abs(platformCenterX - enemyCenterX);
+
+                        // Check if this platform is better than the current best
+                        bool isBetterPlatform = false;
+
+                        // If we found no platform yet, this one is better
+                        if (selectedPlatform == null)
+                        {
+                            isBetterPlatform = true;
+                        }
+                        // If this platform is closer vertically, it's better
+                        else if (verticalDistance < closestVerticalDistance)
+                        {
+                            isBetterPlatform = true;
+                        }
+                        // If vertical distance is the same, compare horizontal distance
+                        else if (verticalDistance == closestVerticalDistance &&
+                                 horizontalDistance < closestHorizontalDistance)
+                        {
+                            isBetterPlatform = true;
+                        }
+
+                        if (isBetterPlatform)
+                        {
+                            selectedPlatform = platform;
+                            closestVerticalDistance = verticalDistance;
+                            closestHorizontalDistance = horizontalDistance;
+                        }
+                    }
 
                     Debug.WriteLine($"No platform directly below enemy {enemy.Name}, using nearest available platform: {selectedPlatform?.Name}");
                 }
@@ -707,8 +775,9 @@ namespace ContraAtHome
                     selectedPlatform.ReplaceTag(0, "PlatformEnemy");
                     enemyPlatformPairs[enemy] = selectedPlatform;
 
+                    int platformCenterX = selectedPlatform.Left + (selectedPlatform.Width / 2);
                     Debug.WriteLine($"Paired {enemy.Name} with {selectedPlatform.Name} - " +
-                        $"X distance: {Math.Abs((selectedPlatform.Left + (selectedPlatform.Width / 2)) - enemyCenterX)}, " +
+                        $"X distance: {Math.Abs(platformCenterX - enemyCenterX)}, " +
                         $"Y distance: {Math.Abs(selectedPlatform.Top - enemyBottom)}, " +
                         $"Y relation: {(selectedPlatform.Top >= enemyBottom ? "below" : "above")} enemy");
                 }
