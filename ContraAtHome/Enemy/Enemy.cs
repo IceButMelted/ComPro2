@@ -13,7 +13,9 @@ namespace ContraAtHome
         public bool IsAlive = true;
         protected string facing = "left";
 
-        enum enemyType { EnemyMoving, EnemyShooting }
+        //State And Animation
+        protected string state = "idle";
+        protected int currentFrame = 0;
 
         // Constructor
         public Enemy(int hp, int speed, params string[] initialTags)
@@ -59,6 +61,7 @@ namespace ContraAtHome
             }
         }
 
+        //Method Face Direction
         public void SetFacing(string direction)
         {
             facing = direction;
@@ -66,6 +69,28 @@ namespace ContraAtHome
         public string GetFacing()
         {
             return facing;
+        }
+
+        //state And Animation Methods
+        public void SetState(string newState)
+        {
+            state = newState;
+        }
+        public string GetState()
+        {
+            return state;
+        }
+        public int GetCurrentFrame()
+        {
+            return currentFrame;
+        }
+        public void SetCurrentFrame(int frame)
+        {
+            currentFrame = frame;
+        }
+        public void ResetFrame()
+        {
+            currentFrame = 0;
         }
 
         public abstract void EnemyAction(Form f);

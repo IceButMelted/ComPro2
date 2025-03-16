@@ -18,6 +18,12 @@ namespace ContraAtHome
 
         private string facingDirecttion = "right";
 
+        //state And Animation
+        private string state = "idle";
+        private int tickChange = 5;
+        private int currentFrame = 0;
+
+
 
         // Constructor
         public Player(int hp, int jumpPower, int speed, int dmg, bool isInvincible)
@@ -43,5 +49,31 @@ namespace ContraAtHome
         {
             facingDirecttion = direction;
         }   
+
+        public string GetState()
+        {
+            return state;
+        }
+        public void SetState(string newState)
+        {
+            state = newState;
+        }
+        public void ResetFrame()
+        {
+            currentFrame = 0;
+        }
+        public int GetCurrentFrame()
+        {
+            return currentFrame;
+        }
+        public void SetCurrentFrame(int frame)
+        {
+            currentFrame = frame;
+        }
+
+        public int GetTickChange()
+        {
+            return tickChange;
+        }
     }
 }

@@ -20,6 +20,18 @@ namespace ContraAtHome
         private int force;
         private int currentShootCooldown = 0;
 
+        private int frameCounter = 0;
+
+        //Player State
+        private bool _isOnGround = false;
+        private bool _isFalling = false;
+
+        //Sprites List Load
+        private string lastFacingDirection = Direction.Right;
+        // 1 : idle, 2 : running, 3 : jumping, 4 : falling
+        private Bitmap[][] player_Frames = new Bitmap[4][];
+
+
         // Background parallax
         private int bgLayer1Offset;
         private int bgLayer2Offset;
@@ -29,10 +41,10 @@ namespace ContraAtHome
         private readonly int screenHeight;
 
         //flags to track when collections need updating
-        private bool needsPlayerBulletUpdate = true;
-        private bool needsEnemyUpdate = true;
-        private bool needsEnemyBulletUpdate = true;
-        private bool needsMovableElementUpdate = true;
+        private bool _needsPlayerBulletUpdate = true;
+        private bool _needsEnemyUpdate = true;
+        private bool _needsEnemyBulletUpdate = true;
+        private bool _needsMovableElementUpdate = true;
 
         // Game objects
         private readonly Dictionary<Enemy, Platform> enemyPlatformPairs = new Dictionary<Enemy, Platform>();
@@ -45,6 +57,7 @@ namespace ContraAtHome
         private List<PictureBox> enemyBullets = new List<PictureBox>();
         private List<Control> movableElements = new List<Control>();
 
+        // Key press tracking
         private HashSet<Keys> keysPressed = new HashSet<Keys>();
 
         public Form1()
@@ -57,6 +70,9 @@ namespace ContraAtHome
             SetUpGameObjects();
             SetUpPlayer();
             SetupBackground();
+
+            //Sprite Loader
+            PlayerSpriteLoader();
 
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
@@ -77,12 +93,14 @@ namespace ContraAtHome
             // Update shoot cooldown
             if (currentShootCooldown <= SHOOT_COOLDOWN)
                 currentShootCooldown++;
+
+            TestAnimationPlayer(0);
         }
 
         #region Cache Methods
         private void UpdateCachedCollectionsIfNeeded()
         {
-            if (needsPlayerBulletUpdate)
+            if (_needsPlayerBulletUpdate)
             {
                 playerBullets.Clear();
                 foreach (Control control in Controls)
@@ -92,10 +110,10 @@ namespace ContraAtHome
                         playerBullets.Add(pictureBox);
                     }
                 }
-                needsPlayerBulletUpdate = false;
+                _needsPlayerBulletUpdate = false;
             }
 
-            if (needsEnemyUpdate)
+            if (_needsEnemyUpdate)
             {
                 activeEnemies.Clear();
                 foreach (Control control in Controls)
@@ -105,10 +123,10 @@ namespace ContraAtHome
                         activeEnemies.Add(enemy);
                     }
                 }
-                needsEnemyUpdate = false;
+                _needsEnemyUpdate = false;
             }
 
-            if (needsEnemyBulletUpdate)
+            if (_needsEnemyBulletUpdate)
             {
                 enemyBullets.Clear();
                 foreach (Control control in Controls)
@@ -118,10 +136,10 @@ namespace ContraAtHome
                         enemyBullets.Add(pictureBox);
                     }
                 }
-                needsEnemyBulletUpdate = false;
+                _needsEnemyBulletUpdate = false;
             }
 
-            if (needsMovableElementUpdate)
+            if (_needsMovableElementUpdate)
             {
                 movableElements.Clear();
                 foreach (Control control in Controls)
@@ -136,7 +154,7 @@ namespace ContraAtHome
                         movableElements.Add(control);
                     }
                 }
-                needsMovableElementUpdate = false;
+                _needsMovableElementUpdate = false;
             }
         }
 
@@ -147,11 +165,11 @@ namespace ContraAtHome
             // Invalidate relevant cache based on control type
             string tag = control.Tag?.ToString();
             if (control is PictureBox && tag == "PlayerBullet")
-                needsPlayerBulletUpdate = true;
+                _needsPlayerBulletUpdate = true;
             else if (control is Enemy && tag == "enemy")
-                needsEnemyUpdate = true;
+                _needsEnemyUpdate = true;
             else if (control is PictureBox && tag == "EnemyBullet")
-                needsEnemyBulletUpdate = true;
+                _needsEnemyBulletUpdate = true;
 
             if (control is PictureBox && (
                 tag == "platform" ||
@@ -159,7 +177,7 @@ namespace ContraAtHome
                 tag == "Tag_Border" ||
                 tag == "EnemyBullet"))
             {
-                needsMovableElementUpdate = true;
+                _needsMovableElementUpdate = true;
             }
         }
 
@@ -170,14 +188,14 @@ namespace ContraAtHome
             // Invalidate relevant cache based on control type
             string tag = control.Tag?.ToString();
             if (control is PictureBox && tag == "PlayerBullet")
-                needsPlayerBulletUpdate = true;
+                _needsPlayerBulletUpdate = true;
             else if (control is Enemy && tag == "enemy")
             {
-                needsEnemyUpdate = true;
+                _needsEnemyUpdate = true;
                 enemyPlatformPairs.Remove(control as Enemy);
             }
             else if (control is PictureBox && tag == "EnemyBullet")
-                needsEnemyBulletUpdate = true;
+                _needsEnemyBulletUpdate = true;
 
             if (control is PictureBox && (
                 tag == "platform" ||
@@ -185,39 +203,149 @@ namespace ContraAtHome
                 tag == "Tag_Border" ||
                 tag == "EnemyBullet"))
             {
-                needsMovableElementUpdate = true;
+                _needsMovableElementUpdate = true;
             }
 
             control.Dispose();
         }
         #endregion
 
+        #region Animation
+
+        private void PlayerSpriteLoader()
+        {
+            player_Frames[0] = new Bitmap[6];
+            player_Frames[1] = new Bitmap[6];
+            player_Frames[2] = new Bitmap[6];
+            player_Frames[3] = new Bitmap[6];
+
+            for (int i = 0; i < player_Frames[0].Length; i++)
+            {
+                //loop for load image in bin/Debug/
+                player_Frames[0][i] = new Bitmap("./Sprites/Player/Idle/Idle_00" + i + ".png");
+
+            }
+
+
+            player.Image = player_Frames[0][0];
+            player.SizeMode = PictureBoxSizeMode.StretchImage;
+            //player.BackgroundImageLayout = ImageLayout.Stretch;
+        }
+
+        private void playerSpriteLoaderCache (){}
+
+        private void TestAnimationPlayer(int state)
+        {
+            frameCounter += 1;
+            if (frameCounter > 59)
+            {
+                frameCounter = 0;
+            }
+            if ((frameCounter % player.GetTickChange() == 0) || lastFacingDirection != player.GetFacing())
+            {
+                lastFacingDirection = player.GetFacing();
+                if (player.GetCurrentFrame() > 5)
+                {
+                    player.ResetFrame();
+                }
+
+                // Create a new copy of the original image
+                Bitmap originalImage = player_Frames[state][player.GetCurrentFrame()];
+                Bitmap flippedImage = new Bitmap(originalImage);
+
+                // Only flip if facing left
+                if (player.GetFacing() == Direction.Left)
+                {
+                    flippedImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                }
+
+                // Set the potentially flipped copy
+                player.Image = flippedImage;
+                player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+            }
+        }
+        private void AnimationTimerEvent()
+        {
+            // Player animation
+            if (player.GetState() == PlayerState.Idle)
+            {
+                player.Image = player_Frames[0][0];
+            }
+            else if (player.GetState() == PlayerState.Running)
+            {
+                player.Image = player_Frames[1][player.GetCurrentFrame()];
+                player.Image.RotateFlip(player.GetFacing() == Direction.Left ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
+                player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                if (player.GetCurrentFrame() > 3)
+                {
+                    player.ResetFrame();
+                }
+            }
+            else if (player.GetState() == PlayerState.Jumping)
+            {
+                player.Image = player_Frames[2][0];
+            }
+            else if (player.GetState() == PlayerState.Falling)
+            {
+                player.Image = player_Frames[3][0];
+            }
+        }
+
+        #endregion
+
         #region Player Movement & Controls
 
         private void HandlePlayerMovement()
         {
-            // Platform collision
+            //Previous ground state (for fall detection)
+            bool _wasOnGround = _isOnGround;
+
+            // Reset ground check for this frame
+            _isOnGround = false;
+
+            // Platform collision - check if player is on ground
             foreach (Platform platform in playerPlatforms)
             {
-                if (player.Bounds.IntersectsWith(platform.Bounds) && !player.jumping)
+                if (player.Bounds.IntersectsWith(platform.Bounds))
                 {
+                    _isOnGround = true;
                     force = PLAYER_JUMP_FORCE;
-                    player.Top = platform.Top - player.Height;
+                    player.Top = platform.Top - player.Height + 1;
+                    _isFalling = false;
+                }
+
+            }
+
+            // Fall detection
+            if (_wasOnGround && !_isOnGround && !player.jumping)
+            {
+                _isFalling = true;
+            }
+
+            // Handle jumping physics
+            if (player.jumping)
+            {
+                force -= 1;
+
+                // End jump if force is depleted
+                if (force < 0)
+                {
+                    player.jumping = false;
+                    _isFalling = true;
                 }
             }
 
-            // Handle jumping
-            if (player.jumping && force < 0)
+            // Apply vertical movement only when not on ground or jumping
+            if (!_isOnGround || player.jumping)
             {
-                player.jumping = false;
+                int jumpSpeed = player.jumping ? -PLAYER_JUMP_SPEED : PLAYER_JUMP_SPEED;
+                player.Top += jumpSpeed;
             }
 
-            // Vertical movement
-            if (player.jumping)
-                force -= 1;
-            int jumpSpeed = player.jumping ? -PLAYER_JUMP_SPEED : PLAYER_JUMP_SPEED;
-
-            player.Top += jumpSpeed;
+            if (_isFalling && _isOnGround)
+            {
+                _isFalling = false;
+            }
 
             // Horizontal movement
             if (player.goLeft)
@@ -229,6 +357,7 @@ namespace ContraAtHome
                     MoveGameElements(Direction.Left);
                     UpdateParallaxBackground(1, 3, 5);
                 }
+                return;
             }
 
             if (player.goRight)
@@ -240,6 +369,7 @@ namespace ContraAtHome
                     MoveGameElements(Direction.Right);
                     UpdateParallaxBackground(1, 3, 5);
                 }
+                return;
             }
         }
 
@@ -257,8 +387,9 @@ namespace ContraAtHome
 
         private void HandleKeyPresses()
         {
-            if (keysPressed.Contains(Keys.K) && !player.jumping && force > 0)
+            if (keysPressed.Contains(Keys.K) && !player.jumping && !_isFalling && _isOnGround)
             {
+                Debug.WriteLine("Jumping");
                 player.jumping = true;
             }
 
@@ -310,7 +441,7 @@ namespace ContraAtHome
                 return;
             }
 
-            
+
         }
 
         #endregion
@@ -457,7 +588,9 @@ namespace ContraAtHome
                 Size = new Size(60, 75),
                 BackColor = Color.FromArgb(255, 255, 121, 123),
                 Location = new Point(ClientSize.Width / 2, 430),
+                BackgroundImageLayout = ImageLayout.Stretch,
             };
+            
             Controls.Add(player);
         }
 
@@ -593,6 +726,7 @@ namespace ContraAtHome
             return enemy;
         }
 
+
         #endregion
     }
 
@@ -603,5 +737,13 @@ namespace ContraAtHome
         public const string Right = "right";
         public const string Up = "up";
         public const string Down = "down";
+    }
+
+    public static class PlayerState
+    {
+        public const string Idle = "idle";
+        public const string Running = "running";
+        public const string Jumping = "jumping";
+        public const string Falling = "falling";
     }
 }
