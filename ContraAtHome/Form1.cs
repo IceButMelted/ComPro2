@@ -761,13 +761,18 @@ namespace ContraAtHome
                 {
                     if (frameCounter % 5 == 0)
                     {
-                        enemy.Image = EnemySpriteDeath[enemy.GetCurrentFrameDeath()];
-                        enemy.CurrentDeathFrameIncreas();
-                        if (enemy.GetCurrentFrameDeath() > 6)
+
+                        if (enemy.GetCurrentFrameDeath() > 5)
                         {
                             enemy.SetFinishDeath();
                             //activeEnemies.Remove(enemy);
                         }
+                        else
+                        {
+                            enemy.Image = EnemySpriteDeath[enemy.GetCurrentFrameDeath()];
+                            enemy.CurrentDeathFrameIncreas();
+                        }
+
                     }
                 }
                 if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == true)

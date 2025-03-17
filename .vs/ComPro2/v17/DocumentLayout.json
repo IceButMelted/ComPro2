@@ -84,7 +84,7 @@
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeToolTip": "ContraAtHome\\Form1.cs",
-              "ViewState": "AgIAAOQCAAAAAAAAAAAtwP0CAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAAOsCAAAAAAAAAADgvwQDAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T19:32:37.667Z",
               "IsPinned": true,
@@ -101,8 +101,7 @@
               "ViewState": "AgIAABQAAAAAAAAAAAAuwBsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T06:27:44.402Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -115,8 +114,7 @@
               "ViewState": "AgIAACMAAAAAAAAAAAAwwDUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-27T18:41:26.423Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -206,8 +204,7 @@
               "RelativeToolTip": "ContraAtHome\\Enemy\\ShootingSoldier.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAswBoAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T04:16:57.068Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T04:16:57.068Z"
             },
             {
               "$type": "Document",

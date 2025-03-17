@@ -74,16 +74,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -92,7 +84,7 @@
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeToolTip": "ContraAtHome\\Form1.cs",
-              "ViewState": "AgIAAJQCAAAAAAAAAAAlwLICAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAOsCAAAAAAAAAADgvwQDAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T19:32:37.667Z",
               "IsPinned": true,
@@ -109,8 +101,7 @@
               "ViewState": "AgIAABQAAAAAAAAAAAAuwBsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T06:27:44.402Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -123,8 +114,15 @@
               "ViewState": "AgIAACMAAAAAAAAAAAAwwDUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-27T18:41:26.423Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
             },
             {
               "$type": "Document",
@@ -206,8 +204,7 @@
               "RelativeToolTip": "ContraAtHome\\Enemy\\ShootingSoldier.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAswBoAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T04:16:57.068Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T04:16:57.068Z"
             },
             {
               "$type": "Document",
