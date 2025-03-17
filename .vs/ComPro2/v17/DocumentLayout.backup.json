@@ -3,8 +3,21 @@
   "WorkspaceRootPath": "D:\\Git\\ComPro2\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\contraathome.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\contraathome.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,6 +40,7 @@
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\properties\\resources.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
     },
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|D:\\Git\\ComPro2\\contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
@@ -60,6 +74,9 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\tags.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+=======
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\tags.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\tags.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -84,7 +101,11 @@
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeToolTip": "ContraAtHome\\Form1.cs",
+<<<<<<< HEAD
               "ViewState": "AgIAAEoCAAAAAAAAAAAkwGMCAAARAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAOcAAAAAAAAAAAAnwPkAAAAUAAAAAAAAAA==",
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T19:32:37.667Z",
               "IsPinned": true,
@@ -92,7 +113,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 8,
+=======
+              "DocumentIndex": 3,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "Player.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Player.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Player.cs",
@@ -112,8 +137,17 @@
               "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
             },
             {
+<<<<<<< HEAD
               "$type": "Document",
               "DocumentIndex": 3,
+=======
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "RunningSoldier.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\RunningSoldier.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\RunningSoldier.cs",
@@ -125,7 +159,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 7,
+=======
+              "DocumentIndex": 1,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "ContraAtHome.csproj",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\ContraAtHome.csproj",
               "RelativeDocumentMoniker": "ContraAtHome\\ContraAtHome.csproj",
@@ -137,7 +175,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 2,
               "Title": "Resources.Designer.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Properties\\Resources.Designer.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Properties\\Resources.Designer.cs",
@@ -145,33 +183,48 @@
               "RelativeToolTip": "ContraAtHome\\Properties\\Resources.Designer.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-16T08:41:08.903Z"
+              "WhenOpened": "2025-03-16T08:41:08.903Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 5,
+=======
+              "DocumentIndex": 13,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "Resources.resx",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Properties\\Resources.resx",
               "RelativeDocumentMoniker": "ContraAtHome\\Properties\\Resources.resx",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Properties\\Resources.resx",
               "RelativeToolTip": "ContraAtHome\\Properties\\Resources.resx",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-03-16T08:40:56.922Z"
+              "WhenOpened": "2025-03-16T08:40:56.922Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 4,
+=======
+              "DocumentIndex": 12,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "Form1.resx",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.resx",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.resx",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.resx",
               "RelativeToolTip": "ContraAtHome\\Form1.resx",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-03-16T08:39:19.255Z"
+              "WhenOpened": "2025-03-16T08:39:19.255Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 9,
+=======
+              "DocumentIndex": 4,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "Bullet.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Bullet.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Bullet.cs",
@@ -183,7 +236,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 2,
+=======
+              "DocumentIndex": 9,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "ShootingSoldier.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\ShootingSoldier.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\ShootingSoldier.cs",
@@ -195,7 +252,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 10,
+=======
+              "DocumentIndex": 5,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "Form1.Designer.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.Designer.cs",
@@ -207,7 +268,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 12,
+=======
+              "DocumentIndex": 11,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "ContraToolUtility.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\ContraToolUtility.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\ContraToolUtility.cs",
@@ -219,7 +284,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 1,
+=======
+              "DocumentIndex": 10,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "Enemy.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\Enemy.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\Enemy.cs",
@@ -255,7 +324,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 11,
+=======
+              "DocumentIndex": 6,
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "Title": "ClassDiagram1.cd",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\ClassDiagram1.cd",
               "RelativeDocumentMoniker": "ContraAtHome\\ClassDiagram1.cd",
@@ -266,14 +339,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
+<<<<<<< HEAD
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs [Design]",
+=======
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Form1.cs [Design]",
+>>>>>>> github-desktop-KapitanzMD2/SpriteSheet
               "RelativeToolTip": "ContraAtHome\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-14T19:32:20.076Z"
+              "WhenOpened": "2025-03-14T19:32:20.076Z",
+              "EditorCaption": " [Design]"
             }
           ]
         }
