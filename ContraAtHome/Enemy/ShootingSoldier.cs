@@ -26,7 +26,7 @@ namespace ContraAtHome
         public override void EnemyAction(Form f)
         {
             //Debug.WriteLine($"Shooting Soldier Action {this.IsAlive}");
-            if (IsAlive == true)
+            if (_IsAlive == true)
             {
                 if (currentCoolDown > coolDown)
                 {

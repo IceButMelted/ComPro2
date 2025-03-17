@@ -10,19 +10,22 @@ namespace ContraAtHome
         // Properties
         public int Hp { get; set; }
         public int Speed { get; set; }
-        public bool IsAlive = true;
         protected string facing = "left";
 
+        public bool _IsAlive;
         //State And Animation
         protected string state = "idle";
         protected int currentFrame = 0;
+        protected int currentDeathFrame = 0;
+        protected bool _IsFinishDeath = false;
+
 
         // Constructor
         public Enemy(int hp, int speed, params string[] initialTags)
         {
             Hp = hp;
             Speed = speed;
-            IsAlive = true;
+            _IsAlive = true;
             Size = new Size(40, 50); // Default size, can be overridden
             BackColor = Color.Red; // Default color, can be overridden
 
@@ -37,8 +40,25 @@ namespace ContraAtHome
         // Method to display enemy details
         public void DisplayInfo()
         {
-            Debug.WriteLine($"Name : {Name}, HP: {Hp}, Speed: {Speed}, Is Alive: {IsAlive}");
+            Debug.WriteLine($"Name : {Name}, HP: {Hp}, Speed: {Speed}");
             DisplayTags();
+        }
+        //Death Control
+        public bool GetIsFinishDeath() {
+            return _IsFinishDeath;
+        }
+
+        public void SetFinishDeath() { 
+            _IsFinishDeath=true;
+        }
+
+        public int GetCurrentFrameDeath()
+        {
+            return currentDeathFrame;
+        }
+        public void CurrentDeathFrameIncreas()
+        {
+            currentDeathFrame++;
         }
 
         // Method to attack
@@ -54,10 +74,9 @@ namespace ContraAtHome
         public void TakeDamage()
         {
             Hp -= 1;
-            if (Hp <= 0)
-            {
-                IsAlive = false;
-                Debug.WriteLine("Enemy defeated!");
+            if (Hp <= 0) 
+            { 
+                _IsAlive=false;
             }
         }
 
@@ -92,7 +111,6 @@ namespace ContraAtHome
         {
             currentFrame = 0;
         }
-
         public abstract void EnemyAction(Form f);
 
 
