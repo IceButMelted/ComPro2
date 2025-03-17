@@ -56,6 +56,8 @@ namespace ContraAtHome
                     Left += BulletSpeed;
                     break;
                 case "up":
+                case "up-right":
+                case "up-left":
                     Top -= BulletSpeed;
                     break;
                 case "down":

@@ -9,6 +9,7 @@ namespace ContraAtHome
 {
     public partial class Form1 : Form
     {
+        #region Variable
         // Constants
         private const int PLAYER_JUMP_FORCE = 10;
         private const int PLAYER_JUMP_SPEED = 10;
@@ -16,11 +17,14 @@ namespace ContraAtHome
         private const int PLATFORM_SPEED = 7;
         private const int SHOOT_COOLDOWN = 10;
 
+        //Player 
+
         // Game state
         private int force;
         private int currentShootCooldown = 0;
 
         private int frameCounter = 0;
+        private int enemyAnimationCounter = 0;
 
         //Player State
         private bool _isOnGround = false;
@@ -28,7 +32,7 @@ namespace ContraAtHome
 
         //Sprites List Load
         private string lastFacingDirection = Direction.Right;
-        // 1:Idle // 2:Running // 3:Runnning // 4:Facing // 5:Jumping // 6:Falling
+        // 1:Idle // 2:Running // 3:Runnning // 4:Facingup // 5:Jumping // 6:Falling
         private Bitmap[][] playerSpriteRight = new Bitmap[6][];
         private Bitmap[][] playerSpriteLeft = new Bitmap[6][];
         // 1: Running-Rigt 2: Running-Left 3:Shooting-Right 4: Shoothn-Left
@@ -63,6 +67,7 @@ namespace ContraAtHome
         // Key press tracking
         private HashSet<Keys> keysPressed = new HashSet<Keys>();
 
+        #endregion
         public Form1()
         {
             InitializeComponent();
@@ -75,8 +80,12 @@ namespace ContraAtHome
             SetUpPlayer();
             SetupBackground();
 
+            //update cache
+            UpdateCachedCollectionsIfNeeded();
+
             //Sprite Loader
             PlayerSpriteLoader();
+            EnemySpriteLoader();
 
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
@@ -95,7 +104,7 @@ namespace ContraAtHome
             // Only update collections when needed
             UpdateCachedCollectionsIfNeeded();
 
-            HandlePlayerMovement();
+            HandlePlayerLogic();
             HandleCollisions();
             ProcessEnemyActions();
 
@@ -252,11 +261,40 @@ namespace ContraAtHome
 
         private void EnemySpriteLoader()
         {
-            string[] animationType = { "RunningSoldier", "ShootingSoldier" };
+            string[] animationTypes = { "RunningSoldier", "ShootingSoldier" };
 
+            for (int animIndex = 0; animIndex < 2; animIndex++)
+            {
+                EnemySprite[animIndex * 2] = new Bitmap[6];
+                EnemySprite[animIndex * 2 + 1] = new Bitmap[6];
+
+                for (int frameIndex = 0; frameIndex < 6; frameIndex++)
+                {
+                    string framePath = $"./Sprites/Enemy/{animationTypes[animIndex]}/{animationTypes[animIndex]}_00{frameIndex}.png";
+                    EnemySprite[animIndex * 2][frameIndex] = new Bitmap(framePath);
+
+                    EnemySprite[animIndex * 2 + 1][frameIndex] = (Bitmap)EnemySprite[animIndex * 2][frameIndex].Clone();
+                    EnemySprite[animIndex * 2 + 1][frameIndex].RotateFlip(RotateFlipType.RotateNoneFlipX);
+                }
+            }
+
+            //initail Sprite For Enemy
+            foreach (var enemy in activeEnemies) {
+                    if (enemy is ShootingSoldier)
+                    {
+                        enemy.Image = EnemySprite[2][0];
+                        enemy.SizeMode = PictureBoxSizeMode.StretchImage;
+                        Debug.WriteLine("enemy set shooting image");
+                    }
+                    else
+                    {
+                        enemy.Image = EnemySprite[0][0];
+                        enemy.SizeMode = PictureBoxSizeMode.StretchImage;
+                        Debug.WriteLine("enemy set running");
+                    }
+                
+            }
         }
-
-        private void playerSpriteLoaderCache (){}
 
         private void TestAnimationPlayer(int state)
         {
@@ -267,25 +305,78 @@ namespace ContraAtHome
             }
             if ((frameCounter % player.GetTickChange() == 0) || lastFacingDirection != player.GetFacing())
             {
+                //falling part with left right
+                if (_isFalling && player.GetFacing() == "right")
+                {
+                    player.Image = playerSpriteRight[5][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                else if (_isFalling && player.GetFacing() == "left")
+                {
+                    player.Image = playerSpriteLeft[5][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                //jump part with
+                else if (player.jumping && player.GetFacing() == "right")
+                {
+                    player.Image = playerSpriteRight[4][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                    
+                }
+                else if (player.jumping && player.GetFacing() == "left") 
+                {
+                    player.Image = playerSpriteLeft[4][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                //Facing up part with left or right
+                else if (player.up && player.goLeft)
+                {
+                    player.Image = playerSpriteLeft[2][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                else if (player.up && player.goRight)
+                {
+                    player.Image = playerSpriteRight[2][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                else if (player.up && player.GetFacing() == "left")
+                {
+                    player.Image = playerSpriteLeft[3][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                else if (player.up && player.GetFacing() == "right")
+                {
+                    player.Image = playerSpriteRight[3][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                //on running part without facing up
+                else if (player.goLeft)
+                {
+                    player.Image = playerSpriteLeft[1][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                else if (player.goRight)
+                {
+                    player.Image = playerSpriteRight[1][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                //On idle part 
+                else if (player.GetFacing() == "left") {
+                    player.Image = playerSpriteLeft[0][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+                else if (player.GetFacing() == "right")
+                {
+                    player.Image = playerSpriteRight[0][player.GetCurrentFrame()];
+                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
+                }
+
                 lastFacingDirection = player.GetFacing();
-                if (player.GetCurrentFrame() > 5)
+
+                if (player.GetCurrentFrame() > player.GetTickChange())
                 {
-                    player.ResetFrame();
+                    player.SetCurrentFrame(0);
                 }
-
-                // Create a new copy of the original image
-                Bitmap originalImage = playerSpriteRight[state][player.GetCurrentFrame()];
-                Bitmap flippedImage = new Bitmap(originalImage);
-
-                // Only flip if facing left
-                if (player.GetFacing() == Direction.Left)
-                {
-                    flippedImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                }
-
-                // Set the potentially flipped copy
-                player.Image = flippedImage;
-                player.SetCurrentFrame(player.GetCurrentFrame() + 1);
             }
         }
         private void AnimationTimerEvent()
@@ -318,9 +409,26 @@ namespace ContraAtHome
         #endregion
 
         #region Player Movement & Controls
+        
 
-        private void HandlePlayerMovement()
+        private void HandlePlayerLogic()
         {
+            //handle player Invincible
+            if (player.IsInvincible)
+            {
+                if (player.GetInvicibleCounter() < player.GetInvicibleDuration())
+                {
+                    player.BackColor = Color.White;
+                    player.SetInvicibleCounter(player.GetInvicibleCounter() + 1);
+                }
+                else
+                {
+                    player.BackColor = Color.Transparent;
+                    player.IsInvincible = false;
+                    player.SetInvicibleCounter(0);
+                }
+            }
+
             //Previous ground state (for fall detection)
             bool _wasOnGround = _isOnGround;
 
@@ -411,61 +519,71 @@ namespace ContraAtHome
 
         private void HandleKeyPresses()
         {
+            // Reset movement flags to avoid carryover
+            player.goLeft = false;
+            player.goRight = false;
+            player.up = false;
+
+
+            // Calculate active movement directions
+            bool pressUp = keysPressed.Contains(Keys.W);
+            bool pressLeft = keysPressed.Contains(Keys.A);
+            bool pressRight = keysPressed.Contains(Keys.D);
+
+            // Jump handling
             if (keysPressed.Contains(Keys.K) && !player.jumping && !_isFalling && _isOnGround)
             {
-                //Debug.WriteLine("Jumping");
                 player.jumping = true;
             }
 
+            // Shoot handling
             if (keysPressed.Contains(Keys.J) && currentShootCooldown > SHOOT_COOLDOWN)
             {
                 ShootBullet(player);
                 currentShootCooldown = 0;
             }
 
-            if (keysPressed.Contains(Keys.W))
+            // Handle direction facing based on key combinations
+            if (pressUp)
             {
-                player.SetFacing(Direction.Up);
-                //Debug.WriteLine("Facing up");
+                if (pressLeft)
+                {
+                    player.SetFacing(Direction.UpLeft);
+                    Debug.WriteLine("Up And Left");
+                    player.goLeft = true;
+                    player.up = true;
+                }
+                else if (pressRight)
+                {
+                    player.SetFacing(Direction.UpRight);
+                    Debug.WriteLine("Up And Right");
+                    player.goRight = true;
+                    player.up = true;
+                }
+                else
+                {
+                    player.SetFacing(Direction.Up);
+                    Debug.WriteLine("Up only");
+                    player.up = true;
+                }
             }
-
-            player.goLeft = keysPressed.Contains(Keys.A);
-            player.goRight = keysPressed.Contains(Keys.D);
-
-            //go up and left or right But Facing up Multi key press
-            if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.A))
+            else if (pressLeft && pressRight)
             {
-                player.SetFacing(Direction.Up);
-                //Debug.WriteLine("Facing UP");
-                return;
+                // Neutralize opposing directions
+                // Direction remains unchanged
             }
-            else if (keysPressed.Contains(Keys.W) && keysPressed.Contains(Keys.D))
-            {
-                player.SetFacing(Direction.Up);
-                //Debug.WriteLine("Facing UP");
-                return;
-            }
-
-            //Go Left or Right single key press
-            if (player.goLeft && player.goRight)
-            {
-                player.goLeft = player.goRight = false;
-                return;
-            }
-            if (player.goLeft)
+            else if (pressLeft)
             {
                 player.SetFacing(Direction.Left);
-                //Debug.WriteLine("Facing left");
-                return;
+                Debug.WriteLine("Left Only");
+                player.goLeft = true;
             }
-            else if (player.goRight)
+            else if (pressRight)
             {
                 player.SetFacing(Direction.Right);
-                //Debug.WriteLine("Facing right");
-                return;
+                Debug.WriteLine("Rightr Only");
+                player.goRight = true;
             }
-
-
         }
 
         #endregion
@@ -493,14 +611,17 @@ namespace ContraAtHome
                     }
                 }
             }
-
-            // Check enemy bullet collisions with player
-            foreach (var bullet in enemyBullets)
-            {
-                if (bullet.Bounds.IntersectsWith(player.Bounds))
+            if (!player.IsInvincible) {  
+                // Check enemy bullet collisions with player
+                foreach (var bullet in enemyBullets)
                 {
-                    controlsToRemove.Add(bullet);
-                    // Player hit logic here
+                    if (bullet.Bounds.IntersectsWith(player.Bounds))
+                    {
+                        player.DecreasHP();
+                        player.IsInvincible = true;
+                        controlsToRemove.Add(bullet);
+                        // Player hit logic here
+                    }
                 }
             }
 
@@ -514,31 +635,58 @@ namespace ContraAtHome
         // Process enemy actions with optimized collections
         private void ProcessEnemyActions()
         {
+            // Increment and reset animation counter
+            if (++enemyAnimationCounter >= 10)
+                enemyAnimationCounter = 0;
+
+            bool updateAnimation = (enemyAnimationCounter == 0);
+
             foreach (var enemy in activeEnemies)
             {
-                if (enemyPlatformPairs.TryGetValue(enemy, out Platform platform))
-                {
-                    // Skip if enemy is off-screen
-                    if (enemy.Right <= 0 || enemy.Left >= screenWidth)
-                        continue;
+                if (!enemyPlatformPairs.TryGetValue(enemy, out Platform platform))
+                    continue;
 
+                // Skip if enemy is off-screen
+                if (enemy.Right <= 0 || enemy.Left >= screenWidth)
+                    continue;
+
+                // Common animation update logic
+                if (updateAnimation)
+                {
+                    int animationType;
+
+                    if (enemy is ShootingSoldier s)
+                    {
+                        s.SetFacing(s.Location.X > player.Location.X ? Direction.Left : Direction.Right);
+                        animationType = enemy.GetFacing() == Direction.Right ? 2 : 3;
+                    }
+                    else
+                        animationType = enemy.GetFacing() == Direction.Right ? 0 : 1;
+
+                    enemy.SetCurrentFrame((enemy.GetCurrentFrame() + 1) % 6);
+                    enemy.Image = EnemySprite[animationType][enemy.GetCurrentFrame()];
+                }
+
+                // Running soldier specific logic
+                if (enemy is RunningSoldier)
+                {
                     // Check platform bounds
                     if (enemy.Left < platform.Left || enemy.Right > platform.Right)
                         enemy.Speed = -enemy.Speed;
-
-                    // Process enemy actions
-                    enemy.EnemyAction(this);
-
-                    // Handle shooting enemies
-                    if (enemy is ShootingSoldier shooter && shooter.CanShooting)
-                    {
-                        // Face the player
-                        shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
-                        shooter.CanShooting = false;
-                        ShootBullet(shooter, shooter.BulletSpeed);
-                        shooter.ResetShootCooldown();
-                    }
                 }
+
+                // Shooting soldier specific logic
+                if (enemy is ShootingSoldier shooter && shooter.CanShooting)
+                {
+                    // Face the player
+                    shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
+                    shooter.CanShooting = false;
+                    ShootBullet(shooter, shooter.BulletSpeed);
+                    shooter.ResetShootCooldown();
+                }
+
+                // Process common enemy actions last
+                enemy.EnemyAction(this);
             }
         }
 
@@ -607,7 +755,7 @@ namespace ContraAtHome
 
         private void SetUpPlayer()
         {
-            player = new Player(100, 10, 7, 10, false)
+            player = new Player(5, 10, 7, 10, false)
             {
                 Size = new Size(60, 75),
                 BackColor = Color.FromArgb(255, 255, 121, 123),
@@ -832,6 +980,8 @@ namespace ContraAtHome
         public const string Right = "right";
         public const string Up = "up";
         public const string Down = "down";
+        public const string UpRight = "up-right";
+        public const string UpLeft = "up-left";
     }
 
     public static class PlayerState

@@ -11,7 +11,8 @@ namespace ContraAtHome
         public int JumpPower { get; set; }
         public int Speed { get; set; }
         public int Dmg { get; set; }
-        public bool IsInvincible { get; set; }
+        
+        public bool up { get; set; }
         public bool goLeft { get; set; }
         public bool goRight { get; set; }
         public bool jumping { get; set; }
@@ -23,6 +24,9 @@ namespace ContraAtHome
         private int tickChange = 5;
         private int currentFrame = 0;
 
+        private int invicibleDuration = 20; // 05 sec at 60 fps
+        private int invicibleCounter = 0;
+        public bool IsInvincible { get; set; }
 
 
         // Constructor
@@ -39,6 +43,10 @@ namespace ContraAtHome
         public void DisplayInfo()
         {
             Debug.WriteLine($"HP: {Hp}, Jump Power: {JumpPower}, Speed: {Speed}, Damage: {Dmg}, Is Invincible: {IsInvincible}");
+        }
+
+        public void DecreasHP() {
+            Hp--;
         }
 
         public string GetFacing()
@@ -75,5 +83,19 @@ namespace ContraAtHome
         {
             return tickChange;
         }
+
+        public int GetInvicibleDuration()
+        {
+            return invicibleDuration;
+        }
+
+        public int GetInvicibleCounter() { 
+            return invicibleCounter;
+        }
+
+        public void SetInvicibleCounter(int counter) {
+            invicibleCounter = counter;  
+        }
+
     }
 }

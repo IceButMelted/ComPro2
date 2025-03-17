@@ -1,45 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="ContraAtHome.Player">
-    <Position X="2.5" Y="0.5" Width="1.5" />
+    <Position X="5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAABEAAgAIDEAAACAAAAAABBAGQAAgEAAAoQAAAQAA=</HashCode>
+      <HashCode>CAAABEAAgAIDEAAACAAAEAABBAGQAAgEAgBoQAAAQAA=</HashCode>
       <FileName>Player.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ContraAtHome.Form1" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="0.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>YaooIiKCACFIIUyAwLDARAECCCICCgwBApAlQJBAAJI=</HashCode>
+      <HashCode>YaooIiKCACFIoWyAxLDARAECKCICCgwBApAlQJDAAMI=</HashCode>
       <FileName>Form1.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ContraAtHome.Enemy">
-    <Position X="8" Y="0.5" Width="1.5" />
+    <Position X="8.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAABFAAgAAAEgAAAAAAAAABBIGQAAgEAAAAgAAAQAA=</HashCode>
       <FileName>Enemy\Enemy.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ContraAtHome.Tags" Collapsed="true">
-    <Position X="10" Y="1.75" Width="1.5" />
+  <Class Name="ContraAtHome.Tags">
+    <Position X="10.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAARAQAAAAAAAAAAAAAAAAAAAAAAAAABAAAAgAAA=</HashCode>
       <FileName>Tags.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ContraAtHome.Platform" Collapsed="true">
-    <Position X="8.75" Y="4.75" Width="1.5" />
-    <InheritanceLine Type="ContraAtHome.Tags" FixedToPoint="true">
+  <Class Name="ContraAtHome.Platform">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="ContraAtHome.Tags" ManuallyRouted="true" FixedToPoint="true">
       <Path>
-        <Point X="10.75" Y="2.441" />
-        <Point X="10.75" Y="5.125" />
-        <Point X="10.25" Y="5.125" />
+        <Point X="11.5" Y="2.954" />
+        <Point X="11.5" Y="3.25" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
       <FileName>Platform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ContraAtHome.RunningSoldier">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enemy\RunningSoldier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ContraAtHome.ShootingSoldier">
+    <Position X="6.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAMAAAgIAIAAAAAAAAAAIAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Enemy\ShootingSoldier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ContraAtHome.Bullet">
+    <Position X="3.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEAAAAAAEBAAAAAACAAAAEAAAAAAIAAAAAAQAAAAAA=</HashCode>
+      <FileName>Bullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ContraAtHome.ContraToolUtility">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAQAAAgAAAAAIQBAAAAgAAQAEAgAAZAAAAEAAA=</HashCode>
+      <FileName>ContraToolUtility.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
