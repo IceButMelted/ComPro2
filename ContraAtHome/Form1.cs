@@ -23,8 +23,13 @@ namespace ContraAtHome
         private int force;
         private int currentShootCooldown = 0;
 
+        //vairable for cal frame
         private int frameCounter = 0;
         private int enemyAnimationCounter = 0;
+
+        private int frameDeathDuration = 30;
+        private int frameDeathCounter = 0;
+        private bool deathforward = true;
 
         //Player State
         private bool _isOnGround = false;
@@ -105,7 +110,7 @@ namespace ContraAtHome
             if (player._isDeath) {
                 AnimationPlayerDeath();
             }
-            else if (player.IsPlayerOver())
+            else if (!player.IsPlayerOver())
             {
                 // Only update collections when needed
                 UpdateCachedCollectionsIfNeeded();
@@ -118,7 +123,7 @@ namespace ContraAtHome
                 if (currentShootCooldown <= SHOOT_COOLDOWN)
                     currentShootCooldown++;
 
-                TestAnimationPlayer(0);
+                AnimationPlayerAlive();
             }
             else { 
                 
@@ -262,6 +267,11 @@ namespace ContraAtHome
                     playerSpriteLeft[animIndex][frameIndex].RotateFlip(RotateFlipType.RotateNoneFlipX);
                 }
             }
+            //Loop to initialize sprite array for death only
+            for (int frameIndex = 0; frameIndex < 6; frameIndex++) {
+                string framePath = $"./Sprites/Player/Dead/Dead_00{frameIndex}.png";
+                playerSpriteDeath[frameIndex] = new Bitmap(framePath);
+            }
 
             // Set the initial player image to the first frame of the idle animation
             // This ensures that when the game starts, the player appears in a neutral state
@@ -306,7 +316,7 @@ namespace ContraAtHome
             }
         }
 
-        private void TestAnimationPlayer(int state)
+        private void AnimationPlayerAlive()
         {
             // Increment and reset frame counter
             if (++frameCounter >= 60)
@@ -318,7 +328,8 @@ namespace ContraAtHome
                 return;
 
             // Store direction for easier access
-            bool isDirectionRight = (player.GetFacing() == Direction.Right || player.GetFacing() == Direction.UpRight);
+            bool isDirectionRight = (player.GetFacing() == Direction.Right || player.GetFacing() == Direction.UpRight || (player.GetFacing() == Direction.Up && (lastFacingDirection == Direction.Right || lastFacingDirection == Direction.UpRight) ));
+            Debug.WriteLine(isDirectionRight);
 
             // Determine animation state based on priority
             int animationState;
@@ -375,10 +386,34 @@ namespace ContraAtHome
             lastFacingDirection = player.GetFacing();
         }
 
-        private void AnimationPlayerDeath() 
+        private void AnimationPlayerDeath()
         {
-            int deathCounter = 5;
-            int player = 10;
+            if (deathforward && frameDeathCounter < 6)
+            {
+                if (frameCounter % 5 == 0)
+                {
+                    player.Image = playerSpriteDeath[frameDeathCounter];
+                    frameDeathCounter++;
+                }
+                frameCounter++;
+                if(frameDeathCounter == 6) deathforward = false;
+            }
+            else if (!deathforward && frameDeathCounter > 1)
+            {
+                if (frameCounter % 5 == 0)
+                {
+                    frameDeathCounter--;
+                    player.Image = playerSpriteDeath[frameDeathCounter];
+                    
+                }
+                frameCounter++;
+            }
+            else
+            {
+                player._isDeath = false;
+                deathforward = true;
+                //frameDeathCounter = 0;
+            }
         }
 
         private void AnimationTimerEvent()
@@ -564,7 +599,10 @@ namespace ContraAtHome
                 }
                 else
                 {
-                    player.SetFacing(Direction.Up);
+                    if (lastFacingDirection == Direction.Right || lastFacingDirection == Direction.UpRight)
+                        player.SetFacing(Direction.UpRight);
+                    if (lastFacingDirection == Direction.Left || lastFacingDirection == Direction.UpLeft)
+                        player.SetFacing(Direction.UpLeft);
                     Debug.WriteLine("Up only");
                     player.up = true;
                 }
@@ -585,6 +623,12 @@ namespace ContraAtHome
                 player.SetFacing(Direction.Right);
                 Debug.WriteLine("Rightr Only");
                 player.goRight = true;
+            }
+            else{ 
+                if(lastFacingDirection == Direction.UpRight)
+                    player.SetFacing(Direction.Right);
+                if (lastFacingDirection == Direction.UpLeft)
+                    player.SetFacing(Direction.Left);
             }
         }
 
@@ -623,6 +667,7 @@ namespace ContraAtHome
                         {
                             player.DecreasHP();
                             player.IsInvincible = true;
+                            player._isDeath = true;
                             controlsToRemove.Add(bullet);
                             // Player hit logic here
                         }
@@ -634,6 +679,7 @@ namespace ContraAtHome
                         {
                             player.DecreasHP();
                             player.IsInvincible = true;
+                            player._isDeath = true;
                         }
                     }
                 }
