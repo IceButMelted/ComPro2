@@ -35,6 +35,7 @@ namespace ContraAtHome
         // 1:Idle // 2:Running // 3:Runnning // 4:Facingup // 5:Jumping // 6:Falling
         private Bitmap[][] playerSpriteRight = new Bitmap[6][];
         private Bitmap[][] playerSpriteLeft = new Bitmap[6][];
+        private Bitmap[] playerSpriteDeath = new Bitmap[6];
         // 1: Running-Rigt 2: Running-Left 3:Shooting-Right 4: Shoothn-Left
         private Bitmap[][] EnemySprite = new Bitmap[4][];
 
@@ -101,18 +102,27 @@ namespace ContraAtHome
         // Main game loop
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
-            // Only update collections when needed
-            UpdateCachedCollectionsIfNeeded();
+            if (player._isDeath) {
+                AnimationPlayerDeath();
+            }
+            else if (player.IsPlayerOver())
+            {
+                // Only update collections when needed
+                UpdateCachedCollectionsIfNeeded();
 
-            HandlePlayerLogic();
-            HandleCollisions();
-            ProcessEnemyActions();
+                HandlePlayerLogic();
+                HandleCollisions();
+                ProcessEnemyActions();
 
-            // Update shoot cooldown
-            if (currentShootCooldown <= SHOOT_COOLDOWN)
-                currentShootCooldown++;
+                // Update shoot cooldown
+                if (currentShootCooldown <= SHOOT_COOLDOWN)
+                    currentShootCooldown++;
 
-            TestAnimationPlayer(0);
+                TestAnimationPlayer(0);
+            }
+            else { 
+                
+            }
         }
 
         #region Cache Methods
@@ -292,7 +302,7 @@ namespace ContraAtHome
                         enemy.SizeMode = PictureBoxSizeMode.StretchImage;
                         Debug.WriteLine("enemy set running");
                     }
-                
+
             }
         }
 
@@ -308,7 +318,7 @@ namespace ContraAtHome
                 return;
 
             // Store direction for easier access
-            bool isDirectionRight = (player.GetFacing() == Direction.Right|| player.GetFacing() == Direction.UpRight);
+            bool isDirectionRight = (player.GetFacing() == Direction.Right || player.GetFacing() == Direction.UpRight);
 
             // Determine animation state based on priority
             int animationState;
@@ -364,6 +374,13 @@ namespace ContraAtHome
             // Update last facing direction
             lastFacingDirection = player.GetFacing();
         }
+
+        private void AnimationPlayerDeath() 
+        {
+            int deathCounter = 5;
+            int player = 10;
+        }
+
         private void AnimationTimerEvent()
         {
             // Player animation
@@ -574,46 +591,57 @@ namespace ContraAtHome
         #endregion
 
         #region Game Logic
-
         private void HandleCollisions()
         {
-            List<Control> controlsToRemove = new List<Control>();
-
-            // Check player bullet collisions with enemies
-            foreach (var bullet in playerBullets)
+            if (player._isPlayerAlive)
             {
-                foreach (var enemy in activeEnemies)
+                List<Control> controlsToRemove = new List<Control>();
+
+                // Check player bullet collisions with enemies
+                foreach (var bullet in playerBullets)
                 {
-                    if (bullet.Bounds.IntersectsWith(enemy.Bounds))
+                    foreach (var enemy in activeEnemies)
                     {
-                        enemy.TakeDamage();
-                        if (!enemy.IsAlive)
+                        if (bullet.Bounds.IntersectsWith(enemy.Bounds))
                         {
-                            controlsToRemove.Add(enemy);
+                            enemy.TakeDamage();
+                            if (!enemy.IsAlive)
+                            {
+                                controlsToRemove.Add(enemy);
+                            }
+                            controlsToRemove.Add(bullet);
+                            break;
                         }
-                        controlsToRemove.Add(bullet);
-                        break;
                     }
                 }
-            }
-            if (!player.IsInvincible) {  
-                // Check enemy bullet collisions with player
-                foreach (var bullet in enemyBullets)
+                if (!player.IsInvincible)
                 {
-                    if (bullet.Bounds.IntersectsWith(player.Bounds))
+                    // Check enemy bullet collisions with player
+                    foreach (var bullet in enemyBullets)
                     {
-                        player.DecreasHP();
-                        player.IsInvincible = true;
-                        controlsToRemove.Add(bullet);
-                        // Player hit logic here
+                        if (bullet.Bounds.IntersectsWith(player.Bounds))
+                        {
+                            player.DecreasHP();
+                            player.IsInvincible = true;
+                            controlsToRemove.Add(bullet);
+                            // Player hit logic here
+                        }
+                    }
+                    //check enemy collisions with player
+                    foreach (var enmy in activeEnemies)
+                    {
+                        if (enmy.Bounds.IntersectsWith(player.Bounds))
+                        {
+                            player.DecreasHP();
+                            player.IsInvincible = true;
+                        }
                     }
                 }
-            }
-
-            // Remove objects outside the loop
-            foreach (Control control in controlsToRemove)
-            {
-                RemoveControlWithCacheUpdate(control);
+                // Remove objects outside the loop
+                foreach (Control control in controlsToRemove)
+                {
+                    RemoveControlWithCacheUpdate(control);
+                }
             }
         }
 

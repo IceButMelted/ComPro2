@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using System.Windows.Forms;
 
 namespace ContraAtHome
@@ -24,7 +26,11 @@ namespace ContraAtHome
         private int tickChange = 5;
         private int currentFrame = 0;
 
-        private int invicibleDuration = 20; // 05 sec at 60 fps
+        public bool _isPlayerAlive = true;
+
+        public bool _isDeath = false;
+
+        private int invicibleDuration = 60; // 05 sec at 60 fps
         private int invicibleCounter = 0;
         public bool IsInvincible { get; set; }
 
@@ -45,8 +51,17 @@ namespace ContraAtHome
             Debug.WriteLine($"HP: {Hp}, Jump Power: {JumpPower}, Speed: {Speed}, Damage: {Dmg}, Is Invincible: {IsInvincible}");
         }
 
-        public void DecreasHP() {
+        public void DecreasHP()
+        {
             Hp--;
+        }
+
+        public bool IsPlayerOver()
+        {
+            if (Hp <= 0)
+                return true;
+            else 
+                return false;
         }
 
         public string GetFacing()

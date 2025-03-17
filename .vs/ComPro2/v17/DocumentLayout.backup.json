@@ -84,7 +84,7 @@
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeToolTip": "ContraAtHome\\Form1.cs",
-              "ViewState": "AgIAAP8AAAAAAAAAAAAiwDEBAACsAAAAAAAAAA==",
+              "ViewState": "AgIAAEoCAAAAAAAAAAAkwGMCAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-14T19:32:37.667Z",
               "IsPinned": true,
@@ -121,8 +121,7 @@
               "RelativeToolTip": "ContraAtHome\\Enemy\\RunningSoldier.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-14T09:06:52.559Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-14T09:06:52.559Z"
             },
             {
               "$type": "Document",
@@ -134,8 +133,7 @@
               "RelativeToolTip": "ContraAtHome\\ContraAtHome.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-03-16T13:09:43.374Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-16T13:09:43.374Z"
             },
             {
               "$type": "Document",
@@ -158,8 +156,7 @@
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Properties\\Resources.resx",
               "RelativeToolTip": "ContraAtHome\\Properties\\Resources.resx",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-03-16T08:40:56.922Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-16T08:40:56.922Z"
             },
             {
               "$type": "Document",
@@ -170,8 +167,7 @@
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.resx",
               "RelativeToolTip": "ContraAtHome\\Form1.resx",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-03-16T08:39:19.255Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-16T08:39:19.255Z"
             },
             {
               "$type": "Document",
@@ -195,8 +191,7 @@
               "RelativeToolTip": "ContraAtHome\\Enemy\\ShootingSoldier.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAAwwCwAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T04:16:57.068Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T04:16:57.068Z"
             },
             {
               "$type": "Document",
@@ -208,8 +203,7 @@
               "RelativeToolTip": "ContraAtHome\\Form1.Designer.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEIBAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-15T07:59:46.131Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-15T07:59:46.131Z"
             },
             {
               "$type": "Document",
@@ -233,8 +227,7 @@
               "RelativeToolTip": "ContraAtHome\\Enemy\\Enemy.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T18:41:26.423Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-27T18:41:26.423Z"
             },
             {
               "$type": "Document",
@@ -280,8 +273,7 @@
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs [Design]",
               "RelativeToolTip": "ContraAtHome\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-14T19:32:20.076Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2025-03-14T19:32:20.076Z"
             }
           ]
         }
