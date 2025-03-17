@@ -298,86 +298,69 @@ namespace ContraAtHome
 
         private void TestAnimationPlayer(int state)
         {
-            frameCounter += 1;
-            if (frameCounter > 59)
-            {
+            // Increment and reset frame counter
+            if (++frameCounter >= 60)
                 frameCounter = 0;
-            }
-            if ((frameCounter % player.GetTickChange() == 0) || lastFacingDirection != player.GetFacing())
+
+            // Only update animation if it's time to change frames or direction changed
+            bool shouldUpdateFrame = (frameCounter % player.GetTickChange() == 0) || lastFacingDirection != player.GetFacing();
+            if (!shouldUpdateFrame)
+                return;
+
+            // Store direction for easier access
+            bool isDirectionRight = player.GetFacing() == "right";
+
+            // Determine animation state based on priority
+            int animationState;
+
+            if (_isFalling)
             {
-                //falling part with left right
-                if (_isFalling && player.GetFacing() == "right")
-                {
-                    player.Image = playerSpriteRight[5][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                else if (_isFalling && player.GetFacing() == "left")
-                {
-                    player.Image = playerSpriteLeft[5][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                //jump part with
-                else if (player.jumping && player.GetFacing() == "right")
-                {
-                    player.Image = playerSpriteRight[4][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                    
-                }
-                else if (player.jumping && player.GetFacing() == "left") 
-                {
-                    player.Image = playerSpriteLeft[4][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                //Facing up part with left or right
-                else if (player.up && player.goLeft)
-                {
-                    player.Image = playerSpriteLeft[2][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                else if (player.up && player.goRight)
-                {
-                    player.Image = playerSpriteRight[2][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                else if (player.up && player.GetFacing() == "left")
-                {
-                    player.Image = playerSpriteLeft[3][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                else if (player.up && player.GetFacing() == "right")
-                {
-                    player.Image = playerSpriteRight[3][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                //on running part without facing up
-                else if (player.goLeft)
-                {
-                    player.Image = playerSpriteLeft[1][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                else if (player.goRight)
-                {
-                    player.Image = playerSpriteRight[1][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                //On idle part 
-                else if (player.GetFacing() == "left") {
-                    player.Image = playerSpriteLeft[0][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-                else if (player.GetFacing() == "right")
-                {
-                    player.Image = playerSpriteRight[0][player.GetCurrentFrame()];
-                    player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                }
-
-                lastFacingDirection = player.GetFacing();
-
-                if (player.GetCurrentFrame() > player.GetTickChange())
-                {
-                    player.SetCurrentFrame(0);
-                }
+                animationState = 5; // Falling animation
             }
+            else if (player.jumping)
+            {
+                animationState = 4; // Jumping animation
+            }
+            else if (player.up)
+            {
+                if (player.goLeft || player.goRight)
+                    animationState = 2; // Moving up-left or up-right
+                else
+                    animationState = 3; // Facing up
+            }
+            else if (player.goLeft || player.goRight)
+            {
+                animationState = 1; // Running animation
+            }
+            else
+            {
+                animationState = 0; // Idle animation
+            }
+
+            // Special case for direction inconsistency
+            if (player.up && player.goLeft)
+            {
+                player.Image = playerSpriteLeft[animationState][player.GetCurrentFrame()];
+            }
+            else if (player.up && player.goRight)
+            {
+                player.Image = playerSpriteRight[animationState][player.GetCurrentFrame()];
+            }
+            // Use directional sprites based on facing direction
+            else if (isDirectionRight)
+            {
+                player.Image = playerSpriteRight[animationState][player.GetCurrentFrame()];
+            }
+            else
+            {
+                player.Image = playerSpriteLeft[animationState][player.GetCurrentFrame()];
+            }
+
+            // Update frame counter and handle wrapping
+            player.SetCurrentFrame((player.GetCurrentFrame() + 1) % (player.GetTickChange() + 1));
+
+            // Update last facing direction
+            lastFacingDirection = player.GetFacing();
         }
         private void AnimationTimerEvent()
         {
@@ -757,7 +740,7 @@ namespace ContraAtHome
         {
             player = new Player(5, 10, 7, 10, false)
             {
-                Size = new Size(60, 75),
+                Size = new Size(60, 80),
                 BackColor = Color.FromArgb(255, 255, 121, 123),
                 Location = new Point(ClientSize.Width / 2, 430),
                 BackgroundImageLayout = ImageLayout.Stretch,
