@@ -303,12 +303,12 @@ namespace ContraAtHome
                 frameCounter = 0;
 
             // Only update animation if it's time to change frames or direction changed
-            bool shouldUpdateFrame = (frameCounter % player.GetTickChange() == 0) || lastFacingDirection != player.GetFacing();
+            bool shouldUpdateFrame = (frameCounter % player.GetTickChange() == 0) || lastFacingDirection != player.GetFacing() || keysPressed.Contains(Keys.K) || _isFalling;
             if (!shouldUpdateFrame)
                 return;
 
             // Store direction for easier access
-            bool isDirectionRight = player.GetFacing() == "right";
+            bool isDirectionRight = (player.GetFacing() == Direction.Right|| player.GetFacing() == Direction.UpRight);
 
             // Determine animation state based on priority
             int animationState;
@@ -350,10 +350,12 @@ namespace ContraAtHome
             else if (isDirectionRight)
             {
                 player.Image = playerSpriteRight[animationState][player.GetCurrentFrame()];
+                Debug.WriteLine("right is here");
             }
             else
             {
                 player.Image = playerSpriteLeft[animationState][player.GetCurrentFrame()];
+                Debug.WriteLine("left is here");
             }
 
             // Update frame counter and handle wrapping
