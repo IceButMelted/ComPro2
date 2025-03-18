@@ -23,11 +23,18 @@ namespace ContraAtHome
         private const int PLATFORM_SPEED = 7;
         private const int SHOOT_COOLDOWN = 10;
 
+        //Counter 
+        private int enemyCounter = 0;
+
+        //Scene
+        private bool _IsCreatedDeathScene = false;
+        private bool _IsLockScreen = false;
         //Player 
 
         // Game state
         private int force;
         private int currentShootCooldown = 0;
+        private bool _IsBossStage = false;
 
         //vairable for cal frame
         private int frameCounter = 0;
@@ -132,7 +139,7 @@ namespace ContraAtHome
             if (player._isDeath) {
                 AnimationPlayerDeath();
             }
-            else if (!player.IsPlayerOver())
+            else if (!player.IsGameOver())
             {
                 // Only update collections when needed
                 UpdateCachedCollectionsIfNeeded();
@@ -147,11 +154,55 @@ namespace ContraAtHome
 
                 AnimationPlayerAlive();
             }
-            else {
-
+            else{
+                //Freeze everythings and show GameOverScreen 
+                //then requested to quit or restart(restartProgram)
+                if (!_IsCreatedDeathScene) {
+                    CreatDeathScene(this);
+                    
+                }
             }
         }
 
+        public void CreatDeathScene(Form form)
+        {
+            // Create a panel that will serve as our rectangle
+            Panel blueRectangle = new Panel
+            {
+                // Set the size to match the client area of the form
+                Size = form.ClientSize,
+                // Set the location to top-left of the client area
+                Location = new Point(0, 0),
+                // Set background color to blue
+                BackgroundImage = new Bitmap("./Sprites/Ui/DeathScreen.png"),
+                // Make sure the panel is on top of other controls
+                Dock = DockStyle.None,
+            };
+
+            // Add the panel to the form
+            form.Controls.Add(blueRectangle);
+
+            // Bring the panel to the front so it appears on top of everything
+            blueRectangle.BringToFront();
+
+            // Optional: Make the panel resize with the form
+            form.Resize += (sender, e) =>
+            {
+                blueRectangle.Size = form.ClientSize;
+            };
+
+            _IsCreatedDeathScene = true;
+        }
+
+        #region Boss Stage
+        private void LockScreen() {
+            if(!_IsLockScreen)
+                _IsLockScreen = true;
+        }
+
+        #endregion
+
+        #region Sound
         private void SoundLoader()
         {
             string resourcePath;
@@ -177,11 +228,13 @@ namespace ContraAtHome
 
         }
 
-        private void SFXPlayer(MediaPlayer mdp) {
+        private void SFXPlayer(MediaPlayer mdp)
+        {
             mdp.Stop();
             mdp.Position = TimeSpan.Zero;
             mdp.Play();
         }
+        #endregion
 
         #region Cache Methods
         private void UpdateCachedCollectionsIfNeeded()
@@ -459,7 +512,7 @@ namespace ContraAtHome
                 frameCounter++;
                 if(frameDeathCounter == 6) deathforward = false;
             }
-            else if (!deathforward && frameDeathCounter > 1)
+            else if (!deathforward && frameDeathCounter > 1 && !player.IsGameOver())
             {
                 if (frameCounter % 5 == 0)
                 {
@@ -480,28 +533,28 @@ namespace ContraAtHome
         #endregion
 
         #region Player Movement & Controls
-        
+
 
         private void HandlePlayerLogic()
         {
-            //handle player Invincible
+            // Handle player Invincible state
             if (player.IsInvincible)
             {
                 if (player.GetInvicibleCounter() < player.GetInvicibleDuration())
                 {
-                    player.BackColor = ColorDrawing.White;
+                    player.BackColor = ColorDrawing.White; 
                     player.SetInvicibleCounter(player.GetInvicibleCounter() + 1);
                 }
                 else
                 {
-                    player.BackColor = ColorDrawing.Transparent;
+                    player.BackColor = ColorDrawing.Transparent; 
                     player.IsInvincible = false;
                     player.SetInvicibleCounter(0);
                 }
             }
 
-            //Previous ground state (for fall detection)
-            bool _wasOnGround = _isOnGround;
+            // Previous ground state (for fall detection)
+            bool wasOnGround = _isOnGround; // Fixed pointer syntax issue
 
             // Reset ground check for this frame
             _isOnGround = false;
@@ -513,7 +566,6 @@ namespace ContraAtHome
                 {
                     if (player.Bounds.IntersectsWith(platform.Bounds))
                     {
-
                         _isOnGround = true;
                         force = PLAYER_JUMP_FORCE;
                         player.Top = platform.Top - player.Height + 1;
@@ -521,11 +573,10 @@ namespace ContraAtHome
                         _isFalling = false;
                     }
                 }
-
             }
 
             // Fall detection
-            if (_wasOnGround && !_isOnGround && !player.jumping)
+            if (wasOnGround && !_isOnGround && !player.jumping)
             {
                 _isFalling = true;
             }
@@ -534,7 +585,7 @@ namespace ContraAtHome
             if (player.jumping)
             {
                 force -= 1;
-                
+
                 // End jump if force is depleted
                 if (force < 0)
                 {
@@ -556,13 +607,17 @@ namespace ContraAtHome
                 _isFalling = false;
             }
 
-            // Horizontal movement
+            // Handle horizontal movement
             if (player.goLeft)
             {
-                if (player.Left > screenWidth)
-                    player.Left -= player.Speed;
+                if (_IsLockScreen)
+                {
+                    if (player.Left > 0) // Move player if not at left edge
+                        player.Left -= player.Speed;
+                }
                 else if (BorderLeft.Location.X < screenWidth / 3)
                 {
+                    // Scroll world with parallax
                     MoveGameElements(Direction.Left);
                     UpdateParallaxBackground(1, 3, 5);
                 }
@@ -571,10 +626,14 @@ namespace ContraAtHome
 
             if (player.goRight)
             {
-                if (player.Right > screenWidth)
-                    player.Left += player.Speed;
+                if (_IsLockScreen)
+                {
+                    if (player.Left + player.Width < screenWidth) // Move player if not at right edge
+                        player.Left += player.Speed;
+                }
                 else if (BorderRight.Location.X > screenWidth - screenWidth / 3)
                 {
+                    // Scroll world with parallax
                     MoveGameElements(Direction.Right);
                     UpdateParallaxBackground(1, 3, 5);
                 }
@@ -596,80 +655,99 @@ namespace ContraAtHome
 
         private void HandleKeyPresses()
         {
-            // Reset movement flags to avoid carryover
-            player.goLeft = false;
-            player.goRight = false;
-            player.up = false;
-
-
-            // Calculate active movement directions
-            bool pressUp = keysPressed.Contains(Keys.W);
-            bool pressLeft = keysPressed.Contains(Keys.A);
-            bool pressRight = keysPressed.Contains(Keys.D);
-
-            // Jump handling
-            if (keysPressed.Contains(Keys.K) && !player.jumping && !_isFalling && _isOnGround)
+            if (!player.IsGameOver())
             {
-                //player Jump Sound
-                SFXPlayer(Jump_Sound);
-                player._IsShouldOnPlatform = false;
-                player.jumping = true;
-            }
+                // Reset movement flags to avoid carryover
+                player.goLeft = false;
+                player.goRight = false;
+                player.up = false;
 
-            // Shoot handling
-            if (keysPressed.Contains(Keys.J) && currentShootCooldown > SHOOT_COOLDOWN)
-            {
-                //Play player shoot -SOUND-
-                SFXPlayer(Gun_Sound);
-                ShootBullet(player);
-                currentShootCooldown = 0;
-            }
 
-            // Handle direction facing based on key combinations
-            if (pressUp)
-            {
-                if (pressLeft)
+                // Calculate active movement directions
+                bool pressUp = keysPressed.Contains(Keys.W);
+                bool pressLeft = keysPressed.Contains(Keys.A);
+                bool pressRight = keysPressed.Contains(Keys.D);
+
+                // Jump handling
+                if (keysPressed.Contains(Keys.K) && !player.jumping && !_isFalling && _isOnGround)
                 {
-                    player.SetFacing(Direction.UpLeft);
+                    //player Jump Sound
+                    SFXPlayer(Jump_Sound);
+                    player._IsShouldOnPlatform = false;
+                    player.jumping = true;
+                }
+
+                // Shoot handling
+                if (keysPressed.Contains(Keys.J) && currentShootCooldown > SHOOT_COOLDOWN)
+                {
+                    //Play player shoot -SOUND-
+                    SFXPlayer(Gun_Sound);
+                    ShootBullet(player);
+                    currentShootCooldown = 0;
+                }
+
+                // Handle direction facing based on key combinations
+                if (pressUp)
+                {
+                    if (pressLeft)
+                    {
+                        player.SetFacing(Direction.UpLeft);
+                        player.goLeft = true;
+                        player.up = true;
+                    }
+                    else if (pressRight)
+                    {
+                        player.SetFacing(Direction.UpRight);
+                        player.goRight = true;
+                        player.up = true;
+                    }
+                    else
+                    {
+                        if (lastFacingDirection == Direction.Right || lastFacingDirection == Direction.UpRight)
+                            player.SetFacing(Direction.UpRight);
+                        if (lastFacingDirection == Direction.Left || lastFacingDirection == Direction.UpLeft)
+                            player.SetFacing(Direction.UpLeft);
+                        player.up = true;
+                    }
+                }
+                else if (pressLeft && pressRight)
+                {
+                    // Neutralize opposing directions
+                    // Direction remains unchanged
+                }
+                else if (pressLeft)
+                {
+                    player.SetFacing(Direction.Left);
                     player.goLeft = true;
-                    player.up = true;
                 }
                 else if (pressRight)
                 {
-                    player.SetFacing(Direction.UpRight);
+                    player.SetFacing(Direction.Right);
                     player.goRight = true;
-                    player.up = true;
                 }
                 else
                 {
-                    if (lastFacingDirection == Direction.Right || lastFacingDirection == Direction.UpRight)
-                        player.SetFacing(Direction.UpRight);
-                    if (lastFacingDirection == Direction.Left || lastFacingDirection == Direction.UpLeft)
-                        player.SetFacing(Direction.UpLeft);
-                    player.up = true;
+                    if (lastFacingDirection == Direction.UpRight)
+                        player.SetFacing(Direction.Right);
+                    if (lastFacingDirection == Direction.UpLeft)
+                        player.SetFacing(Direction.Left);
                 }
             }
-            else if (pressLeft && pressRight)
+            else
             {
-                // Neutralize opposing directions
-                // Direction remains unchanged
+                if (keysPressed.Contains(Keys.Enter))
+                {
+                    Debug.WriteLine("RestartGame");
+                    Application.Restart();
+                }
+                if (keysPressed.Contains(Keys.Q)) 
+                {
+                    Debug.WriteLine("Quit Game");
+                    Application.Exit();
+                }
             }
-            else if (pressLeft)
-            {
-                player.SetFacing(Direction.Left);
-                player.goLeft = true;
-            }
-            else if (pressRight)
-            {
-                player.SetFacing(Direction.Right);
-                player.goRight = true;
-            }
-            else{ 
-                if(lastFacingDirection == Direction.UpRight)
-                    player.SetFacing(Direction.Right);
-                if (lastFacingDirection == Direction.UpLeft)
-                    player.SetFacing(Direction.Left);
-            }
+
+
         }
 
         #endregion
@@ -747,88 +825,98 @@ namespace ContraAtHome
         // Process enemy actions with optimized collections
         private void ProcessEnemyActions()
         {
-            // Increment and reset animation counter
-            if (++enemyAnimationCounter >= 10)
-                enemyAnimationCounter = 0;
-
-            bool updateAnimation = (enemyAnimationCounter == 0);
-
-            foreach (var enemy in activeEnemies)
+            if (enemyCounter > 0)
             {
-                if (enemy._IsAlive)
+                // Increment and reset animation counter
+                if (++enemyAnimationCounter >= 10)
+                    enemyAnimationCounter = 0;
+
+                bool updateAnimation = (enemyAnimationCounter == 0);
+
+                foreach (var enemy in activeEnemies)
                 {
-                    if (!enemyPlatformPairs.TryGetValue(enemy, out Platform platform))
-                        continue;
-
-                    // Skip if enemy is off-screen
-                    if (enemy.Right <= 0 || enemy.Left >= screenWidth)
-                        continue;
-
-                    // Common animation update logic
-                    if (updateAnimation)
+                    if (enemy._IsAlive)
                     {
-                        int animationType;
+                        if (!enemyPlatformPairs.TryGetValue(enemy, out Platform platform))
+                            continue;
 
-                        if (enemy is ShootingSoldier s)
+                        // Skip if enemy is off-screen
+                        if (enemy.Right <= 0 || enemy.Left >= screenWidth)
+                            continue;
+
+                        // Common animation update logic
+                        if (updateAnimation)
                         {
-                            s.SetFacing(s.Location.X > player.Location.X ? Direction.Left : Direction.Right);
-                            animationType = enemy.GetFacing() == Direction.Right ? 2 : 3;
-                        }
-                        else
-                            animationType = enemy.GetFacing() == Direction.Right ? 0 : 1;
+                            int animationType;
 
-                        enemy.SetCurrentFrame((enemy.GetCurrentFrame() + 1) % 6);
-                        enemy.Image = EnemySprite[animationType][enemy.GetCurrentFrame()];
-                    }
+                            if (enemy is ShootingSoldier s)
+                            {
+                                s.SetFacing(s.Location.X > player.Location.X ? Direction.Left : Direction.Right);
+                                animationType = enemy.GetFacing() == Direction.Right ? 2 : 3;
+                            }
+                            else
+                                animationType = enemy.GetFacing() == Direction.Right ? 0 : 1;
 
-                    // Running soldier specific logic
-                    if (enemy is RunningSoldier)
-                    {
-                        // Check platform bounds
-                        if (enemy.Left < platform.Left || enemy.Right > platform.Right)
-                            enemy.Speed = -enemy.Speed;
-                    }
-
-                    // Shooting soldier specific logic
-                    if (enemy is ShootingSoldier shooter && shooter.CanShooting)
-                    {
-                        // Face the player
-                        shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
-                        shooter.CanShooting = false;
-                        ShootBullet(shooter, shooter.BulletSpeed);
-                        //Play Enemy shoot -SOUND-
-                        SFXPlayer(Gun_Sound);
-                        Gun_Sound.Stop();
-                        Gun_Sound.Position = TimeSpan.Zero;
-                        Gun_Sound.Play();
-                        shooter.ResetShootCooldown();
-                    }
-
-                    // Process common enemy actions last
-                    enemy.EnemyAction(this);
-                }
-                if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == false)
-                {
-                    if (frameCounter % 2 == 0)
-                    {
-
-                        if (enemy.GetCurrentFrameDeath() > 5)
-                        {
-                            enemy.SetFinishDeath();
-                            //activeEnemies.Remove(enemy);
-                        }
-                        else
-                        {
-                            enemy.Image = EnemySpriteDeath[enemy.GetCurrentFrameDeath()];
-                            enemy.CurrentDeathFrameIncreas();
+                            enemy.SetCurrentFrame((enemy.GetCurrentFrame() + 1) % 6);
+                            enemy.Image = EnemySprite[animationType][enemy.GetCurrentFrame()];
                         }
 
+                        // Running soldier specific logic
+                        if (enemy is RunningSoldier)
+                        {
+                            // Check platform bounds
+                            if (enemy.Left < platform.Left || enemy.Right > platform.Right)
+                                enemy.Speed = -enemy.Speed;
+                        }
+
+                        // Shooting soldier specific logic
+                        if (enemy is ShootingSoldier shooter && shooter.CanShooting)
+                        {
+                            // Face the player
+                            shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
+                            shooter.CanShooting = false;
+                            ShootBullet(shooter, shooter.BulletSpeed);
+                            //Play Enemy shoot -SOUND-
+                            SFXPlayer(Gun_Sound);
+                            Gun_Sound.Stop();
+                            Gun_Sound.Position = TimeSpan.Zero;
+                            Gun_Sound.Play();
+                            shooter.ResetShootCooldown();
+                        }
+
+                        // Process common enemy actions last
+                        enemy.EnemyAction(this);
+                    }
+                    if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == false)
+                    {
+                        if (frameCounter % 2 == 0)
+                        {
+
+                            if (enemy.GetCurrentFrameDeath() > 5)
+                            {
+                                enemy.SetFinishDeath();
+                                //activeEnemies.Remove(enemy);
+                            }
+                            else
+                            {
+                                enemy.Image = EnemySpriteDeath[enemy.GetCurrentFrameDeath()];
+                                enemy.CurrentDeathFrameIncreas();
+                            }
+
+                        }
+                    }
+                    if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == true)
+                    {
+                        RemoveControlWithCacheUpdate(enemy);
+                        enemyCounter--;
+                        Debug.WriteLine($"Enemy in scene {enemyCounter}");
                     }
                 }
-                if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == true)
-                {
-                    RemoveControlWithCacheUpdate(enemy);
-                }
+            }
+            else
+            {
+                LockScreen();
+                Debug.WriteLine($"player Left:{player.Left} Right: {player.Right}");
             }
         }
 
@@ -863,15 +951,13 @@ namespace ContraAtHome
         {
             if (shooter == null || !shooter._IsAlive) return;
 
-            ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Red : ColorDrawing.Yellow;
+            ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Red : ColorDrawing.Purple;
 
             Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
                 new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), bulletColor, screenWidth, screenHeight)
             {
                 Direction = shooter.GetFacing()
             };
-
-            bullet.BackColor = ColorDrawing.Purple;
 
             AddControlWithCacheUpdate(bullet);
             bullet.BringToFront();
@@ -889,6 +975,7 @@ namespace ContraAtHome
 
             AddControlWithCacheUpdate(bullet);
             bullet.BringToFront();
+            player.BringToFront();
         }
 
         #endregion
@@ -914,18 +1001,20 @@ namespace ContraAtHome
             BGLv3.SendToBack();
             BGLv2.SendToBack();
             BGLv1.SendToBack();
+            BG.SendToBack();
             player.BringToFront();
 
-            // Calculate offsets
-            bgLayer1Offset = BGLv1.Width / 2;
-            bgLayer2Offset = BGLv2.Width / 2;
-            bgLayer3Offset = BGLv3.Width / 2;
-            playerOffset = player.Width / 2;
+            //// Calculate offsets
+            //bgLayer1Offset = BGLv1.Width / 2;
+            //bgLayer2Offset = BGLv2.Width / 2;
+            //bgLayer3Offset = BGLv3.Width / 2;
+            //playerOffset = player.Width / 2;
 
             // Position background layers
-            BGLv1.Location = new Point(player.Left - bgLayer1Offset + playerOffset, BGLv1.Top);
-            BGLv2.Location = new Point(player.Left - bgLayer2Offset + playerOffset, BGLv2.Top);
-            BGLv3.Location = new Point(player.Left - bgLayer3Offset + playerOffset, BGLv3.Top);
+            BGLv1.Location = new Point(0, 0);
+            BGLv2.Location = new Point(0, 0);
+            BGLv3.Location = new Point(0, 0);
+
         }
 
         private void SetUpGameObjects()
@@ -1091,13 +1180,14 @@ namespace ContraAtHome
 
         private Enemy CreateEnemy(Control control, int enemyNumber)
         {
+            enemyCounter++;
             Enemy enemy;
 
             // Create appropriate enemy type
             if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
-                enemy = new ShootingSoldier(3, 3) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new ShootingSoldier(1, 3) { Name = $"Enemy{enemyNumber:D2}" };
             else
-                enemy = new RunningSoldier(5, 3) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new RunningSoldier(1, 3) { Name = $"Enemy{enemyNumber:D2}" };
 
             enemy.Size = control.Size;
             enemy.Location = control.Location;

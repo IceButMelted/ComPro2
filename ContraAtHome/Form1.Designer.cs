@@ -47,6 +47,7 @@
             pictureBox7 = new PictureBox();
             pictureBox8 = new PictureBox();
             plf2 = new PictureBox();
+            BG = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)plf).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy1).BeginInit();
@@ -64,6 +65,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BG).BeginInit();
             SuspendLayout();
             // 
             // plf
@@ -107,28 +109,32 @@
             // 
             // BGLv1
             // 
-            BGLv1.BackColor = Color.DarkGreen;
-            BGLv1.Location = new Point(-6, 29);
+            BGLv1.BackColor = Color.DimGray;
+            BGLv1.BackgroundImage = Properties.Resources.BG_Parallax_002;
+            BGLv1.Location = new Point(33, 0);
             BGLv1.Name = "BGLv1";
-            BGLv1.Size = new Size(400, 100);
+            BGLv1.Size = new Size(30, 30);
             BGLv1.TabIndex = 4;
             BGLv1.TabStop = false;
             // 
             // BGLv2
             // 
-            BGLv2.BackColor = Color.Chartreuse;
-            BGLv2.Location = new Point(43, 81);
+            BGLv2.BackColor = Color.DarkGray;
+            BGLv2.BackgroundImage = Properties.Resources.BG_Parallax_001;
+            BGLv2.Location = new Point(79, 41);
             BGLv2.Name = "BGLv2";
-            BGLv2.Size = new Size(300, 100);
+            BGLv2.Size = new Size(30, 30);
             BGLv2.TabIndex = 5;
             BGLv2.TabStop = false;
             // 
             // BGLv3
             // 
-            BGLv3.BackColor = Color.DarkSeaGreen;
-            BGLv3.Location = new Point(43, 125);
+            BGLv3.BackColor = Color.Gainsboro;
+            BGLv3.BackgroundImage = Properties.Resources.BG_Parallax_000;
+            BGLv3.BackgroundImageLayout = ImageLayout.None;
+            BGLv3.Location = new Point(143, 77);
             BGLv3.Name = "BGLv3";
-            BGLv3.Size = new Size(200, 100);
+            BGLv3.Size = new Size(30, 30);
             BGLv3.TabIndex = 6;
             BGLv3.TabStop = false;
             // 
@@ -254,10 +260,20 @@
             plf2.TabStop = false;
             plf2.Tag = "platform";
             // 
+            // BG
+            // 
+            BG.BackgroundImage = Properties.Resources.BG;
+            BG.Location = new Point(0, 0);
+            BG.Name = "BG";
+            BG.Size = new Size(800, 600);
+            BG.TabIndex = 20;
+            BG.TabStop = false;
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
-            BackColor = Color.LightBlue;
+            BackColor = Color.Black;
+            BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(780, 557);
             Controls.Add(pictureBox5);
             Controls.Add(pictureBox8);
@@ -270,12 +286,13 @@
             Controls.Add(enemy2);
             Controls.Add(BorderLeft);
             Controls.Add(plf2);
-            Controls.Add(BGLv3);
-            Controls.Add(BGLv2);
-            Controls.Add(BGLv1);
             Controls.Add(enemy1);
             Controls.Add(plf1);
             Controls.Add(plf);
+            Controls.Add(BGLv3);
+            Controls.Add(BGLv2);
+            Controls.Add(BGLv1);
+            Controls.Add(BG);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -301,6 +318,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
             ((System.ComponentModel.ISupportInitialize)plf2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BG).EndInit();
             ResumeLayout(false);
         }
 
@@ -324,5 +342,6 @@
         private PictureBox pictureBox7;
         public PictureBox pictureBox8;
         private PictureBox plf2;
+        private PictureBox BG;
     }
 }

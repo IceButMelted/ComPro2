@@ -41,7 +41,7 @@ namespace ContraAtHome
             if (Left < 0 || Right > 800 || Top < 0 || Bottom > 600)
             {
                 DisposeBullet();
-                Debug.WriteLine("Bullet dispose");
+                //Debug.WriteLine("Bullet dispose");
             }
         }
 

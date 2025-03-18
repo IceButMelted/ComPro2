@@ -57,15 +57,13 @@ namespace ContraAtHome
         {
             Hp--;
         }
-
-        public bool IsPlayerOver()
+        public bool IsGameOver()
         {
             if (Hp <= 0)
                 return true;
             else 
                 return false;
         }
-
         public string GetFacing()
         {
             return facingDirecttion;
@@ -74,19 +72,6 @@ namespace ContraAtHome
         {
             facingDirecttion = direction;
         }   
-
-        public string GetState()
-        {
-            return state;
-        }
-        public void SetState(string newState)
-        {
-            state = newState;
-        }
-        public void ResetFrame()
-        {
-            currentFrame = 0;
-        }
         public int GetCurrentFrame()
         {
             return currentFrame;
@@ -95,21 +80,17 @@ namespace ContraAtHome
         {
             currentFrame = frame;
         }
-
         public int GetTickChange()
         {
             return tickChange;
         }
-
         public int GetInvicibleDuration()
         {
             return invicibleDuration;
         }
-
         public int GetInvicibleCounter() { 
             return invicibleCounter;
         }
-
         public void SetInvicibleCounter(int counter) {
             invicibleCounter = counter;  
         }
