@@ -1,0 +1,58 @@
+# Ignore Visual Studio specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore build artifacts
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.log
+*.cache
+
+# Ignore NuGet packages
+packages/
+!packages/repositories.config
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.swp
+*.sln.ide
+
+# Ignore Rider and JetBrains files
+.idea/
+*.sln.iml
+
+# Ignore ASP.NET temp files
+**/AppData/
+
+# Ignore Dotnet tools
+.dotnet/
+
+# Ignore environment-specific settings
+appsettings.*.json
+secrets.json
+
+# Ignore publish output
+publish/
+
+# Ignore local development files
+*.local.json
+
+# Ignore Resharper files
+_ReSharper.Caches/
+
+# Ignore SQL Server LocalDB files
+*.mdf
+*.ldf
+
+# Ignore logs and debugging files
+*.tlog
+*.ilk
+*.ipch
+*.obj
