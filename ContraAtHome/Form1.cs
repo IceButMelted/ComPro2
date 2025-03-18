@@ -99,6 +99,12 @@ namespace ContraAtHome
         // Key press tracking
         private HashSet<Keys> keysPressed = new HashSet<Keys>();
 
+        public Enemy enemyBoss;
+        private bool _IsBossSpawn;
+        private bool _IsBossAlive;
+        private bool _BossAction = false;
+
+
         #endregion
         public Form1()
         {
@@ -119,11 +125,16 @@ namespace ContraAtHome
             PlayerSpriteLoader();
             EnemySpriteLoader();
 
+
             //LoadSound
             SoundLoader();
 
+            CreateBoss();
+            Debug.WriteLine($"Boss is : {enemyBoss._IsAlive}");
+
+
             //Set Key
-            KeyPic.Location = new Point(this.ClientSize.Width/2 - KeyPic.Width,KeyPic.Location.Y);
+            KeyPic.Location = new Point(this.ClientSize.Width/2 - (KeyPic.Width * 4),KeyPic.Location.Y);
 
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
@@ -156,15 +167,31 @@ namespace ContraAtHome
                     currentShootCooldown++;
 
                 AnimationPlayerAlive();
+
+                if (!_IsBossSpawn && _IsLockScreen)
+                {
+                    _IsBossSpawn = true;
+                }
+                if (_IsBossSpawn && enemyBoss.Location.Y < 0)
+                {
+                    Debug.WriteLine($"Boss Y : {enemyBoss.Location.Y}");
+                    enemyBoss.Top += 1;
+                }
+                if(enemyBoss.Location.Y >= 0){
+                    _BossAction = true;
+                }
+                
+                
             }
-            else{
+            else
+            {
                 //Freeze everythings and show GameOverScreen 
                 //then requested to quit or restart(restartProgram)
                 if (!_IsCreatedDeathScene) {
                     CreatDeathScene(this);
-                    
                 }
             }
+            
         }
 
         public void CreatDeathScene(Form form)
@@ -197,7 +224,27 @@ namespace ContraAtHome
             _IsCreatedDeathScene = true;
         }
 
+        private void CreateBoss()
+        {
+            enemyBoss = new Boss(30,10, "Boss");
+            enemyBoss.Location = new Point(BossPicBox.Location.X, BossPicBox.Location.Y);
+            enemyBoss.Size = BossPicBox.Size;
+            enemyBoss.BackColor = ColorDrawing.White;
+            Controls.Add(enemyBoss);
+            enemyBoss.BringToFront();
+            Controls.Remove(BossPicBox);
+
+        }
+
+
         #region Boss Stage
+        private void BossAction() 
+        {
+
+            // Check platform bounds
+            if (enemyBoss.Left < enemyBoss.Left || enemyBoss.Right > enemyBoss.Right)
+                enemyBoss.Speed = -enemyBoss.Speed;
+        }
 
         #endregion
 
@@ -264,7 +311,7 @@ namespace ContraAtHome
                 _needsEnemyUpdate = false;
             }
 
-            if (_needsEnemyBulletUpdate)
+            if (_needsEnemyBulletUpdate || frameCounter % 30 == 0)
             {
                 enemyBullets.Clear();
                 foreach (Control control in Controls)
@@ -618,32 +665,41 @@ namespace ContraAtHome
             // Handle horizontal movement
             if (player.goLeft)
             {
-                if (_IsLockScreen)
+                if (_IsLockScreen || BorderLeft.Location.X > -1)
                 {
                     if (player.Left > 0) // Move player if not at left edge
                         player.Left -= player.Speed;
                 }
-                else if (BorderLeft.Location.X < screenWidth / 3)
+                else if (player.Left + player.Width > screenWidth / 2)
+                {
+                    player.Left -= player.Speed;
+                }
+                else if (BorderLeft.Location.X < screenWidth)
                 {
                     // Scroll world with parallax
                     MoveGameElements(Direction.Left);
-                    UpdateParallaxBackground(1, 3, 5);
+                    //UpdateParallaxBackground(1, 3, 5);
                 }
                 return;
             }
 
             if (player.goRight)
             {
-                if (_IsLockScreen)
+                if (_IsLockScreen || BorderRight.Location.X < screenWidth)
                 {
-                    if (player.Left + player.Width < screenWidth) // Move player if not at right edge
+                    if (player.Left + player.Width/2 < screenWidth) // Move player if not at right edge
                         player.Left += player.Speed;
+
                 }
-                else if (BorderRight.Location.X > screenWidth - screenWidth / 3)
+                else if (player.Left + player.Width/2 < screenWidth / 2) 
+                {
+                    player.Left += player.Speed;
+                }
+                else if (BorderRight.Location.X > screenWidth)
                 {
                     // Scroll world with parallax
                     MoveGameElements(Direction.Right);
-                    UpdateParallaxBackground(1, 3, 5);
+                    //UpdateParallaxBackground(1, 3, 5);
                 }
                 return;
             }
@@ -921,9 +977,11 @@ namespace ContraAtHome
                     }
                 }
             }
-            else
-            { 
-            
+            else if(_BossAction)
+            {
+                if (enemyBoss._IsAlive) {
+                    enemyBoss.EnemyAction(this);
+                }
             }
         }
 
@@ -1000,7 +1058,7 @@ namespace ContraAtHome
             };
 
             Controls.Add(player);
-            player.Location = new Point(ClientSize.Width / 2 - player.Width, 430);
+            player.Location = new Point(ClientSize.Width / 2 - player.Width/2, 430);
         }
 
         private void SetupBackground()

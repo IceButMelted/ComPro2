@@ -4,6 +4,9 @@
     <Compile Update="Bullet.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Enemy\Boss.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Enemy\Enemy.cs">
       <SubType>Component</SubType>
     </Compile>
