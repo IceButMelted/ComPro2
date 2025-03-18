@@ -1,8 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Git\\ComPro2\\",
+  "WorkspaceRootPath": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\boss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\boss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,12 +14,21 @@
     {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|D:\\Git\\ComPro2\\contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> Assets-Update1
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
@@ -28,18 +38,31 @@
     {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|",
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> Assets-Update1
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|"
     },
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|d:\\git\\compro2\\contraathome\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|c:\\users\\asus\\documents\\github\\compro2\\contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE4A52EA-56F2-4AD3-8484-B7DC3B9DA45F}|ContraAtHome\\ContraAtHome.csproj|solutionrelative:contraathome\\enemy\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> Assets-Update1
     }
   ],
   "DocumentGroupContainers": [
@@ -55,11 +78,15 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Form1.cs",
-              "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
-              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeToolTip": "ContraAtHome\\Form1.cs",
+<<<<<<< HEAD
               "ViewState": "AgIAAIgDAAAAAAAAAAAUwLMAAAAqAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYCAAAIAAAAAAAAAA==",
+>>>>>>> Assets-Update1
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-17T19:33:57.689Z",
               "IsPinned": true,
@@ -68,6 +95,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
               "$type": "Bookmark",
@@ -86,6 +117,7 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
+<<<<<<< HEAD
               "Title": "RunningSoldier.cs",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Enemy\\RunningSoldier.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\RunningSoldier.cs",
@@ -107,29 +139,76 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-18T13:59:39.613Z",
               "EditorCaption": ""
+=======
+              "Title": "ClassDiagram1.cd",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\ClassDiagram1.cd",
+              "RelativeDocumentMoniker": "ContraAtHome\\ClassDiagram1.cd",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\ClassDiagram1.cd",
+              "RelativeToolTip": "ContraAtHome\\ClassDiagram1.cd",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000463|",
+              "WhenOpened": "2025-03-18T08:16:21.344Z"
+>>>>>>> Assets-Update1
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
+<<<<<<< HEAD
+=======
+              "Title": "Enemy.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Enemy\\Enemy.cs",
+              "RelativeDocumentMoniker": "ContraAtHome\\Enemy\\Enemy.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Enemy\\Enemy.cs",
+              "RelativeToolTip": "ContraAtHome\\Enemy\\Enemy.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwDIAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T08:16:17.945Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Bullet.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Bullet.cs",
+              "RelativeDocumentMoniker": "ContraAtHome\\Bullet.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Bullet.cs",
+              "RelativeToolTip": "ContraAtHome\\Bullet.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAACQAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T07:57:27.704Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Player.cs",
+              "RelativeDocumentMoniker": "ContraAtHome\\Player.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Player.cs",
+              "RelativeToolTip": "ContraAtHome\\Player.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAkwDwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T03:21:51.957Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+>>>>>>> Assets-Update1
               "Title": "Form1.Designer.cs",
-              "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.Designer.cs",
-              "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.Designer.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Form1.Designer.cs",
               "RelativeToolTip": "ContraAtHome\\Form1.Designer.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-17T19:33:53.682Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-17T19:33:53.682Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs [Design]",
-              "RelativeToolTip": "ContraAtHome\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2025-03-17T19:33:43.971Z",
               "EditorCaption": " [Design]"
             },
@@ -180,6 +259,9 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-18T03:21:51.957Z"
+=======
+              "WhenOpened": "2025-03-17T19:33:43.971Z"
+>>>>>>> Assets-Update1
             }
           ]
         }
