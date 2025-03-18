@@ -21,7 +21,7 @@ namespace ContraAtHome
         private const int PLAYER_JUMP_SPEED = 15;
 
         private const int PLATFORM_SPEED = 7;
-        private const int SHOOT_COOLDOWN = 10;
+        private const int SHOOT_COOLDOWN = 20;
 
         //Counter 
         private int enemyCounter = 0;
@@ -65,11 +65,12 @@ namespace ContraAtHome
         private MediaPlayer BossDead_Sound   = new MediaPlayer();
         private MediaPlayer BossHit_Sound    = new MediaPlayer();
         private MediaPlayer EnemyDead_Sound  = new MediaPlayer();
-        private MediaPlayer GameOver_Sound  = new MediaPlayer();
+        private MediaPlayer GameOver_Sound   = new MediaPlayer();
         private MediaPlayer Gun_Sound        = new MediaPlayer();
         private MediaPlayer Jump_Sound       = new MediaPlayer();
         private MediaPlayer PlayerDead_Sound = new MediaPlayer();
         private MediaPlayer PlayerHit_Sound  = new MediaPlayer();
+        private MediaPlayer BGM_Sound        = new MediaPlayer();
 
         // Background parallax
         private int bgLayer1Offset;
@@ -99,6 +100,13 @@ namespace ContraAtHome
         // Key press tracking
         private HashSet<Keys> keysPressed = new HashSet<Keys>();
 
+        public Enemy enemyBoss;
+        public GunBoss gunBoss1;
+        private bool _IsBossSpawn;
+        private bool _IsBossAlive;
+        private bool _BossAction = false;
+
+
         #endregion
         public Form1()
         {
@@ -119,8 +127,22 @@ namespace ContraAtHome
             PlayerSpriteLoader();
             EnemySpriteLoader();
 
+
             //LoadSound
             SoundLoader();
+            BGM_Sound.MediaEnded += (sender, e) =>
+            {
+                // When the music ends, restart it from the beginning
+                BGM_Sound.Position = TimeSpan.Zero;
+                BGM_Sound.Play();
+            };
+
+            CreateBoss();
+            CreateGunBoss1();
+
+
+            //Set Key
+            KeyPic.Location = new Point(this.ClientSize.Width/2 - (KeyPic.Width * 4),KeyPic.Location.Y);
 
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
@@ -136,6 +158,10 @@ namespace ContraAtHome
         // Main game loop
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
+            if (!BGM_Sound.IsBuffering)
+            {
+                BGM_Sound.Play();
+            }
             if (player._isDeath) {
                 AnimationPlayerDeath();
             }
@@ -153,15 +179,35 @@ namespace ContraAtHome
                     currentShootCooldown++;
 
                 AnimationPlayerAlive();
+
+                if (!_IsBossSpawn && _IsLockScreen)
+                {
+                    BG.BackgroundImage = Properties.Resources.BG2;
+                    _IsBossSpawn = true;
+                }
+                if (_IsBossSpawn && enemyBoss.Location.Y < 0)
+                {
+                    Debug.WriteLine($"Boss Y : {enemyBoss.Location.Y}");
+                    enemyBoss.Top += 1;
+                }
+                if (_IsBossSpawn && gunBoss1.Location.Y < 0) {
+                    gunBoss1.Top += 1;
+                }
+                if(enemyBoss.Location.Y >= 0){
+                    _BossAction = true;
+                }
+                
+                
             }
-            else{
+            else
+            {
                 //Freeze everythings and show GameOverScreen 
                 //then requested to quit or restart(restartProgram)
                 if (!_IsCreatedDeathScene) {
                     CreatDeathScene(this);
-                    
                 }
             }
+            
         }
 
         public void CreatDeathScene(Form form)
@@ -194,11 +240,29 @@ namespace ContraAtHome
             _IsCreatedDeathScene = true;
         }
 
-        #region Boss Stage
-        private void LockScreen() {
-            if(!_IsLockScreen)
-                _IsLockScreen = true;
+        private void CreateBoss()
+        {
+            enemyBoss = new Boss(30,10, "Boss");
+            enemyBoss.Location = new Point(BossPicBox.Location.X, BossPicBox.Location.Y);
+            enemyBoss.Size = BossPicBox.Size;
+            enemyBoss.BackColor = ColorDrawing.White;
+            Controls.Add(enemyBoss);
+            enemyBoss.BringToFront();
+            Controls.Remove(BossPicBox);
+
         }
+        private void CreateGunBoss1() 
+        { 
+            gunBoss1 = new GunBoss();
+            gunBoss1.Location = new Point(BossGun1.Location.X, BossGun1.Location.Y);
+            gunBoss1.Size = BossGun1.Size;
+            gunBoss1.BackColor = ColorDrawing.Gold;
+            Controls.Add(gunBoss1);
+            gunBoss1.BringToFront();
+            Controls.Remove(BossGun1);
+        }
+
+        #region Boss Stage
 
         #endregion
 
@@ -224,6 +288,8 @@ namespace ContraAtHome
             PlayerDead_Sound.Open(new System.Uri(resourcePath));
             resourcePath = Path.GetFullPath("./Sounds/SFX/PlayerHit" + ".wav");
             PlayerHit_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/BGM/MainTheme.mp3");
+            BGM_Sound.Open(new System.Uri(resourcePath));
 
 
         }
@@ -265,7 +331,7 @@ namespace ContraAtHome
                 _needsEnemyUpdate = false;
             }
 
-            if (_needsEnemyBulletUpdate)
+            if (_needsEnemyBulletUpdate || frameCounter % 30 == 0)
             {
                 enemyBullets.Clear();
                 foreach (Control control in Controls)
@@ -288,7 +354,8 @@ namespace ContraAtHome
                         tag == "platform" ||
                         tag == "enemy" ||
                         tag == "Tag_Border" ||
-                        tag == "EnemyBullet"))
+                        tag == "EnemyBullet")||
+                        tag == "key")
                     {
                         movableElements.Add(control);
                     }
@@ -553,6 +620,14 @@ namespace ContraAtHome
                 }
             }
 
+            //ColletedKey and Eneble Boss Stage
+            if (player.Bounds.IntersectsWith(KeyPic.Bounds) && enemyCounter < 1)
+            {
+                //Look Screen
+                _IsLockScreen = true;
+                KeyPic.Dispose();
+            }
+
             // Previous ground state (for fall detection)
             bool wasOnGround = _isOnGround; // Fixed pointer syntax issue
 
@@ -610,32 +685,41 @@ namespace ContraAtHome
             // Handle horizontal movement
             if (player.goLeft)
             {
-                if (_IsLockScreen)
+                if (_IsLockScreen || BorderLeft.Location.X > -1)
                 {
                     if (player.Left > 0) // Move player if not at left edge
                         player.Left -= player.Speed;
                 }
-                else if (BorderLeft.Location.X < screenWidth / 3)
+                else if (player.Left + player.Width > screenWidth / 2)
+                {
+                    player.Left -= player.Speed;
+                }
+                else if (BorderLeft.Location.X < screenWidth)
                 {
                     // Scroll world with parallax
                     MoveGameElements(Direction.Left);
-                    UpdateParallaxBackground(1, 3, 5);
+                    //UpdateParallaxBackground(1, 3, 5);
                 }
                 return;
             }
 
             if (player.goRight)
             {
-                if (_IsLockScreen)
+                if (_IsLockScreen || BorderRight.Location.X < screenWidth)
                 {
-                    if (player.Left + player.Width < screenWidth) // Move player if not at right edge
+                    if (player.Left + player.Width/2 < screenWidth) // Move player if not at right edge
                         player.Left += player.Speed;
+
                 }
-                else if (BorderRight.Location.X > screenWidth - screenWidth / 3)
+                else if (player.Left + player.Width/2 < screenWidth / 2) 
+                {
+                    player.Left += player.Speed;
+                }
+                else if (BorderRight.Location.X > screenWidth)
                 {
                     // Scroll world with parallax
                     MoveGameElements(Direction.Right);
-                    UpdateParallaxBackground(1, 3, 5);
+                    //UpdateParallaxBackground(1, 3, 5);
                 }
                 return;
             }
@@ -913,10 +997,12 @@ namespace ContraAtHome
                     }
                 }
             }
-            else
+            else if(_BossAction)
             {
-                LockScreen();
-                Debug.WriteLine($"player Left:{player.Left} Right: {player.Right}");
+                if (enemyBoss._IsAlive) {
+                    enemyBoss.EnemyAction(this);
+                    gunBoss1.MoveWithPlayer(player);
+                }
             }
         }
 
@@ -991,8 +1077,9 @@ namespace ContraAtHome
                 Location = new Point(ClientSize.Width / 2, 430),
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
-            
+
             Controls.Add(player);
+            player.Location = new Point(ClientSize.Width / 2 - player.Width/2, 430);
         }
 
         private void SetupBackground()
@@ -1045,7 +1132,7 @@ namespace ContraAtHome
                         Name = $"Platform{platformCount++:D2}",
                         Size = control.Size,
                         Location = control.Location,
-                        BackColor = ColorDrawing.Brown,
+                        BackgroundImage = control.BackgroundImage,
                         Tag = "platform"
                     };
                     Controls.Remove(control);

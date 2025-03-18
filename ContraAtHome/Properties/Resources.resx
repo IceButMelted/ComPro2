@@ -118,16 +118,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="BG" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="BG_Parallax_001" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG_Parallax_001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="BG_Parallax_000" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG_Parallax_000.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="BG_Parallax_001" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG_Parallax_001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="BG" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="BG_Parallax_002" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG_Parallax_002.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Platform3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\Platform\Platform3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Platform2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\Platform\Platform2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Platform1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\Platform\Platform1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Platform4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\Platform\Platform4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BG2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
