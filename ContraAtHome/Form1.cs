@@ -122,6 +122,9 @@ namespace ContraAtHome
             //LoadSound
             SoundLoader();
 
+            //Set Key
+            KeyPic.Location = new Point(this.ClientSize.Width/2 - KeyPic.Width,KeyPic.Location.Y);
+
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
             ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
@@ -195,10 +198,6 @@ namespace ContraAtHome
         }
 
         #region Boss Stage
-        private void LockScreen() {
-            if(!_IsLockScreen)
-                _IsLockScreen = true;
-        }
 
         #endregion
 
@@ -288,7 +287,8 @@ namespace ContraAtHome
                         tag == "platform" ||
                         tag == "enemy" ||
                         tag == "Tag_Border" ||
-                        tag == "EnemyBullet"))
+                        tag == "EnemyBullet")||
+                        tag == "key")
                     {
                         movableElements.Add(control);
                     }
@@ -551,6 +551,14 @@ namespace ContraAtHome
                     player.IsInvincible = false;
                     player.SetInvicibleCounter(0);
                 }
+            }
+
+            //ColletedKey and Eneble Boss Stage
+            if (player.Bounds.IntersectsWith(KeyPic.Bounds) && enemyCounter < 1)
+            {
+                //Look Screen
+                _IsLockScreen = true;
+                KeyPic.Dispose();
             }
 
             // Previous ground state (for fall detection)
@@ -914,9 +922,8 @@ namespace ContraAtHome
                 }
             }
             else
-            {
-                LockScreen();
-                Debug.WriteLine($"player Left:{player.Left} Right: {player.Right}");
+            { 
+            
             }
         }
 
@@ -991,8 +998,9 @@ namespace ContraAtHome
                 Location = new Point(ClientSize.Width / 2, 430),
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
-            
+
             Controls.Add(player);
+            player.Location = new Point(ClientSize.Width / 2 - player.Width, 430);
         }
 
         private void SetupBackground()
