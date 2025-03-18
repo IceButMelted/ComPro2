@@ -21,7 +21,7 @@ namespace ContraAtHome
         private const int PLAYER_JUMP_SPEED = 15;
 
         private const int PLATFORM_SPEED = 7;
-        private const int SHOOT_COOLDOWN = 10;
+        private const int SHOOT_COOLDOWN = 20;
 
         //Counter 
         private int enemyCounter = 0;
@@ -65,11 +65,12 @@ namespace ContraAtHome
         private MediaPlayer BossDead_Sound   = new MediaPlayer();
         private MediaPlayer BossHit_Sound    = new MediaPlayer();
         private MediaPlayer EnemyDead_Sound  = new MediaPlayer();
-        private MediaPlayer GameOver_Sound  = new MediaPlayer();
+        private MediaPlayer GameOver_Sound   = new MediaPlayer();
         private MediaPlayer Gun_Sound        = new MediaPlayer();
         private MediaPlayer Jump_Sound       = new MediaPlayer();
         private MediaPlayer PlayerDead_Sound = new MediaPlayer();
         private MediaPlayer PlayerHit_Sound  = new MediaPlayer();
+        private MediaPlayer BGM_Sound        = new MediaPlayer();
 
         // Background parallax
         private int bgLayer1Offset;
@@ -100,6 +101,7 @@ namespace ContraAtHome
         private HashSet<Keys> keysPressed = new HashSet<Keys>();
 
         public Enemy enemyBoss;
+        public GunBoss gunBoss1;
         private bool _IsBossSpawn;
         private bool _IsBossAlive;
         private bool _BossAction = false;
@@ -128,9 +130,15 @@ namespace ContraAtHome
 
             //LoadSound
             SoundLoader();
+            BGM_Sound.MediaEnded += (sender, e) =>
+            {
+                // When the music ends, restart it from the beginning
+                BGM_Sound.Position = TimeSpan.Zero;
+                BGM_Sound.Play();
+            };
 
             CreateBoss();
-            Debug.WriteLine($"Boss is : {enemyBoss._IsAlive}");
+            CreateGunBoss1();
 
 
             //Set Key
@@ -150,6 +158,10 @@ namespace ContraAtHome
         // Main game loop
         private void MainGameTimerEvent(object sender, EventArgs e)
         {
+            if (!BGM_Sound.IsBuffering)
+            {
+                BGM_Sound.Play();
+            }
             if (player._isDeath) {
                 AnimationPlayerDeath();
             }
@@ -170,12 +182,16 @@ namespace ContraAtHome
 
                 if (!_IsBossSpawn && _IsLockScreen)
                 {
+                    BG.BackgroundImage = Properties.Resources.BG2;
                     _IsBossSpawn = true;
                 }
                 if (_IsBossSpawn && enemyBoss.Location.Y < 0)
                 {
                     Debug.WriteLine($"Boss Y : {enemyBoss.Location.Y}");
                     enemyBoss.Top += 1;
+                }
+                if (_IsBossSpawn && gunBoss1.Location.Y < 0) {
+                    gunBoss1.Top += 1;
                 }
                 if(enemyBoss.Location.Y >= 0){
                     _BossAction = true;
@@ -235,16 +251,18 @@ namespace ContraAtHome
             Controls.Remove(BossPicBox);
 
         }
-
+        private void CreateGunBoss1() 
+        { 
+            gunBoss1 = new GunBoss();
+            gunBoss1.Location = new Point(BossGun1.Location.X, BossGun1.Location.Y);
+            gunBoss1.Size = BossGun1.Size;
+            gunBoss1.BackColor = ColorDrawing.Gold;
+            Controls.Add(gunBoss1);
+            gunBoss1.BringToFront();
+            Controls.Remove(BossGun1);
+        }
 
         #region Boss Stage
-        private void BossAction() 
-        {
-
-            // Check platform bounds
-            if (enemyBoss.Left < enemyBoss.Left || enemyBoss.Right > enemyBoss.Right)
-                enemyBoss.Speed = -enemyBoss.Speed;
-        }
 
         #endregion
 
@@ -270,6 +288,8 @@ namespace ContraAtHome
             PlayerDead_Sound.Open(new System.Uri(resourcePath));
             resourcePath = Path.GetFullPath("./Sounds/SFX/PlayerHit" + ".wav");
             PlayerHit_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/BGM/MainTheme.mp3");
+            BGM_Sound.Open(new System.Uri(resourcePath));
 
 
         }
@@ -981,6 +1001,7 @@ namespace ContraAtHome
             {
                 if (enemyBoss._IsAlive) {
                     enemyBoss.EnemyAction(this);
+                    gunBoss1.MoveWithPlayer(player);
                 }
             }
         }
@@ -1111,7 +1132,7 @@ namespace ContraAtHome
                         Name = $"Platform{platformCount++:D2}",
                         Size = control.Size,
                         Location = control.Location,
-                        BackColor = ColorDrawing.Brown,
+                        BackgroundImage = control.BackgroundImage,
                         Tag = "platform"
                     };
                     Controls.Remove(control);

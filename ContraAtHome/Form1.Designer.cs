@@ -43,13 +43,13 @@
             pictureBox4 = new PictureBox();
             pictureBox5 = new PictureBox();
             pictureBox6 = new PictureBox();
-            pictureBox7 = new PictureBox();
             pictureBox8 = new PictureBox();
             plf2 = new PictureBox();
             BG = new PictureBox();
             KeyPic = new PictureBox();
             pictureBox3 = new PictureBox();
             BossPicBox = new PictureBox();
+            BossGun1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)plf).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy1).BeginInit();
@@ -63,18 +63,19 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BG).BeginInit();
             ((System.ComponentModel.ISupportInitialize)KeyPic).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BossPicBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BossGun1).BeginInit();
             SuspendLayout();
             // 
             // plf
             // 
             plf.BackColor = Color.IndianRed;
+            plf.BackgroundImage = Properties.Resources.Platform1;
             plf.Location = new Point(0, 532);
             plf.Margin = new Padding(0);
             plf.Name = "plf";
@@ -86,6 +87,7 @@
             // plf1
             // 
             plf1.BackColor = Color.IndianRed;
+            plf1.BackgroundImage = Properties.Resources.Platform1;
             plf1.Location = new Point(803, 205);
             plf1.Margin = new Padding(0);
             plf1.Name = "plf1";
@@ -167,6 +169,7 @@
             // pictureBox2
             // 
             pictureBox2.BackColor = Color.IndianRed;
+            pictureBox2.BackgroundImage = Properties.Resources.Platform2;
             pictureBox2.Location = new Point(0, 373);
             pictureBox2.Margin = new Padding(0);
             pictureBox2.Name = "pictureBox2";
@@ -189,6 +192,7 @@
             // pictureBox4
             // 
             pictureBox4.BackColor = Color.IndianRed;
+            pictureBox4.BackgroundImage = Properties.Resources.Platform2;
             pictureBox4.Location = new Point(943, 424);
             pictureBox4.Margin = new Padding(0);
             pictureBox4.Name = "pictureBox4";
@@ -219,17 +223,6 @@
             pictureBox6.TabStop = false;
             pictureBox6.Tag = "enemy";
             // 
-            // pictureBox7
-            // 
-            pictureBox7.BackColor = Color.IndianRed;
-            pictureBox7.Location = new Point(990, 424);
-            pictureBox7.Margin = new Padding(0);
-            pictureBox7.Name = "pictureBox7";
-            pictureBox7.Size = new Size(253, 10);
-            pictureBox7.TabIndex = 18;
-            pictureBox7.TabStop = false;
-            pictureBox7.Tag = "platform";
-            // 
             // pictureBox8
             // 
             pictureBox8.BackColor = Color.Red;
@@ -244,6 +237,7 @@
             // plf2
             // 
             plf2.BackColor = Color.IndianRed;
+            plf2.BackgroundImage = Properties.Resources.Platform4;
             plf2.Location = new Point(1285, 205);
             plf2.Margin = new Padding(0);
             plf2.Name = "plf2";
@@ -275,6 +269,7 @@
             // pictureBox3
             // 
             pictureBox3.BackColor = Color.IndianRed;
+            pictureBox3.BackgroundImage = Properties.Resources.Platform3;
             pictureBox3.Location = new Point(559, 373);
             pictureBox3.Margin = new Padding(0);
             pictureBox3.Name = "pictureBox3";
@@ -292,18 +287,27 @@
             BossPicBox.TabIndex = 23;
             BossPicBox.TabStop = false;
             // 
+            // BossGun1
+            // 
+            BossGun1.BackColor = Color.DarkOrchid;
+            BossGun1.Location = new Point(653, -38);
+            BossGun1.Name = "BossGun1";
+            BossGun1.Size = new Size(30, 50);
+            BossGun1.TabIndex = 24;
+            BossGun1.TabStop = false;
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.Black;
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(780, 557);
+            Controls.Add(BossGun1);
             Controls.Add(BossPicBox);
             Controls.Add(pictureBox3);
             Controls.Add(KeyPic);
             Controls.Add(pictureBox5);
             Controls.Add(pictureBox8);
-            Controls.Add(pictureBox7);
             Controls.Add(pictureBox6);
             Controls.Add(pictureBox4);
             Controls.Add(BorderRight);
@@ -339,13 +343,13 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
             ((System.ComponentModel.ISupportInitialize)plf2).EndInit();
             ((System.ComponentModel.ISupportInitialize)BG).EndInit();
             ((System.ComponentModel.ISupportInitialize)KeyPic).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)BossPicBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)BossGun1).EndInit();
             ResumeLayout(false);
         }
 
@@ -365,12 +369,12 @@
         private PictureBox pictureBox4;
         private PictureBox pictureBox5;
         public PictureBox pictureBox6;
-        private PictureBox pictureBox7;
         public PictureBox pictureBox8;
         private PictureBox plf2;
         private PictureBox BG;
         private PictureBox KeyPic;
         private PictureBox pictureBox3;
         private PictureBox BossPicBox;
+        private PictureBox BossGun1;
     }
 }
