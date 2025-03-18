@@ -36,7 +36,6 @@
             BGLv1 = new PictureBox();
             BGLv2 = new PictureBox();
             BGLv3 = new PictureBox();
-            plf2 = new PictureBox();
             BorderLeft = new PictureBox();
             enemy2 = new PictureBox();
             pictureBox1 = new PictureBox();
@@ -47,13 +46,13 @@
             pictureBox6 = new PictureBox();
             pictureBox7 = new PictureBox();
             pictureBox8 = new PictureBox();
+            plf2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)plf).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BGLv1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BGLv2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BGLv3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)plf2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BorderLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -64,6 +63,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)plf2).BeginInit();
             SuspendLayout();
             // 
             // plf
@@ -132,17 +132,6 @@
             BGLv3.TabIndex = 6;
             BGLv3.TabStop = false;
             // 
-            // plf2
-            // 
-            plf2.BackColor = Color.IndianRed;
-            plf2.Location = new Point(819, 282);
-            plf2.Margin = new Padding(0);
-            plf2.Name = "plf2";
-            plf2.Size = new Size(300, 20);
-            plf2.TabIndex = 7;
-            plf2.TabStop = false;
-            plf2.Tag = "platform";
-            // 
             // BorderLeft
             // 
             BorderLeft.BackColor = Color.DarkSlateGray;
@@ -157,7 +146,7 @@
             // enemy2
             // 
             enemy2.BackColor = Color.Red;
-            enemy2.Location = new Point(597, 354);
+            enemy2.Location = new Point(597, 330);
             enemy2.Margin = new Padding(0);
             enemy2.Name = "enemy2";
             enemy2.Size = new Size(40, 50);
@@ -180,7 +169,7 @@
             // pictureBox2
             // 
             pictureBox2.BackColor = Color.IndianRed;
-            pictureBox2.Location = new Point(501, 404);
+            pictureBox2.Location = new Point(501, 380);
             pictureBox2.Margin = new Padding(0);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(300, 20);
@@ -254,6 +243,17 @@
             pictureBox8.TabStop = false;
             pictureBox8.Tag = "enemy";
             // 
+            // plf2
+            // 
+            plf2.BackColor = Color.IndianRed;
+            plf2.Location = new Point(819, 282);
+            plf2.Margin = new Padding(0);
+            plf2.Name = "plf2";
+            plf2.Size = new Size(300, 20);
+            plf2.TabIndex = 7;
+            plf2.TabStop = false;
+            plf2.Tag = "platform";
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -290,7 +290,6 @@
             ((System.ComponentModel.ISupportInitialize)BGLv1).EndInit();
             ((System.ComponentModel.ISupportInitialize)BGLv2).EndInit();
             ((System.ComponentModel.ISupportInitialize)BGLv3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)plf2).EndInit();
             ((System.ComponentModel.ISupportInitialize)BorderLeft).EndInit();
             ((System.ComponentModel.ISupportInitialize)enemy2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -301,6 +300,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
+            ((System.ComponentModel.ISupportInitialize)plf2).EndInit();
             ResumeLayout(false);
         }
 
@@ -308,7 +308,6 @@
 
         private PictureBox plf;
         private PictureBox plf1;
-        private PictureBox plf2;
         public PictureBox enemy1;
         public PictureBox enemy2;
         private System.Windows.Forms.Timer gameTimer;
@@ -324,5 +323,6 @@
         public PictureBox pictureBox6;
         private PictureBox pictureBox7;
         public PictureBox pictureBox8;
+        private PictureBox plf2;
     }
 }

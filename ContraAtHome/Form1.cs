@@ -4,6 +4,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Media; 
+using System.IO;
+using System.Windows.Shell;
+using System.Windows.Media;
+using ColorDrawing = System.Drawing.Color;
+
 
 namespace ContraAtHome
 {
@@ -12,7 +18,7 @@ namespace ContraAtHome
         #region Variable
         // Constants
         private const int PLAYER_JUMP_FORCE = 10;
-        private const int PLAYER_JUMP_SPEED = 10;
+        private const int PLAYER_JUMP_SPEED = 15;
 
         private const int PLATFORM_SPEED = 7;
         private const int SHOOT_COOLDOWN = 10;
@@ -47,6 +53,16 @@ namespace ContraAtHome
         private Bitmap[][] EnemySprite = new Bitmap[4][];
         private Bitmap[] EnemySpriteDeath = new Bitmap[6];
 
+        //Sound 
+        private MediaPlayer BossATK_Sound    = new MediaPlayer();
+        private MediaPlayer BossDead_Sound   = new MediaPlayer();
+        private MediaPlayer BossHit_Sound    = new MediaPlayer();
+        private MediaPlayer EnemyDead_Sound  = new MediaPlayer();
+        private MediaPlayer GameOver_Sound  = new MediaPlayer();
+        private MediaPlayer Gun_Sound        = new MediaPlayer();
+        private MediaPlayer Jump_Sound       = new MediaPlayer();
+        private MediaPlayer PlayerDead_Sound = new MediaPlayer();
+        private MediaPlayer PlayerHit_Sound  = new MediaPlayer();
 
         // Background parallax
         private int bgLayer1Offset;
@@ -96,6 +112,9 @@ namespace ContraAtHome
             PlayerSpriteLoader();
             EnemySpriteLoader();
 
+            //LoadSound
+            SoundLoader();
+
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
             ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
@@ -128,9 +147,40 @@ namespace ContraAtHome
 
                 AnimationPlayerAlive();
             }
-            else { 
-                
+            else {
+
             }
+        }
+
+        private void SoundLoader()
+        {
+            string resourcePath;
+            resourcePath = Path.GetFullPath("./Sounds/SFX/BossAttack" + ".wav");
+            BossATK_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/BossDead" + ".wav");
+            BossDead_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/BossHit" + ".wav");
+            BossHit_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/EnemyDead" + ".wav");
+            EnemyDead_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/GameOver" + ".wav");
+            GameOver_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/GunSound" + ".wav");
+            Gun_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/Jump" + ".wav");
+            Jump_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/PlayerDead" + ".wav");
+            PlayerDead_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/SFX/PlayerHit" + ".wav");
+            PlayerHit_Sound.Open(new System.Uri(resourcePath));
+
+
+        }
+
+        private void SFXPlayer(MediaPlayer mdp) {
+            mdp.Stop();
+            mdp.Position = TimeSpan.Zero;
+            mdp.Play();
         }
 
         #region Cache Methods
@@ -308,13 +358,13 @@ namespace ContraAtHome
                 {
                     enemy.Image = EnemySprite[2][0];
                     enemy.SizeMode = PictureBoxSizeMode.StretchImage;
-                    Debug.WriteLine("enemy set shooting image");
+                    //Debug.WriteLine("enemy set shooting image");
                 }
                 else
                 {
                     enemy.Image = EnemySprite[0][0];
                     enemy.SizeMode = PictureBoxSizeMode.StretchImage;
-                    Debug.WriteLine("enemy set running");
+                    //Debug.WriteLine("enemy set running");
                 }
 
             }
@@ -340,7 +390,7 @@ namespace ContraAtHome
 
             // Store direction for easier access
             bool isDirectionRight = (player.GetFacing() == Direction.Right || player.GetFacing() == Direction.UpRight || (player.GetFacing() == Direction.Up && (lastFacingDirection == Direction.Right || lastFacingDirection == Direction.UpRight) ));
-            Debug.WriteLine(isDirectionRight);
+            //Debug.WriteLine(isDirectionRight);
 
             // Determine animation state based on priority
             int animationState;
@@ -382,12 +432,12 @@ namespace ContraAtHome
             else if (isDirectionRight)
             {
                 player.Image = playerSpriteRight[animationState][player.GetCurrentFrame()];
-                Debug.WriteLine("right is here");
+                //Debug.WriteLine("right is here");
             }
             else
             {
                 player.Image = playerSpriteLeft[animationState][player.GetCurrentFrame()];
-                Debug.WriteLine("left is here");
+                //Debug.WriteLine("left is here");
             }
 
             // Update frame counter and handle wrapping
@@ -427,33 +477,6 @@ namespace ContraAtHome
             }
         }
 
-        private void AnimationTimerEvent()
-        {
-            // Player animation
-            if (player.GetState() == PlayerState.Idle)
-            {
-                player.Image = playerSpriteRight[0][0];
-            }
-            else if (player.GetState() == PlayerState.Running)
-            {
-                player.Image = playerSpriteRight[1][player.GetCurrentFrame()];
-                player.Image.RotateFlip(player.GetFacing() == Direction.Left ? RotateFlipType.RotateNoneFlipX : RotateFlipType.RotateNoneFlipNone);
-                player.SetCurrentFrame(player.GetCurrentFrame() + 1);
-                if (player.GetCurrentFrame() > 3)
-                {
-                    player.ResetFrame();
-                }
-            }
-            else if (player.GetState() == PlayerState.Jumping)
-            {
-                player.Image = playerSpriteRight[2][0];
-            }
-            else if (player.GetState() == PlayerState.Falling)
-            {
-                player.Image = playerSpriteRight[3][0];
-            }
-        }
-
         #endregion
 
         #region Player Movement & Controls
@@ -466,12 +489,12 @@ namespace ContraAtHome
             {
                 if (player.GetInvicibleCounter() < player.GetInvicibleDuration())
                 {
-                    player.BackColor = Color.White;
+                    player.BackColor = ColorDrawing.White;
                     player.SetInvicibleCounter(player.GetInvicibleCounter() + 1);
                 }
                 else
                 {
-                    player.BackColor = Color.Transparent;
+                    player.BackColor = ColorDrawing.Transparent;
                     player.IsInvincible = false;
                     player.SetInvicibleCounter(0);
                 }
@@ -486,12 +509,17 @@ namespace ContraAtHome
             // Platform collision - check if player is on ground
             foreach (Platform platform in playerPlatforms)
             {
-                if (player.Bounds.IntersectsWith(platform.Bounds))
+                if (player._IsShouldOnPlatform)
                 {
-                    _isOnGround = true;
-                    force = PLAYER_JUMP_FORCE;
-                    player.Top = platform.Top - player.Height + 1;
-                    _isFalling = false;
+                    if (player.Bounds.IntersectsWith(platform.Bounds))
+                    {
+
+                        _isOnGround = true;
+                        force = PLAYER_JUMP_FORCE;
+                        player.Top = platform.Top - player.Height + 1;
+                        //keysPressed.Remove(Keys.K);
+                        _isFalling = false;
+                    }
                 }
 
             }
@@ -506,12 +534,13 @@ namespace ContraAtHome
             if (player.jumping)
             {
                 force -= 1;
-
+                
                 // End jump if force is depleted
                 if (force < 0)
                 {
                     player.jumping = false;
                     _isFalling = true;
+                    player._IsShouldOnPlatform = true;
                 }
             }
 
@@ -581,12 +610,17 @@ namespace ContraAtHome
             // Jump handling
             if (keysPressed.Contains(Keys.K) && !player.jumping && !_isFalling && _isOnGround)
             {
+                //player Jump Sound
+                SFXPlayer(Jump_Sound);
+                player._IsShouldOnPlatform = false;
                 player.jumping = true;
             }
 
             // Shoot handling
             if (keysPressed.Contains(Keys.J) && currentShootCooldown > SHOOT_COOLDOWN)
             {
+                //Play player shoot -SOUND-
+                SFXPlayer(Gun_Sound);
                 ShootBullet(player);
                 currentShootCooldown = 0;
             }
@@ -657,6 +691,13 @@ namespace ContraAtHome
                             if (bullet.Bounds.IntersectsWith(enemy.Bounds))
                             {
                                 enemy.TakeDamage();
+                                if (enemy.Hp <= 0)
+                                {//Play Die sound -SOUND-
+                                    SFXPlayer(EnemyDead_Sound);
+                                }
+                                else
+                                {//Play Hit sound -SOUND- 
+                                }
                                 controlsToRemove.Add(bullet);
                                 break;
                             }
@@ -670,6 +711,8 @@ namespace ContraAtHome
                     {
                         if (bullet.Bounds.IntersectsWith(player.Bounds))
                         {
+                            //Play Playe Hit sound -SOUND-
+                            SFXPlayer(PlayerHit_Sound);
                             player.DecreasHP();
                             player.IsInvincible = true;
                             player._isDeath = true;
@@ -684,6 +727,8 @@ namespace ContraAtHome
                         {
                             if (enmy.Bounds.IntersectsWith(player.Bounds))
                             {
+                                //Play Playe Hit sound -SOUND-
+                                SFXPlayer(PlayerHit_Sound);
                                 player.DecreasHP();
                                 player.IsInvincible = true;
                                 player._isDeath = true;
@@ -751,6 +796,11 @@ namespace ContraAtHome
                         shooter.SetFacing(shooter.Location.X > player.Location.X ? Direction.Left : Direction.Right);
                         shooter.CanShooting = false;
                         ShootBullet(shooter, shooter.BulletSpeed);
+                        //Play Enemy shoot -SOUND-
+                        SFXPlayer(Gun_Sound);
+                        Gun_Sound.Stop();
+                        Gun_Sound.Position = TimeSpan.Zero;
+                        Gun_Sound.Play();
                         shooter.ResetShootCooldown();
                     }
 
@@ -759,7 +809,7 @@ namespace ContraAtHome
                 }
                 if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == false)
                 {
-                    if (frameCounter % 5 == 0)
+                    if (frameCounter % 2 == 0)
                     {
 
                         if (enemy.GetCurrentFrameDeath() > 5)
@@ -813,7 +863,7 @@ namespace ContraAtHome
         {
             if (shooter == null || !shooter._IsAlive) return;
 
-            Color bulletColor = bulletType == "explosive" ? Color.Red : Color.Yellow;
+            ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Red : ColorDrawing.Yellow;
 
             Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
                 new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), bulletColor, screenWidth, screenHeight)
@@ -821,7 +871,7 @@ namespace ContraAtHome
                 Direction = shooter.GetFacing()
             };
 
-            bullet.BackColor = Color.Purple;
+            bullet.BackColor = ColorDrawing.Purple;
 
             AddControlWithCacheUpdate(bullet);
             bullet.BringToFront();
@@ -832,7 +882,7 @@ namespace ContraAtHome
             if (shooter == null) return;
 
             Bullet bullet = new Bullet("PlayerBullet", 10,
-                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), Color.Yellow, screenWidth, screenHeight)
+                new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), ColorDrawing.Yellow, screenWidth, screenHeight)
             {
                 Direction = shooter.GetFacing()
             };
@@ -850,7 +900,7 @@ namespace ContraAtHome
             player = new Player(5, 10, 7, 10, false)
             {
                 Size = new Size(60, 80),
-                BackColor = Color.FromArgb(255, 255, 121, 123),
+                BackColor = ColorDrawing.FromArgb(255, 255, 121, 123),
                 Location = new Point(ClientSize.Width / 2, 430),
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
@@ -906,7 +956,7 @@ namespace ContraAtHome
                         Name = $"Platform{platformCount++:D2}",
                         Size = control.Size,
                         Location = control.Location,
-                        BackColor = Color.Brown,
+                        BackColor = ColorDrawing.Brown,
                         Tag = "platform"
                     };
                     Controls.Remove(control);
@@ -1051,7 +1101,7 @@ namespace ContraAtHome
 
             enemy.Size = control.Size;
             enemy.Location = control.Location;
-            enemy.BackColor = Color.Orange;
+            enemy.BackColor = ColorDrawing.Orange;
             enemy.Tag = "enemy";
 
             Controls.Remove(control);

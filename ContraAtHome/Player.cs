@@ -34,6 +34,8 @@ namespace ContraAtHome
         private int invicibleCounter = 0;
         public bool IsInvincible { get; set; }
 
+        public bool _IsShouldOnPlatform = true;
+
 
         // Constructor
         public Player(int hp, int jumpPower, int speed, int dmg, bool isInvincible)
