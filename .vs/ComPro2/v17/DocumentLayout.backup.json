@@ -53,7 +53,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+<<<<<<< HEAD
           "SelectedChildIndex": 0,
+=======
+          "SelectedChildIndex": 6,
+>>>>>>> KapitanzMD2/BGM
           "Children": [
             {
               "$type": "Document",
@@ -89,6 +93,13 @@
             },
             {
               "$type": "Bookmark",
+<<<<<<< HEAD
+=======
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Bookmark",
+>>>>>>> KapitanzMD2/BGM
               "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
             },
             {
@@ -168,6 +179,7 @@
             {
               "$type": "Document",
               "DocumentIndex": 9,
+<<<<<<< HEAD
               "Title": "ClassDiagram1.cd",
               "DocumentMoniker": "D:\\Git\\ComPro2\\ContraAtHome\\ClassDiagram1.cd",
               "RelativeDocumentMoniker": "ContraAtHome\\ClassDiagram1.cd",
@@ -175,6 +187,16 @@
               "RelativeToolTip": "ContraAtHome\\ClassDiagram1.cd",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000463|",
               "WhenOpened": "2025-03-18T17:17:26.914Z"
+=======
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Player.cs",
+              "RelativeDocumentMoniker": "ContraAtHome\\Player.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\GitHub\\ComPro2\\ContraAtHome\\Player.cs",
+              "RelativeToolTip": "ContraAtHome\\Player.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T03:21:51.957Z"
+>>>>>>> KapitanzMD2/BGM
             },
             {
               "$type": "Document",
