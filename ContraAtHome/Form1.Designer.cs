@@ -315,12 +315,12 @@
             txt_tut.AutoSize = true;
             txt_tut.BackColor = Color.Black;
             txt_tut.Font = new Font("Unispace", 15.7499981F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            txt_tut.ForeColor = Color.SpringGreen;
-            txt_tut.Location = new Point(79, 110);
+            txt_tut.ForeColor = Color.MediumSpringGreen;
+            txt_tut.Location = new Point(79, 139);
             txt_tut.Name = "txt_tut";
-            txt_tut.Size = new Size(662, 50);
+            txt_tut.Size = new Size(662, 150);
             txt_tut.TabIndex = 26;
-            txt_tut.Text = "'A' : move left | 'D' : move right | 'W' : Face up\r\n'J' : shoot | 'K' : jump";
+            txt_tut.Text = "'A' : move left | 'D' : move right | 'W' : Face up\r\n'J' : shoot | 'K' : jump\r\n\r\nYour Objective is Kill All Bug and Come back here\r\n\r\npress Any Keys To start\r\n";
             txt_tut.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Form1

@@ -43,6 +43,7 @@ namespace ContraAtHome
         //vairable for cal frame
         private int frameCounter = 0;
         private int enemyAnimationCounter = 0;
+        private int BossDeathFrameCounter = 0;
 
         private int frameDeathDuration = 30;
         private int frameDeathCounter = 0;
@@ -79,6 +80,8 @@ namespace ContraAtHome
         private MediaPlayer PlayerHit_Sound  = new MediaPlayer();
         private MediaPlayer BGM_Sound        = new MediaPlayer();
 
+        
+
         // Background parallax
         private int bgLayer1Offset;
         private int bgLayer2Offset;
@@ -110,6 +113,7 @@ namespace ContraAtHome
         public Enemy enemyBoss;
         public GunBoss gunBoss1;
         private bool _IsBossSpawn;
+        private bool _IsBossFinishSpaen = false;
         private bool _IsBossAlive;
         private bool _IsBosHurt = false;
         private bool _BossAction = false;
@@ -150,7 +154,6 @@ namespace ContraAtHome
                 BGM_Sound.Play();
             };
 
-            
 
 
             //Set Key
@@ -207,6 +210,7 @@ namespace ContraAtHome
                 //then requested to quit or restart(restartProgram)
                 if (!_IsCreatedDeathScene) {
                     CreatDeathScene(this);
+                    GameOver_Sound.Play();
                 }
                 
             }
@@ -214,6 +218,9 @@ namespace ContraAtHome
             {
                 if (!_IsCreatedWinSccen) {
                     CreateWinScene(this);
+                    BGM_Sound.Close();
+                    GameOver_Sound.Play();
+
                 }
             }
             if(_IsShowTutTxt == false)
@@ -323,12 +330,15 @@ namespace ContraAtHome
             if (enemyBoss.Location.Y >= 0)
             {
                 _BossAction = true;
+                _IsBossFinishSpaen= true;
             }
         }
 
         #endregion
 
         #region Sound
+
+
         private void SoundLoader()
         {
             string resourcePath;
@@ -732,12 +742,19 @@ namespace ContraAtHome
                 }
             }
 
-            if (!enemyBoss._IsAlive && frameCounter % 5 == 0) {
-                enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 6);
-                enemyBoss.Image = BossSprite[2][enemyBoss.GetCurrentFrame()];
-                if (enemyBoss.GetCurrentFrame() > 5)
+            if (!enemyBoss._IsAlive && frameCounter %50 == 0) {
+                BossDeathFrameCounter++;
+                Debug.WriteLine("Boss death11");
+                if (BossDeathFrameCounter++ % 4 == 0)
                 {
-                    enemyBoss.SetFinishDeath();
+                    Debug.WriteLine("Boss death");
+                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 6);
+                    enemyBoss.Image = BossSprite[2][enemyBoss.GetCurrentFrame()];
+                    SFXPlayer(BossHit_Sound);
+                    if (enemyBoss.GetCurrentFrame() > 5)
+                    {
+                        enemyBoss.SetFinishDeath();
+                    }
                 }
             }
         }
@@ -1019,19 +1036,24 @@ namespace ContraAtHome
                             }
                         }
                     }
-                    else {
+                    else if (_IsBossFinishSpaen)
+                    {
                         if (bullet.Bounds.IntersectsWith(enemyBoss.Bounds))
                         {
-                            enemyBoss.TakeDamage();
-                            _IsBosHurt = true;  
-                            if (enemyBoss.Hp <= 0)
-                            {//Play Die sound -SOUND-
-                                SFXPlayer(EnemyDead_Sound);
-                                enemyBoss._IsAlive = false;
-                            }
-                            else
-                            {//Play Hit sound -SOUND- 
-                                SFXPlayer(BossHit_Sound);
+                            if (bullet.Bottom > enemyBoss.Top + enemyBoss.Size.Height /2)
+                            {
+                                enemyBoss.TakeDamage();
+                                _IsBosHurt = true;
+                                if (enemyBoss.Hp <= 0)
+                                {//Play Die sound -SOUND-
+                                    SFXPlayer(EnemyDead_Sound);
+                                    enemyBoss.SetCurrentFrame(0);
+                                    enemyBoss._IsAlive = false;
+                                }
+                                else
+                                {//Play Hit sound -SOUND- 
+                                    SFXPlayer(BossHit_Sound);
+                                }
                             }
                             controlsToRemove.Add(bullet);
                             break;
@@ -1106,6 +1128,14 @@ namespace ContraAtHome
                         if (enemy.Right <= 0 || enemy.Left >= screenWidth)
                             continue;
 
+                        // Running soldier specific logic
+                        if (enemy is RunningSoldier)
+                        {
+                            // Check platform bounds
+                            if (enemy.Left < platform.Left || enemy.Right > platform.Right)
+                                enemy.Speed = -enemy.Speed;
+                        }
+
                         // Common animation update logic
                         if (updateAnimation)
                         {
@@ -1122,14 +1152,7 @@ namespace ContraAtHome
                             enemy.SetCurrentFrame((enemy.GetCurrentFrame() + 1) % 6);
                             enemy.Image = EnemySprite[animationType][enemy.GetCurrentFrame()];
                         }
-
-                        // Running soldier specific logic
-                        if (enemy is RunningSoldier)
-                        {
-                            // Check platform bounds
-                            if (enemy.Left < platform.Left || enemy.Right > platform.Right)
-                                enemy.Speed = -enemy.Speed;
-                        }
+                        
 
                         // Shooting soldier specific logic
                         if (enemy is ShootingSoldier shooter && shooter.CanShooting)
@@ -1188,10 +1211,12 @@ namespace ContraAtHome
                     gunBoss1.MoveWithPlayer(player);
                     if (frameCounter % gunBoss1.GetFrameDurationBetween() == 0 && gunBoss1.IsBurstShoot())
                     {
+                        SFXPlayer(BossATK_Sound);
                         ShootBullet(gunBoss1, 15, "basic");
                     }
                     else if (frameCounter % 50 == 0)
                     {
+                        SFXPlayer(BossATK_Sound);
                         ShootBullet(gunBoss1, 15, "basic");
                     }
                     PlayeBossAnimation();
@@ -1200,7 +1225,7 @@ namespace ContraAtHome
                 {
                     if (!enemyBoss._IsAlive)
                     {
-                        if (frameCounter % 2 == 0)
+                        if (frameCounter % 20 == 0)
                         {
                             if (enemyBoss.GetCurrentFrameDeath() > 5)
                             {
@@ -1209,6 +1234,7 @@ namespace ContraAtHome
                             }
                             else
                             {
+                                SFXPlayer(BossDead_Sound);
                                 enemyBoss.Image = BossSprite[2][enemyBoss.GetCurrentFrameDeath()];
                                 enemyBoss.CurrentDeathFrameIncreas();
                             }
@@ -1502,7 +1528,7 @@ namespace ContraAtHome
             if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
                 enemy = new ShootingSoldier(1, 3) { Name = $"Enemy{enemyNumber:D2}" };
             else
-                enemy = new RunningSoldier(1, 3) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new RunningSoldier(1, 7) { Name = $"Enemy{enemyNumber:D2}" };
 
             enemy.Size = control.Size;
             enemy.Location = control.Location;

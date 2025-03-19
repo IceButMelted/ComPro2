@@ -8,6 +8,7 @@ namespace ContraAtHome
 {
     class RunningSoldier : Enemy
     {
+        public string lastFacing = "";
         public RunningSoldier(int hp, int speed, params string[] initialTags) : base(hp, speed, initialTags)
         {
 
@@ -20,5 +21,6 @@ namespace ContraAtHome
 
             Left += Speed;
         }
+
     }
 }
