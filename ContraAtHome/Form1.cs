@@ -537,11 +537,11 @@ namespace ContraAtHome
 
         private void BossSpriteLoader()
         {
-            BossSprite[0] = new Bitmap[12];
-            BossSprite[1] = new Bitmap[6];
-            BossSprite[2] = new Bitmap[6];
+            BossSprite[0] = new Bitmap[16];
+            BossSprite[1] = new Bitmap[8];
+            BossSprite[2] = new Bitmap[10];
             //load normal
-            for (int frameIndex = 0; frameIndex < 12; frameIndex++)
+            for (int frameIndex = 0; frameIndex < 16; frameIndex++)
             {
                 string framePath = "";
                 if (frameIndex < 10)
@@ -551,16 +551,19 @@ namespace ContraAtHome
                 BossSprite[0][frameIndex] = new Bitmap(framePath);
             }
             //load hurt
-            for (int frameIndex = 0; frameIndex < 6; frameIndex++)
+            for (int frameIndex = 0; frameIndex < 8; frameIndex++)
             {
                 string framePath = $"./Sprites/Boss/Hurt/Hurt_00{frameIndex}.png";
                 BossSprite[1][frameIndex] = new Bitmap(framePath);
             }
             //load death
-            for (int frameIndex = 0; frameIndex < 6; frameIndex++)
+            for (int frameIndex = 0; frameIndex < 10; frameIndex++)
             {
                 string framePath = $"./Sprites/Boss/Death/Death_00{frameIndex}.png";
-                BossSprite[2][frameIndex] = new Bitmap(framePath);
+                if(frameIndex < 10)
+                    BossSprite[2][frameIndex] = new Bitmap(framePath);
+                if(frameIndex >= 10)
+                    BossSprite[2][frameIndex] = new Bitmap(framePath);
             }
 
             enemyBoss.Image = BossSprite[0][0];
@@ -726,37 +729,25 @@ namespace ContraAtHome
 
             if (!_IsBosHurt)
             {
-                if (frameCounter % 10 == 0)
+                if (frameCounter % 2 == 0)
                 {
-                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 12);
+                    //Boss Nromal
+                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 16);
                     enemyBoss.Image = BossSprite[0][enemyBoss.GetCurrentFrame()];
                 }
             }
             else {
-                if (frameCounter % 3 == 0)
+                if (frameCounter % 2 == 0)
                 {
-                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 6);
+                    //Boss Hurt
+                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 8);
                     enemyBoss.Image = BossSprite[1][enemyBoss.GetCurrentFrame()];
-                    if(enemyBoss.GetCurrentFrame() > 4)
+                    if(enemyBoss.GetCurrentFrame() > 6)
                         _IsBosHurt = false;
                 }
             }
 
-            if (!enemyBoss._IsAlive && frameCounter %50 == 0) {
-                BossDeathFrameCounter++;
-                Debug.WriteLine("Boss death11");
-                if (BossDeathFrameCounter++ % 4 == 0)
-                {
-                    Debug.WriteLine("Boss death");
-                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 6);
-                    enemyBoss.Image = BossSprite[2][enemyBoss.GetCurrentFrame()];
-                    SFXPlayer(BossHit_Sound);
-                    if (enemyBoss.GetCurrentFrame() > 5)
-                    {
-                        enemyBoss.SetFinishDeath();
-                    }
-                }
-            }
+            
         }
 
         
@@ -1053,6 +1044,8 @@ namespace ContraAtHome
                                 else
                                 {//Play Hit sound -SOUND- 
                                     SFXPlayer(BossHit_Sound);
+                                    enemyBoss.SetCurrentFrame(0);
+                                    _IsBosHurt = true;
                                 }
                             }
                             controlsToRemove.Add(bullet);
@@ -1225,18 +1218,22 @@ namespace ContraAtHome
                 {
                     if (!enemyBoss._IsAlive)
                     {
-                        if (frameCounter % 20 == 0)
+                        BossDeathFrameCounter++;
+                        if (frameCounter % 2 == 0 )
                         {
-                            if (enemyBoss.GetCurrentFrameDeath() > 5)
+                            if (enemyBoss.GetCurrentFrameDeath() > 9 && BossDeathFrameCounter > 32)
                             {
                                 enemyBoss.SetFinishDeath();
                                 //activeEnemies.Remove(enemy);
                             }
-                            else
+                            else if (enemyBoss.GetCurrentFrameDeath() < 10)
                             {
                                 SFXPlayer(BossDead_Sound);
                                 enemyBoss.Image = BossSprite[2][enemyBoss.GetCurrentFrameDeath()];
                                 enemyBoss.CurrentDeathFrameIncreas();
+                            }
+                            else {
+                                enemyBoss.SetCurrentFrame(0);
                             }
                         }
                     }
