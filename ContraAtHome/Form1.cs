@@ -200,8 +200,6 @@ namespace ContraAtHome
 
                 StartBossAction();
 
-
-
             }
             else
             {
@@ -212,9 +210,11 @@ namespace ContraAtHome
                 }
                 
             }
-            if (!enemyBoss._IsAlive) 
-            { 
-                    
+            if (enemyBoss.GetIsFinishDeath()) 
+            {
+                if (!_IsCreatedWinSccen) {
+                    CreateWinScene(this);
+                }
             }
             if(_IsShowTutTxt == false)
                 txt_tut.Visible = false;
@@ -250,10 +250,40 @@ namespace ContraAtHome
 
             _IsCreatedDeathScene = true;
         }
+        
+        public void CreateWinScene(Form form)
+        {
+            // Create a panel that will serve as our rectangle
+            Panel blueRectangle = new Panel
+            {
+                // Set the size to match the client area of the form
+                Size = form.ClientSize,
+                // Set the location to top-left of the client area
+                Location = new Point(0, 0),
+                // Set background color to blue
+                BackgroundImage = new Bitmap("./Sprites/Ui/WinScene2.png"),
+                // Make sure the panel is on top of other controls
+                Dock = DockStyle.None,
+            };
+
+            // Add the panel to the form
+            form.Controls.Add(blueRectangle);
+
+            // Bring the panel to the front so it appears on top of everything
+            blueRectangle.BringToFront();
+
+            // Optional: Make the panel resize with the form
+            form.Resize += (sender, e) =>
+            {
+                blueRectangle.Size = form.ClientSize;
+            };
+
+            _IsCreatedWinSccen = true;
+        }
 
         private void CreateBoss()
         {
-            enemyBoss = new Boss(30,10, "Boss");
+            enemyBoss = new Boss(5,10, "Boss");
             enemyBoss.Location = new Point(BossPicBox.Location.X, BossPicBox.Location.Y);
             enemyBoss.Size = BossPicBox.Size;
             enemyBoss.BackColor = ColorDrawing.White;
@@ -262,6 +292,7 @@ namespace ContraAtHome
             Controls.Remove(BossPicBox);
 
         }
+
         private void CreateGunBoss1() 
         { 
             gunBoss1 = new GunBoss();
