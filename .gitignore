@@ -63,3 +63,5 @@ _ReSharper.Caches/
 *.ilk
 *.ipch
 *.obj
+
+*.v2
