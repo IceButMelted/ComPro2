@@ -6,7 +6,6 @@
 *.sln.docstates
 
 # Ignore build artifacts
-bin/
 obj/
 *.exe
 *.dll
@@ -19,6 +18,8 @@ obj/
 !bin/debug/Sound/
 !bin/Debug/net8.0-windows/Sound/
 !bin/Debug/net8.0-windows/Sprite/
+!ContraAtHome/bin/Debug/net8.0-windows/Sounds/
+!ContraAtHome/bin/Debug/net8.0-windows/Sprites/
 
 # Ignore NuGet packages
 packages/
@@ -58,7 +59,4 @@ _ReSharper.Caches/
 *.ldf
 
 # Ignore logs and debugging files
-*.tlog
-*.ilk
-*.ipch
-*.obj
+*.t
