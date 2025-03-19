@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ContraAtHome")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+795fa54559a92128d831d286d532c0237edc842f")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+934a8686b4364adce9baf510c60adca3d0164544")]
->>>>>>> KapitanzMD2/BGM
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e091f04be6b8b42bc3792bb98472bf7bf576b281")]
 [assembly: System.Reflection.AssemblyProductAttribute("ContraAtHome")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ContraAtHome")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

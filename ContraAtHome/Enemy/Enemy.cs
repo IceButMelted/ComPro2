@@ -26,7 +26,6 @@ namespace ContraAtHome
             Hp = hp;
             Speed = speed;
             _IsAlive = true;
-            Size = new Size(40, 50); // Default size, can be overridden
             BackColor = Color.Red; // Default color, can be overridden
 
             // Set initial tags
@@ -66,7 +65,7 @@ namespace ContraAtHome
         {
             if (Bounds.IntersectsWith(player.Bounds))
             {
-                Console.WriteLine($"Player hit! Player HP: {player.Hp}");
+                Console.WriteLine($"Player hit! Player HP: {player.Live}");
             }
         }
 

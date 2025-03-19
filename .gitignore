@@ -14,6 +14,12 @@ obj/
 *.log
 *.cache
 
+# Allow specific files in bin/debug
+!bin/debug/Sprite/
+!bin/debug/Sound/
+!bin/Debug/net8.0-windows/Sound/
+!bin/Debug/net8.0-windows/Sprite/
+
 # Ignore NuGet packages
 packages/
 !packages/repositories.config

@@ -9,7 +9,7 @@ namespace ContraAtHome
     public class Player : PictureBox
     {
         // Properties
-        public int Hp { get; set; }
+        public int Live { get; set; }
         public int JumpPower { get; set; }
         public int Speed { get; set; }
         public int Dmg { get; set; }
@@ -40,7 +40,7 @@ namespace ContraAtHome
         // Constructor
         public Player(int hp, int jumpPower, int speed, int dmg, bool isInvincible)
         {
-            Hp = hp;
+            Live = hp;
             JumpPower = jumpPower;
             Speed = speed;
             Dmg = dmg;
@@ -50,16 +50,16 @@ namespace ContraAtHome
         // Method to display player details
         public void DisplayInfo()
         {
-            Debug.WriteLine($"HP: {Hp}, Jump Power: {JumpPower}, Speed: {Speed}, Damage: {Dmg}, Is Invincible: {IsInvincible}");
+            Debug.WriteLine($"HP: {Live}, Jump Power: {JumpPower}, Speed: {Speed}, Damage: {Dmg}, Is Invincible: {IsInvincible}");
         }
 
-        public void DecreasHP()
+        public void DecreasLive()
         {
-            Hp--;
+            Live--;
         }
         public bool IsGameOver()
         {
-            if (Hp <= 0)
+            if (Live <= 0)
                 return true;
             else 
                 return false;

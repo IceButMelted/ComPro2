@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows.Shell;
 using System.Windows.Media;
 using ColorDrawing = System.Drawing.Color;
+using System.Windows.Automation.Text;
 
 
 namespace ContraAtHome
@@ -25,10 +26,13 @@ namespace ContraAtHome
 
         //Counter 
         private int enemyCounter = 0;
+        private int tutConter = 0;
 
         //Scene
         private bool _IsCreatedDeathScene = false;
+        private bool _IsCreatedWinSccen = false;
         private bool _IsLockScreen = false;
+        private bool _IsShowTutTxt = true;
         //Player 
 
         // Game state
@@ -58,7 +62,10 @@ namespace ContraAtHome
         //[Enemy Sprite]
         // 1: Running-Rigt 2: Running-Left 3:Shooting-Right 4: Shoothn-Left
         private Bitmap[][] EnemySprite = new Bitmap[4][];
-        private Bitmap[] EnemySpriteDeath = new Bitmap[6];
+        private Bitmap[][] EnemySpriteDeath = new Bitmap[4][];
+        //[Boss]
+        //1:normal 2:hurt 3:death
+        private Bitmap[][] BossSprite= new Bitmap[3][];
 
         //Sound 
         private MediaPlayer BossATK_Sound    = new MediaPlayer();
@@ -104,6 +111,7 @@ namespace ContraAtHome
         public GunBoss gunBoss1;
         private bool _IsBossSpawn;
         private bool _IsBossAlive;
+        private bool _IsBosHurt = false;
         private bool _BossAction = false;
 
 
@@ -123,9 +131,14 @@ namespace ContraAtHome
             //update cache
             UpdateCachedCollectionsIfNeeded();
 
+            //initail boss
+            CreateBoss();
+            CreateGunBoss1();
+
             //Sprite Loader
             PlayerSpriteLoader();
             EnemySpriteLoader();
+            BossSpriteLoader();
 
 
             //LoadSound
@@ -137,21 +150,24 @@ namespace ContraAtHome
                 BGM_Sound.Play();
             };
 
-            CreateBoss();
-            CreateGunBoss1();
+            
 
 
             //Set Key
             KeyPic.Location = new Point(this.ClientSize.Width/2 - (KeyPic.Width * 4),KeyPic.Location.Y);
 
+            //Text
+            txt_Live.Text = "Live : " + (player.Live-1);
+            txt_Live.BringToFront();
+
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
-            ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
+            //ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
             ContraToolUtility.DebugDict(enemyPlatformPairs);
             Debug.WriteLine($" width :{screenWidth}");
             Debug.WriteLine($" height : {screenHeight}");
 
-
+            
 
         }
 
@@ -172,6 +188,8 @@ namespace ContraAtHome
 
                 HandlePlayerLogic();
                 HandleCollisions();
+
+                //Boss And Enemy
                 ProcessEnemyActions();
 
                 // Update shoot cooldown
@@ -180,24 +198,10 @@ namespace ContraAtHome
 
                 AnimationPlayerAlive();
 
-                if (!_IsBossSpawn && _IsLockScreen)
-                {
-                    BG.BackgroundImage = Properties.Resources.BG2;
-                    _IsBossSpawn = true;
-                }
-                if (_IsBossSpawn && enemyBoss.Location.Y < 0)
-                {
-                    Debug.WriteLine($"Boss Y : {enemyBoss.Location.Y}");
-                    enemyBoss.Top += 1;
-                }
-                if (_IsBossSpawn && gunBoss1.Location.Y < 0) {
-                    gunBoss1.Top += 1;
-                }
-                if(enemyBoss.Location.Y >= 0){
-                    _BossAction = true;
-                }
-                
-                
+                StartBossAction();
+
+
+
             }
             else
             {
@@ -206,7 +210,10 @@ namespace ContraAtHome
                 if (!_IsCreatedDeathScene) {
                     CreatDeathScene(this);
                 }
+                
             }
+            if(_IsShowTutTxt == false)
+                txt_tut.Visible = false;
             
         }
 
@@ -263,6 +270,26 @@ namespace ContraAtHome
         }
 
         #region Boss Stage
+        private void StartBossAction() {
+            if (!_IsBossSpawn && _IsLockScreen)
+            {
+                BG.BackgroundImage = Properties.Resources.BG2;
+                _IsBossSpawn = true;
+            }
+            if (_IsBossSpawn && enemyBoss.Location.Y < 0)
+            {
+                PlayeBossAnimation();
+                enemyBoss.Top += 1;
+            }
+            if (_IsBossSpawn && gunBoss1.Location.Y < 0)
+            {
+                gunBoss1.Top += 1;
+            }
+            if (enemyBoss.Location.Y >= 0)
+            {
+                _BossAction = true;
+            }
+        }
 
         #endregion
 
@@ -305,7 +332,7 @@ namespace ContraAtHome
         #region Cache Methods
         private void UpdateCachedCollectionsIfNeeded()
         {
-            if (_needsPlayerBulletUpdate)
+            if (_needsPlayerBulletUpdate || frameCounter % 30 == 0)
             {
                 playerBullets.Clear();
                 foreach (Control control in Controls)
@@ -316,19 +343,6 @@ namespace ContraAtHome
                     }
                 }
                 _needsPlayerBulletUpdate = false;
-            }
-
-            if (_needsEnemyUpdate)
-            {
-                activeEnemies.Clear();
-                foreach (Control control in Controls)
-                {
-                    if (control is Enemy enemy && control.Tag?.ToString() == "enemy" && enemy._IsAlive)
-                    {
-                        activeEnemies.Add(enemy);
-                    }
-                }
-                _needsEnemyUpdate = false;
             }
 
             if (_needsEnemyBulletUpdate || frameCounter % 30 == 0)
@@ -344,23 +358,41 @@ namespace ContraAtHome
                 _needsEnemyBulletUpdate = false;
             }
 
-            if (_needsMovableElementUpdate)
+            if (!_IsLockScreen)
             {
-                movableElements.Clear();
-                foreach (Control control in Controls)
+                if (_needsEnemyUpdate)
                 {
-                    string tag = control.Tag?.ToString();
-                    if (control is PictureBox && (
-                        tag == "platform" ||
-                        tag == "enemy" ||
-                        tag == "Tag_Border" ||
-                        tag == "EnemyBullet")||
-                        tag == "key")
+                    activeEnemies.Clear();
+                    foreach (Control control in Controls)
                     {
-                        movableElements.Add(control);
+                        if (control is Enemy enemy && control.Tag?.ToString() == "enemy" && enemy._IsAlive)
+                        {
+                            activeEnemies.Add(enemy);
+                        }
                     }
+                    _needsEnemyUpdate = false;
                 }
-                _needsMovableElementUpdate = false;
+
+
+
+                if (_needsMovableElementUpdate)
+                {
+                    movableElements.Clear();
+                    foreach (Control control in Controls)
+                    {
+                        string tag = control.Tag?.ToString();
+                        if (control is PictureBox && (
+                            tag == "platform" ||
+                            tag == "enemy" ||
+                            tag == "Tag_Border" ||
+                            tag == "EnemyBullet") ||
+                            tag == "key")
+                        {
+                            movableElements.Add(control);
+                        }
+                    }
+                    _needsMovableElementUpdate = false;
+                }
             }
         }
 
@@ -377,13 +409,16 @@ namespace ContraAtHome
             else if (control is PictureBox && tag == "EnemyBullet")
                 _needsEnemyBulletUpdate = true;
 
-            if (control is PictureBox && (
-                tag == "platform" ||
-                tag == "enemy" ||
-                tag == "Tag_Border" ||
-                tag == "EnemyBullet"))
+            if (!_IsLockScreen)
             {
-                _needsMovableElementUpdate = true;
+                if (control is PictureBox && (
+                    tag == "platform" ||
+                    tag == "enemy" ||
+                    tag == "Tag_Border" ||
+                    tag == "EnemyBullet"))
+                {
+                    _needsMovableElementUpdate = true;
+                }
             }
         }
 
@@ -403,13 +438,16 @@ namespace ContraAtHome
             else if (control is PictureBox && tag == "EnemyBullet")
                 _needsEnemyBulletUpdate = true;
 
-            if (control is PictureBox && (
-                tag == "platform" ||
-                tag == "enemy" ||
-                tag == "Tag_Border" ||
-                tag == "EnemyBullet"))
+            if (!_IsLockScreen)
             {
-                _needsMovableElementUpdate = true;
+                if (control is PictureBox && (
+                    tag == "platform" ||
+                    tag == "enemy" ||
+                    tag == "Tag_Border" ||
+                    tag == "EnemyBullet"))
+                {
+                    _needsMovableElementUpdate = true;
+                }
             }
 
             control.Dispose();
@@ -452,6 +490,38 @@ namespace ContraAtHome
             player.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
+        private void BossSpriteLoader()
+        {
+            BossSprite[0] = new Bitmap[12];
+            BossSprite[1] = new Bitmap[6];
+            BossSprite[2] = new Bitmap[6];
+            //load normal
+            for (int frameIndex = 0; frameIndex < 12; frameIndex++)
+            {
+                string framePath = "";
+                if (frameIndex < 10)
+                    framePath = $"./Sprites/Boss/Normal/Normal_00{frameIndex}.png";
+                else if (frameIndex >= 10)
+                    framePath = $"./Sprites/Boss/Normal/Normal_0{frameIndex}.png";
+                BossSprite[0][frameIndex] = new Bitmap(framePath);
+            }
+            //load hurt
+            for (int frameIndex = 0; frameIndex < 6; frameIndex++)
+            {
+                string framePath = $"./Sprites/Boss/Hurt/Hurt_00{frameIndex}.png";
+                BossSprite[1][frameIndex] = new Bitmap(framePath);
+            }
+            //load death
+            for (int frameIndex = 0; frameIndex < 6; frameIndex++)
+            {
+                string framePath = $"./Sprites/Boss/Death/Death_00{frameIndex}.png";
+                BossSprite[2][frameIndex] = new Bitmap(framePath);
+            }
+
+            enemyBoss.Image = BossSprite[0][0];
+            enemyBoss.SizeMode = PictureBoxSizeMode.StretchImage;
+        }
+
         private void EnemySpriteLoader()
         {
             string[] animationTypes = { "RunningSoldier", "ShootingSoldier" };
@@ -489,11 +559,21 @@ namespace ContraAtHome
 
             }
 
+            string[] animationDeathTypes = { "MeleeDead", "ShooterDead" };
             //initail Sprite Enemy death
-            for(int frameIndex = 0; frameIndex < 6; frameIndex++)
+            for (int animIndex = 0; animIndex < 2; animIndex++)
+            {
+                EnemySpriteDeath[animIndex * 2] = new Bitmap[6];
+                EnemySpriteDeath[animIndex * 2 + 1] = new Bitmap[6];
+
+                for (int frameIndex = 0; frameIndex < 6; frameIndex++)
                 {
-                string framePath = $"./Sprites/Enemy/Dead/Dead_00{frameIndex}.png";
-                EnemySpriteDeath[frameIndex] = new Bitmap(framePath);           
+                    string framePath = $"./Sprites/Enemy/Dead/{animationDeathTypes[animIndex]}/{animationDeathTypes[animIndex]}_00{frameIndex}.png";
+                    EnemySpriteDeath[animIndex * 2][frameIndex] = new Bitmap(framePath);
+
+                    EnemySpriteDeath[animIndex * 2 + 1][frameIndex] = (Bitmap)EnemySpriteDeath[animIndex * 2][frameIndex].Clone();
+                    EnemySpriteDeath[animIndex * 2 + 1][frameIndex].RotateFlip(RotateFlipType.RotateNoneFlipX);
+                }
             }
         }
 
@@ -597,6 +677,37 @@ namespace ContraAtHome
             }
         }
 
+        private void PlayeBossAnimation() {
+
+            if (!_IsBosHurt)
+            {
+                if (frameCounter % 10 == 0)
+                {
+                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 12);
+                    enemyBoss.Image = BossSprite[0][enemyBoss.GetCurrentFrame()];
+                }
+            }
+            else {
+                if (frameCounter % 3 == 0)
+                {
+                    enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 6);
+                    enemyBoss.Image = BossSprite[1][enemyBoss.GetCurrentFrame()];
+                    if(enemyBoss.GetCurrentFrame() > 4)
+                        _IsBosHurt = false;
+                }
+            }
+
+            if (!enemyBoss._IsAlive && frameCounter % 5 == 0) {
+                enemyBoss.SetCurrentFrame((enemyBoss.GetCurrentFrame() + 1) % 6);
+                enemyBoss.Image = BossSprite[2][enemyBoss.GetCurrentFrame()];
+                if (enemyBoss.GetCurrentFrame() > 5)
+                {
+                    enemyBoss.SetFinishDeath();
+                }
+            }
+        }
+
+        
         #endregion
 
         #region Player Movement & Controls
@@ -739,6 +850,9 @@ namespace ContraAtHome
 
         private void HandleKeyPresses()
         {
+            if (_IsShowTutTxt && keysPressed.Count > 0) {
+                _IsShowTutTxt = false;
+            }
             if (!player.IsGameOver())
             {
                 // Reset movement flags to avoid carryover
@@ -846,23 +960,46 @@ namespace ContraAtHome
                 // Check player bullet collisions with enemies
                 foreach (var bullet in playerBullets)
                 {
-                    foreach (var enemy in activeEnemies)
+                    if (!_IsLockScreen) // bossStage
                     {
-                        if (enemy._IsAlive)
+                        foreach (var enemy in activeEnemies)
                         {
-                            if (bullet.Bounds.IntersectsWith(enemy.Bounds))
+                            if (enemy._IsAlive)
                             {
-                                enemy.TakeDamage();
-                                if (enemy.Hp <= 0)
-                                {//Play Die sound -SOUND-
-                                    SFXPlayer(EnemyDead_Sound);
+                                if (bullet.Bounds.IntersectsWith(enemy.Bounds))
+                                {
+                                    enemy.TakeDamage();
+                                    if (enemy.Hp <= 0)
+                                    {//Play Die sound -SOUND-
+                                        SFXPlayer(EnemyDead_Sound);
+                                        
+                                    }
+                                    else
+                                    {//Play Hit sound -SOUND- 
+                                        SFXPlayer(PlayerHit_Sound);
+                                    }
+                                    controlsToRemove.Add(bullet);
+                                    break;
                                 }
-                                else
-                                {//Play Hit sound -SOUND- 
-                                }
-                                controlsToRemove.Add(bullet);
-                                break;
                             }
+                        }
+                    }
+                    else {
+                        if (bullet.Bounds.IntersectsWith(enemyBoss.Bounds))
+                        {
+                            enemyBoss.TakeDamage();
+                            _IsBosHurt = true;  
+                            if (enemyBoss.Hp <= 0)
+                            {//Play Die sound -SOUND-
+                                SFXPlayer(EnemyDead_Sound);
+                                enemyBoss._IsAlive = false;
+                            }
+                            else
+                            {//Play Hit sound -SOUND- 
+                                SFXPlayer(BossHit_Sound);
+                            }
+                            controlsToRemove.Add(bullet);
+                            break;
                         }
                     }
                 }
@@ -875,25 +1012,31 @@ namespace ContraAtHome
                         {
                             //Play Playe Hit sound -SOUND-
                             SFXPlayer(PlayerHit_Sound);
-                            player.DecreasHP();
+                            player.DecreasLive();
                             player.IsInvincible = true;
                             player._isDeath = true;
                             controlsToRemove.Add(bullet);
+                            txt_Live.Text = "Live : " + (player.Live - 1);
                             // Player hit logic here
                         }
                     }
-                    //check enemy collisions with player
-                    foreach (var enmy in activeEnemies)
+                    
+                    if (!_IsLockScreen) // BossStage not use
                     {
-                        if (enmy._IsAlive)
+                        //check enemy collisions with player
+                        foreach (var enmy in activeEnemies)
                         {
-                            if (enmy.Bounds.IntersectsWith(player.Bounds))
+                            if (enmy._IsAlive)
                             {
-                                //Play Playe Hit sound -SOUND-
-                                SFXPlayer(PlayerHit_Sound);
-                                player.DecreasHP();
-                                player.IsInvincible = true;
-                                player._isDeath = true;
+                                if (enmy.Bounds.IntersectsWith(player.Bounds))
+                                {
+                                    //Play Playe Hit sound -SOUND-
+                                    SFXPlayer(PlayerHit_Sound);
+                                    player.DecreasLive();
+                                    player.IsInvincible = true;
+                                    player._isDeath = true;
+                                    txt_Live.Text = "Live : " + (player.Live - 1);
+                                }
                             }
                         }
                     }
@@ -971,6 +1114,7 @@ namespace ContraAtHome
                         // Process common enemy actions last
                         enemy.EnemyAction(this);
                     }
+                    //is death
                     if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == false)
                     {
                         if (frameCounter % 2 == 0)
@@ -983,7 +1127,10 @@ namespace ContraAtHome
                             }
                             else
                             {
-                                enemy.Image = EnemySpriteDeath[enemy.GetCurrentFrameDeath()];
+                                int a = (enemy is RunningSoldier) ? 0 : 2;
+                                int b = enemy.GetFacing() == Direction.Left ? 1 : 0;
+                                int spriteIndex = a + b;
+                                enemy.Image = EnemySpriteDeath[spriteIndex][enemy.GetCurrentFrameDeath()];
                                 enemy.CurrentDeathFrameIncreas();
                             }
 
@@ -997,11 +1144,41 @@ namespace ContraAtHome
                     }
                 }
             }
+            //boss Action
             else if(_BossAction)
             {
-                if (enemyBoss._IsAlive) {
+                if (enemyBoss._IsAlive)
+                {
                     enemyBoss.EnemyAction(this);
                     gunBoss1.MoveWithPlayer(player);
+                    if (frameCounter % gunBoss1.GetFrameDurationBetween() == 0 && gunBoss1.IsBurstShoot())
+                    {
+                        ShootBullet(gunBoss1, 15, "basic");
+                    }
+                    else if (frameCounter % 50 == 0)
+                    {
+                        ShootBullet(gunBoss1, 15, "basic");
+                    }
+                    PlayeBossAnimation();
+                }
+                else
+                {
+                    if (!enemyBoss._IsAlive)
+                    {
+                        if (frameCounter % 2 == 0)
+                        {
+                            if (enemyBoss.GetCurrentFrameDeath() > 5)
+                            {
+                                enemyBoss.SetFinishDeath();
+                                //activeEnemies.Remove(enemy);
+                            }
+                            else
+                            {
+                                enemyBoss.Image = BossSprite[2][enemyBoss.GetCurrentFrameDeath()];
+                                enemyBoss.CurrentDeathFrameIncreas();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -1033,6 +1210,22 @@ namespace ContraAtHome
         }
 
         // Modified ShootBullet method to use the new AddControlWithCacheUpdate
+        private void ShootBullet(GunBoss gunBoss, int bulletSpeed, string bulletType = "basic")
+        {
+            if (gunBoss == null) return;
+
+            ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Purple : ColorDrawing.Red;
+
+            Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
+                new Point(gunBoss.Left + gunBoss.Width / 2, gunBoss.Top + gunBoss.Height / 2), bulletColor, screenWidth, screenHeight)
+            {
+                Direction = gunBoss.facing
+            };
+            bullet.Size = new Size(20, 20);
+            AddControlWithCacheUpdate(bullet);
+            bullet.BringToFront();
+        }
+
         private void ShootBullet(Enemy shooter, int bulletSpeed, string bulletType = "basic")
         {
             if (shooter == null || !shooter._IsAlive) return;
@@ -1053,7 +1246,7 @@ namespace ContraAtHome
         {
             if (shooter == null) return;
 
-            Bullet bullet = new Bullet("PlayerBullet", 10,
+            Bullet bullet = new Bullet("PlayerBullet", 15,
                 new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), ColorDrawing.Yellow, screenWidth, screenHeight)
             {
                 Direction = shooter.GetFacing()
@@ -1073,7 +1266,7 @@ namespace ContraAtHome
             player = new Player(5, 10, 7, 10, false)
             {
                 Size = new Size(60, 80),
-                BackColor = ColorDrawing.FromArgb(255, 255, 121, 123),
+                BackColor = ColorDrawing.Transparent,
                 Location = new Point(ClientSize.Width / 2, 430),
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
@@ -1278,7 +1471,7 @@ namespace ContraAtHome
 
             enemy.Size = control.Size;
             enemy.Location = control.Location;
-            enemy.BackColor = ColorDrawing.Orange;
+            enemy.BackColor = ColorDrawing.Transparent;
             enemy.Tag = "enemy";
 
             Controls.Remove(control);
