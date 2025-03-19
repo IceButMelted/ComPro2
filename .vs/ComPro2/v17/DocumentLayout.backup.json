@@ -63,7 +63,7 @@
               "RelativeDocumentMoniker": "ContraAtHome\\Form1.cs",
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs",
               "RelativeToolTip": "ContraAtHome\\Form1.cs",
-              "ViewState": "AgIAALwAAAAAAAAAAAD4v9MAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAANIAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-18T17:17:26.718Z",
               "IsPinned": true,
@@ -80,8 +80,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-18T17:20:27.033Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -94,8 +93,7 @@
               "ViewState": "AgIAAAMAAAAAAAAAAAAAADsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-18T17:17:26.896Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -108,8 +106,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-18T17:17:26.909Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -139,8 +136,7 @@
               "RelativeToolTip": "ContraAtHome\\Enemy\\RunningSoldier.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T17:17:26.891Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T17:17:26.891Z"
             },
             {
               "$type": "Document",
@@ -152,8 +148,7 @@
               "RelativeToolTip": "ContraAtHome\\Form1.Designer.cs",
               "ViewState": "AgIAAG8AAAAAAAAAAAD4v4IAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T17:17:26.901Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T17:17:26.901Z"
             },
             {
               "$type": "Document",
@@ -165,8 +160,7 @@
               "RelativeToolTip": "ContraAtHome\\Bullet.cs",
               "ViewState": "AgIAACkAAAAAAAAAAAAIwEUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T17:17:26.905Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T17:17:26.905Z"
             },
             {
               "$type": "Document",
@@ -177,8 +171,7 @@
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\ClassDiagram1.cd",
               "RelativeToolTip": "ContraAtHome\\ClassDiagram1.cd",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000463|",
-              "WhenOpened": "2025-03-18T17:17:26.914Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T17:17:26.914Z"
             },
             {
               "$type": "Document",
@@ -190,8 +183,7 @@
               "RelativeToolTip": "ContraAtHome\\Player.cs",
               "ViewState": "AgIAAB0AAAAAAAAAAAAAwAsAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T17:17:26.92Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-18T17:17:26.92Z"
             },
             {
               "$type": "Document",
@@ -202,8 +194,7 @@
               "ToolTip": "D:\\Git\\ComPro2\\ContraAtHome\\Form1.cs [Design]",
               "RelativeToolTip": "ContraAtHome\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-18T17:17:27.759Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2025-03-18T17:17:27.759Z"
             }
           ]
         }

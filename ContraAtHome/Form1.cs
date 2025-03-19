@@ -212,6 +212,10 @@ namespace ContraAtHome
                 }
                 
             }
+            if (!enemyBoss._IsAlive) 
+            { 
+                    
+            }
             if(_IsShowTutTxt == false)
                 txt_tut.Visible = false;
             
