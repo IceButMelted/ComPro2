@@ -113,6 +113,16 @@ namespace ContraAtHome.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap letter {
+            get {
+                object obj = ResourceManager.GetObject("letter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap MainMenuScreen {
             get {
                 object obj = ResourceManager.GetObject("MainMenuScreen", resourceCulture);
@@ -156,6 +166,16 @@ namespace ContraAtHome.Properties {
         internal static System.Drawing.Bitmap Platform4 {
             get {
                 object obj = ResourceManager.GetObject("Platform4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap TopTurret {
+            get {
+                object obj = ResourceManager.GetObject("TopTurret", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -130,8 +130,14 @@
   <data name="BG_Parallax_002" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG_Parallax_002.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="TopTurret" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\Boss\TopTurret\TopTurret.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Platform3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\net8.0-windows\Sprites\Platform\Platform3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MainMenuScreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\Ui\MainMenuScreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="BG2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\net8.0-windows\Sprites\BG\BG2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -145,7 +151,7 @@
   <data name="Platform4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\net8.0-windows\Sprites\Platform\Platform4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="MainMenuScreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\net8.0-windows\Sprites\Ui\MainMenuScreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="letter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\net8.0-windows\Sprites\Ui\letter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

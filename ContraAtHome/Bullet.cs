@@ -38,7 +38,7 @@ namespace ContraAtHome
         {
             MoveBullet();
 
-            if (Left < 0 || Right > 850 || Top < 0 || Bottom > 600)
+            if (Left < 0 || Right > 810 || Top < 0 || Bottom > 600)
             {
                 DisposeBullet();
                 //Debug.WriteLine("Bullet dispose");

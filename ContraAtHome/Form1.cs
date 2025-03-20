@@ -154,6 +154,7 @@ namespace ContraAtHome
                 BGM_Sound.Play();
             };
 
+            KeyPic.Visible = false;
 
 
             //Set Key
@@ -228,94 +229,6 @@ namespace ContraAtHome
             
         }
 
-        public void CreatDeathScene(Form form)
-        {
-            // Create a panel that will serve as our rectangle
-            Panel blueRectangle = new Panel
-            {
-                // Set the size to match the client area of the form
-                Size = form.ClientSize,
-                // Set the location to top-left of the client area
-                Location = new Point(0, 0),
-                // Set background color to blue
-                BackgroundImage = new Bitmap("./Sprites/Ui/DeathScreen.png"),
-                // Make sure the panel is on top of other controls
-                Dock = DockStyle.None,
-            };
-
-            // Add the panel to the form
-            form.Controls.Add(blueRectangle);
-
-            // Bring the panel to the front so it appears on top of everything
-            blueRectangle.BringToFront();
-
-            // Optional: Make the panel resize with the form
-            form.Resize += (sender, e) =>
-            {
-                blueRectangle.Size = form.ClientSize;
-            };
-
-            _IsCreatedDeathScene = true;
-        }
-        
-        public void CreateWinScene(Form form)
-        {
-            // Create a panel that will serve as our rectangle
-            Panel blueRectangle = new Panel
-            {
-                // Set the size to match the client area of the form
-                Size = form.ClientSize,
-                // Set the location to top-left of the client area
-                Location = new Point(0, 0),
-                // Set background color to blue
-                BackgroundImage = new Bitmap("./Sprites/Ui/WinScene2.png"),
-                // Make sure the panel is on top of other controls
-                Dock = DockStyle.None,
-            };
-
-            // Add the panel to the form
-            form.Controls.Add(blueRectangle);
-
-            // Bring the panel to the front so it appears on top of everything
-            blueRectangle.BringToFront();
-
-            // Optional: Make the panel resize with the form
-            form.Resize += (sender, e) =>
-            {
-                blueRectangle.Size = form.ClientSize;
-            };
-
-            _IsCreatedWinSccen = true;
-        }
-
-        public void CreateTileScene() {
-            TitleUi.Visible = true;
-            TitleUi.BringToFront();
-        }
-
-        private void CreateBoss()
-        {
-            enemyBoss = new Boss(5,10, "Boss");
-            enemyBoss.Location = new Point(BossPicBox.Location.X, BossPicBox.Location.Y);
-            enemyBoss.Size = BossPicBox.Size;
-            enemyBoss.BackColor = ColorDrawing.White;
-            Controls.Add(enemyBoss);
-            enemyBoss.BringToFront();
-            Controls.Remove(BossPicBox);
-
-        }
-
-        private void CreateGunBoss1() 
-        { 
-            gunBoss1 = new GunBoss();
-            gunBoss1.Location = new Point(BossGun1.Location.X, BossGun1.Location.Y);
-            gunBoss1.Size = BossGun1.Size;
-            gunBoss1.BackColor = ColorDrawing.Gold;
-            Controls.Add(gunBoss1);
-            gunBoss1.BringToFront();
-            Controls.Remove(BossGun1);
-        }
-
         #region Boss Stage
         private void StartBossAction() {
             if (!_IsBossSpawn && _IsLockScreen)
@@ -341,9 +254,8 @@ namespace ContraAtHome
 
         #endregion
 
+        //-------------------------------------------------------------------------------------------------------
         #region Sound
-
-
         private void SoundLoader()
         {
             string resourcePath;
@@ -378,6 +290,8 @@ namespace ContraAtHome
             mdp.Play();
         }
         #endregion
+
+        //-------------------------------------------------------------------------------------------------------
 
         #region Cache Methods
         private void UpdateCachedCollectionsIfNeeded()
@@ -480,7 +394,7 @@ namespace ContraAtHome
             string tag = control.Tag?.ToString();
             if (control is PictureBox && tag == "PlayerBullet")
                 _needsPlayerBulletUpdate = true;
-            else if (control is Enemy && tag == "enemy")
+            else if (control is Enemy && tag == "enemy" )
             {
                 _needsEnemyUpdate = true;
                 enemyPlatformPairs.Remove(control as Enemy);
@@ -502,7 +416,9 @@ namespace ContraAtHome
 
             control.Dispose();
         }
+
         #endregion
+        //-------------------------------------------------------------------------------------------------------
 
         #region Animation
 
@@ -754,135 +670,10 @@ namespace ContraAtHome
 
             
         }
-
         
         #endregion
-
-        #region Player Movement & Controls
-
-
-        private void HandlePlayerLogic()
-        {
-            // Handle player Invincible state
-            if (player.IsInvincible)
-            {
-                if (player.GetInvicibleCounter() < player.GetInvicibleDuration())
-                {
-                    player.BackColor = ColorDrawing.White; 
-                    player.SetInvicibleCounter(player.GetInvicibleCounter() + 1);
-                }
-                else
-                {
-                    player.BackColor = ColorDrawing.Transparent; 
-                    player.IsInvincible = false;
-                    player.SetInvicibleCounter(0);
-                }
-            }
-
-            //ColletedKey and Eneble Boss Stage
-            if (player.Bounds.IntersectsWith(KeyPic.Bounds) && enemyCounter < 1)
-            {
-                //Look Screen
-                _IsLockScreen = true;
-                KeyPic.Dispose();
-            }
-
-            // Previous ground state (for fall detection)
-            bool wasOnGround = _isOnGround; // Fixed pointer syntax issue
-
-            // Reset ground check for this frame
-            _isOnGround = false;
-
-            // Platform collision - check if player is on ground
-            foreach (Platform platform in playerPlatforms)
-            {
-                if (player._IsShouldOnPlatform)
-                {
-                    if (player.Bounds.IntersectsWith(platform.Bounds))
-                    {
-                        _isOnGround = true;
-                        force = PLAYER_JUMP_FORCE;
-                        player.Top = platform.Top - player.Height + 1;
-                        //keysPressed.Remove(Keys.K);
-                        _isFalling = false;
-                    }
-                }
-            }
-
-            // Fall detection
-            if (wasOnGround && !_isOnGround && !player.jumping)
-            {
-                _isFalling = true;
-            }
-
-            // Handle jumping physics
-            if (player.jumping)
-            {
-                force -= 1;
-
-                // End jump if force is depleted
-                if (force < 0)
-                {
-                    player.jumping = false;
-                    _isFalling = true;
-                    player._IsShouldOnPlatform = true;
-                }
-            }
-
-            // Apply vertical movement only when not on ground or jumping
-            if (!_isOnGround || player.jumping)
-            {
-                int jumpSpeed = player.jumping ? -PLAYER_JUMP_SPEED : PLAYER_JUMP_SPEED;
-                player.Top += jumpSpeed;
-            }
-
-            if (_isFalling && _isOnGround)
-            {
-                _isFalling = false;
-            }
-
-            // Handle horizontal movement
-            if (player.goLeft)
-            {
-                if (_IsLockScreen || BorderLeft.Location.X > -1)
-                {
-                    if (player.Left > 0) // Move player if not at left edge
-                        player.Left -= player.Speed;
-                }
-                else if (player.Left + player.Width > screenWidth / 2)
-                {
-                    player.Left -= player.Speed;
-                }
-                else if (BorderLeft.Location.X < screenWidth)
-                {
-                    // Scroll world with parallax
-                    MoveGameElements(Direction.Left);
-                    //UpdateParallaxBackground(1, 3, 5);
-                }
-                return;
-            }
-
-            if (player.goRight)
-            {
-                if (_IsLockScreen || BorderRight.Location.X < screenWidth)
-                {
-                    if (player.Left + player.Width/2 < screenWidth) // Move player if not at right edge
-                        player.Left += player.Speed;
-
-                }
-                else if (player.Left + player.Width/2 < screenWidth / 2) 
-                {
-                    player.Left += player.Speed;
-                }
-                else if (BorderRight.Location.X > screenWidth)
-                {
-                    // Scroll world with parallax
-                    MoveGameElements(Direction.Right);
-                    //UpdateParallaxBackground(1, 3, 5);
-                }
-                return;
-            }
-        }
+        //-------------------------------------------------------------------------------------------------------
+        #region KeyInput
 
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
@@ -1012,8 +803,134 @@ namespace ContraAtHome
         }
 
         #endregion
+        //-------------------------------------------------------------------------------------------------------
 
         #region Game Logic
+
+        private void HandlePlayerLogic()
+        {
+            // Handle player Invincible state
+            if (player.IsInvincible)
+            {
+                if (player.GetInvicibleCounter() < player.GetInvicibleDuration())
+                {
+                    player.BackColor = ColorDrawing.White;
+                    player.SetInvicibleCounter(player.GetInvicibleCounter() + 1);
+                }
+                else
+                {
+                    player.BackColor = ColorDrawing.Transparent;
+                    player.IsInvincible = false;
+                    player.SetInvicibleCounter(0);
+                }
+            }
+
+            //ColletedKey and Eneble Boss Stage
+            if (player.Bounds.IntersectsWith(KeyPic.Bounds) && enemyCounter < 1)
+            {
+                //Look Screen
+                _IsLockScreen = true;
+                KeyPic.Dispose();
+                txt_Objective.Text = "KILL GLITCH BOSS";
+            }
+
+            // Previous ground state (for fall detection)
+            bool wasOnGround = _isOnGround; // Fixed pointer syntax issue
+
+            // Reset ground check for this frame
+            _isOnGround = false;
+
+            // Platform collision - check if player is on ground
+            foreach (Platform platform in playerPlatforms)
+            {
+                if (player._IsShouldOnPlatform)
+                {
+                    if (player.Bounds.IntersectsWith(platform.Bounds))
+                    {
+                        _isOnGround = true;
+                        force = PLAYER_JUMP_FORCE;
+                        player.Top = platform.Top - player.Height + 1;
+                        //keysPressed.Remove(Keys.K);
+                        _isFalling = false;
+                    }
+                }
+            }
+
+            // Fall detection
+            if (wasOnGround && !_isOnGround && !player.jumping)
+            {
+                _isFalling = true;
+            }
+
+            // Handle jumping physics
+            if (player.jumping)
+            {
+                force -= 1;
+
+                // End jump if force is depleted
+                if (force < 0)
+                {
+                    player.jumping = false;
+                    _isFalling = true;
+                    player._IsShouldOnPlatform = true;
+                }
+            }
+
+            // Apply vertical movement only when not on ground or jumping
+            if (!_isOnGround || player.jumping)
+            {
+                int jumpSpeed = player.jumping ? -PLAYER_JUMP_SPEED : PLAYER_JUMP_SPEED;
+                player.Top += jumpSpeed;
+            }
+
+            if (_isFalling && _isOnGround)
+            {
+                _isFalling = false;
+            }
+
+            // Handle horizontal movement
+            if (player.goLeft)
+            {
+                if (_IsLockScreen || BorderLeft.Location.X > -1)
+                {
+                    if (player.Left > 0) // Move player if not at left edge
+                        player.Left -= player.Speed;
+                }
+                else if (player.Left + player.Width > screenWidth / 2)
+                {
+                    player.Left -= player.Speed;
+                }
+                else if (BorderLeft.Location.X < screenWidth)
+                {
+                    // Scroll world with parallax
+                    MoveGameElements(Direction.Left);
+                    //UpdateParallaxBackground(1, 3, 5);
+                }
+                return;
+            }
+
+            if (player.goRight)
+            {
+                if (_IsLockScreen || BorderRight.Location.X < screenWidth)
+                {
+                    if (player.Left + player.Width / 2 < screenWidth) // Move player if not at right edge
+                        player.Left += player.Speed;
+
+                }
+                else if (player.Left + player.Width / 2 < screenWidth / 2)
+                {
+                    player.Left += player.Speed;
+                }
+                else if (BorderRight.Location.X > screenWidth)
+                {
+                    // Scroll world with parallax
+                    MoveGameElements(Direction.Right);
+                    //UpdateParallaxBackground(1, 3, 5);
+                }
+                return;
+            }
+        }
+
         private void HandleCollisions()
         {
             if (player._isPlayerAlive)
@@ -1025,6 +942,8 @@ namespace ContraAtHome
                 {
                     if (!_IsLockScreen) // bossStage
                     {
+                        bool bulletHit = false; // Flag to track if bullet hit anything
+
                         foreach (var enemy in activeEnemies)
                         {
                             if (enemy._IsAlive)
@@ -1033,18 +952,24 @@ namespace ContraAtHome
                                 {
                                     enemy.TakeDamage();
                                     if (enemy.Hp <= 0)
-                                    {//Play Die sound -SOUND-
+                                    {
+                                        //Play Die sound -SOUND-
                                         SFXPlayer(EnemyDead_Sound);
-                                        
                                     }
                                     else
-                                    {//Play Hit sound -SOUND- 
+                                    {
+                                        //Play Hit sound -SOUND- 
                                         SFXPlayer(PlayerHit_Sound);
                                     }
-                                    controlsToRemove.Add(bullet);
-                                    break;
+                                    bulletHit = true;
+                                    break; // Exit inner loop after hitting one enemy
                                 }
                             }
+                        }
+
+                        if (bulletHit)
+                        {
+                            controlsToRemove.Add(bullet);
                         }
                     }
                     else if (_IsBossFinishSpaen)
@@ -1122,6 +1047,7 @@ namespace ContraAtHome
         // Process enemy actions with optimized collections
         private void ProcessEnemyActions()
         {
+
             if (enemyCounter > 0)
             {
                 // Increment and reset animation counter
@@ -1190,11 +1116,10 @@ namespace ContraAtHome
                     {
                         if (frameCounter % 2 == 0)
                         {
-
                             if (enemy.GetCurrentFrameDeath() > 5)
                             {
                                 enemy.SetFinishDeath();
-                                //activeEnemies.Remove(enemy);
+                                // Don't remove it here, just mark it as finished
                             }
                             else
                             {
@@ -1204,7 +1129,6 @@ namespace ContraAtHome
                                 enemy.Image = EnemySpriteDeath[spriteIndex][enemy.GetCurrentFrameDeath()];
                                 enemy.CurrentDeathFrameIncreas();
                             }
-
                         }
                     }
                     if (enemy._IsAlive == false && enemy.GetIsFinishDeath() == true)
@@ -1220,6 +1144,7 @@ namespace ContraAtHome
                         else
                         {
                             txt_Objective.Text = "Back To Left Side";
+                            KeyPic.Visible = true; 
                             txt_Objective.BringToFront();
                         }
                     }
@@ -1235,12 +1160,12 @@ namespace ContraAtHome
                     if (frameCounter % gunBoss1.GetFrameDurationBetween() == 0 && gunBoss1.IsBurstShoot())
                     {
                         SFXPlayer(BossATK_Sound);
-                        ShootBullet(gunBoss1, 20, "basic");
+                        ShootBullet(gunBoss1, 10, "basic");
                     }
                     else if (frameCounter % 50 == 0)
                     {
                         SFXPlayer(BossATK_Sound);
-                        ShootBullet(gunBoss1, 20, "basic");
+                        ShootBullet(gunBoss1, 10, "basic");
                     }
                     PlayeBossAnimation();
                 }
@@ -1272,6 +1197,7 @@ namespace ContraAtHome
         }
 
         #endregion
+        //-------------------------------------------------------------------------------------------------------
 
         #region Game Elements
         // Move game elements with optimized collection
@@ -1282,18 +1208,6 @@ namespace ContraAtHome
             foreach (var element in movableElements)
             {
                 element.Left += moveAmount;
-            }
-        }
-
-        private void UpdateParallaxBackground(int layer1Factor, int layer2Factor, int layer3Factor)
-        {
-            int directionMultiplier = player.goRight ? -1 : 1;
-
-            if (player.goLeft || player.goRight)
-            {
-                BGLv1.Left += directionMultiplier * layer1Factor;
-                BGLv2.Left += directionMultiplier * layer2Factor;
-                BGLv3.Left += directionMultiplier * layer3Factor;
             }
         }
 
@@ -1546,6 +1460,10 @@ namespace ContraAtHome
             }
         }
 
+        #endregion
+        //-------------------------------------------------------------------------------------------------------
+
+        #region Create Function
         private Enemy CreateEnemy(Control control, int enemyNumber)
         {
             enemyCounter++;
@@ -1553,9 +1471,9 @@ namespace ContraAtHome
 
             // Create appropriate enemy type
             if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
-                enemy = new ShootingSoldier(1, 3) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new ShootingSoldier(2, 3) { Name = $"Enemy{enemyNumber:D2}" };
             else
-                enemy = new RunningSoldier(1, 7) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new RunningSoldier(3, 7) { Name = $"Enemy{enemyNumber:D2}" };
 
             enemy.Size = control.Size;
             enemy.Location = control.Location;
@@ -1569,7 +1487,98 @@ namespace ContraAtHome
             return enemy;
         }
 
+        public void CreatDeathScene(Form form)
+        {
+            // Create a panel that will serve as our rectangle
+            Panel blueRectangle = new Panel
+            {
+                // Set the size to match the client area of the form
+                Size = form.ClientSize,
+                // Set the location to top-left of the client area
+                Location = new Point(0, 0),
+                // Set background color to blue
+                BackgroundImage = new Bitmap("./Sprites/Ui/DeathScreen.png"),
+                // Make sure the panel is on top of other controls
+                Dock = DockStyle.None,
+            };
 
+            // Add the panel to the form
+            form.Controls.Add(blueRectangle);
+
+            // Bring the panel to the front so it appears on top of everything
+            blueRectangle.BringToFront();
+
+            // Optional: Make the panel resize with the form
+            form.Resize += (sender, e) =>
+            {
+                blueRectangle.Size = form.ClientSize;
+            };
+
+            _IsCreatedDeathScene = true;
+        }
+
+        public void CreateWinScene(Form form)
+        {
+            // Create a panel that will serve as our rectangle
+            Panel blueRectangle = new Panel
+            {
+                // Set the size to match the client area of the form
+                Size = form.ClientSize,
+                // Set the location to top-left of the client area
+                Location = new Point(0, 0),
+                // Set background color to blue
+                BackgroundImage = new Bitmap("./Sprites/Ui/WinScene2.png"),
+                // Make sure the panel is on top of other controls
+                Dock = DockStyle.None,
+            };
+
+            // Add the panel to the form
+            form.Controls.Add(blueRectangle);
+
+            // Bring the panel to the front so it appears on top of everything
+            blueRectangle.BringToFront();
+
+            // Optional: Make the panel resize with the form
+            form.Resize += (sender, e) =>
+            {
+                blueRectangle.Size = form.ClientSize;
+            };
+
+            _IsCreatedWinSccen = true;
+        }
+
+        public void CreateTileScene()
+        {
+            TitleUi.Visible = true;
+            TitleUi.BringToFront();
+        }
+
+        private void CreateBoss()
+        {
+            enemyBoss = new Boss(20, 10, "Boss");
+            enemyBoss.Location = new Point(BossPicBox.Location.X, BossPicBox.Location.Y);
+            enemyBoss.Size = BossPicBox.Size;
+            enemyBoss.BackColor = ColorDrawing.Transparent;
+            Controls.Add(enemyBoss);
+            enemyBoss.BringToFront();
+            Controls.Remove(BossPicBox);
+
+        }
+
+        private void CreateGunBoss1()
+        {
+            gunBoss1 = new GunBoss();
+            gunBoss1.Location = new Point(BossGun1.Location.X, BossGun1.Location.Y);
+            gunBoss1.Size = BossGun1.Size;
+
+            gunBoss1.Image = new Bitmap("./Sprites/Boss/TopTurret/TopTurret.png");
+            gunBoss1.SizeMode = PictureBoxSizeMode.StretchImage;
+            Controls.Add(gunBoss1);
+            gunBoss1.BringToFront();
+            Controls.Remove(BossGun1);
+
+        }
+        //-------------------------------------------------------------------------------------------------------
         #endregion
     }
 
