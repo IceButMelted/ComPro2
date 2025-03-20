@@ -78,6 +78,7 @@ namespace ContraAtHome
         private MediaPlayer PlayerHit_Sound  = new MediaPlayer();
         private MediaPlayer BGM_Sound        = new MediaPlayer();
         private MediaPlayer WinGone_Sound    = new MediaPlayer();
+        private MediaPlayer OpenBoss_Sound   = new MediaPlayer();
 
         
 
@@ -257,7 +258,8 @@ namespace ContraAtHome
             BGM_Sound.Open(new System.Uri(resourcePath));
             resourcePath = Path.GetFullPath("./Sounds/WindowGone.mp3");
             WinGone_Sound.Open(new System.Uri(resourcePath));
-            
+            resourcePath = Path.GetFullPath("./Sounds/OpenBoss1.mp3");
+            OpenBoss_Sound.Open(new System.Uri(resourcePath));
 
 
         }
@@ -1216,7 +1218,7 @@ namespace ContraAtHome
         {
             if (gunBoss == null) return;
 
-            ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Purple : ColorDrawing.Red;
+            ColorDrawing bulletColor = bulletType == "explosive" ? ContraToolUtility.GetRandomColor() : ColorDrawing.Red;
             int Y_Axis = bulletType == "explosive" ? (gunBoss.Left + gunBoss.Width / 2) - 75 : gunBoss.Left + gunBoss.Width / 2;
             
             Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
@@ -1273,6 +1275,7 @@ namespace ContraAtHome
             if (!_IsBossSpawn && _IsLockScreen)
             {
                 BG.BackgroundImage = Properties.Resources.BG2;
+                OpenBoss_Sound.Play();
                 _IsBossSpawn = true;
             }
             if (_IsBossSpawn && enemyBoss.Location.Y < 0)
@@ -1293,7 +1296,7 @@ namespace ContraAtHome
 
         private void SetUpPlayer()
         {
-            player = new Player(1, 10, 10, 10, false)
+            player = new Player(3, 10, 10, 10, false)
             {
                 Size = new Size(60, 80),
                 BackColor = ColorDrawing.Transparent,
@@ -1499,9 +1502,9 @@ namespace ContraAtHome
 
             // Create appropriate enemy type
             if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
-                enemy = new ShootingSoldier(1, 3) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new ShootingSoldier(2, 3) { Name = $"Enemy{enemyNumber:D2}" };
             else
-                enemy = new RunningSoldier(1, 7) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new RunningSoldier(3, 7) { Name = $"Enemy{enemyNumber:D2}" };
 
             enemy.Size = control.Size;
             enemy.Location = control.Location;

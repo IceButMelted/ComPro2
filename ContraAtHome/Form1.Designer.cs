@@ -38,7 +38,6 @@
             BGLv3 = new PictureBox();
             BorderLeft = new PictureBox();
             enemy2 = new PictureBox();
-            pictureBox2 = new PictureBox();
             BorderRight = new PictureBox();
             pictureBox4 = new PictureBox();
             pictureBox5 = new PictureBox();
@@ -46,7 +45,6 @@
             pictureBox8 = new PictureBox();
             plf2 = new PictureBox();
             KeyPic = new PictureBox();
-            pictureBox3 = new PictureBox();
             BossPicBox = new PictureBox();
             BossGun1 = new PictureBox();
             txt_Live = new Label();
@@ -61,8 +59,8 @@
             pictureBox14 = new PictureBox();
             pictureBox15 = new PictureBox();
             pictureBox16 = new PictureBox();
-            pictureBox17 = new PictureBox();
             pictureBox18 = new PictureBox();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)plf).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy1).BeginInit();
@@ -71,7 +69,6 @@
             ((System.ComponentModel.ISupportInitialize)BGLv3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BorderLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemy2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BorderRight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
@@ -79,7 +76,6 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
             ((System.ComponentModel.ISupportInitialize)plf2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)KeyPic).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BossPicBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BossGun1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)BG).BeginInit();
@@ -92,8 +88,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox14).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox15).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox16).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox17).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox18).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // plf
@@ -183,25 +179,13 @@
             // enemy2
             // 
             enemy2.BackColor = Color.Red;
-            enemy2.Location = new Point(1371, 174);
+            enemy2.Location = new Point(1370, 117);
             enemy2.Margin = new Padding(0);
             enemy2.Name = "enemy2";
             enemy2.Size = new Size(60, 80);
             enemy2.TabIndex = 9;
             enemy2.TabStop = false;
             enemy2.Tag = "enemy";
-            // 
-            // pictureBox2
-            // 
-            pictureBox2.BackColor = Color.IndianRed;
-            pictureBox2.BackgroundImage = Properties.Resources.Platform2;
-            pictureBox2.Location = new Point(0, 356);
-            pictureBox2.Margin = new Padding(0);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(241, 33);
-            pictureBox2.TabIndex = 12;
-            pictureBox2.TabStop = false;
-            pictureBox2.Tag = "platform";
             // 
             // BorderRight
             // 
@@ -241,7 +225,7 @@
             // pictureBox6
             // 
             pictureBox6.BackColor = Color.Red;
-            pictureBox6.Location = new Point(1236, 435);
+            pictureBox6.Location = new Point(1261, 435);
             pictureBox6.Margin = new Padding(0);
             pictureBox6.Name = "pictureBox6";
             pictureBox6.Size = new Size(60, 80);
@@ -264,7 +248,7 @@
             // 
             plf2.BackColor = Color.IndianRed;
             plf2.BackgroundImage = Properties.Resources.Platform4;
-            plf2.Location = new Point(1371, 254);
+            plf2.Location = new Point(1370, 197);
             plf2.Margin = new Padding(0);
             plf2.Name = "plf2";
             plf2.Size = new Size(229, 33);
@@ -276,7 +260,7 @@
             // 
             KeyPic.BackColor = Color.Transparent;
             KeyPic.Image = Properties.Resources.letter;
-            KeyPic.Location = new Point(79, 283);
+            KeyPic.Location = new Point(200, 440);
             KeyPic.Margin = new Padding(0);
             KeyPic.Name = "KeyPic";
             KeyPic.Size = new Size(64, 48);
@@ -284,18 +268,6 @@
             KeyPic.TabIndex = 21;
             KeyPic.TabStop = false;
             KeyPic.Tag = "key";
-            // 
-            // pictureBox3
-            // 
-            pictureBox3.BackColor = Color.IndianRed;
-            pictureBox3.BackgroundImage = Properties.Resources.Platform3;
-            pictureBox3.Location = new Point(559, 356);
-            pictureBox3.Margin = new Padding(0);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(256, 33);
-            pictureBox3.TabIndex = 22;
-            pictureBox3.TabStop = false;
-            pictureBox3.Tag = "platform";
             // 
             // BossPicBox
             // 
@@ -379,7 +351,7 @@
             // 
             pictureBox10.BackColor = Color.IndianRed;
             pictureBox10.BackgroundImage = Properties.Resources.Platform3;
-            pictureBox10.Location = new Point(2100, 196);
+            pictureBox10.Location = new Point(2100, 197);
             pictureBox10.Margin = new Padding(0);
             pictureBox10.Name = "pictureBox10";
             pictureBox10.Size = new Size(291, 33);
@@ -391,7 +363,7 @@
             // 
             pictureBox11.BackColor = Color.IndianRed;
             pictureBox11.BackgroundImage = Properties.Resources.Platform1;
-            pictureBox11.Location = new Point(1711, 254);
+            pictureBox11.Location = new Point(1712, 197);
             pictureBox11.Margin = new Padding(0);
             pictureBox11.Name = "pictureBox11";
             pictureBox11.Size = new Size(291, 33);
@@ -402,7 +374,7 @@
             // pictureBox12
             // 
             pictureBox12.BackColor = Color.Red;
-            pictureBox12.Location = new Point(2214, 116);
+            pictureBox12.Location = new Point(2214, 117);
             pictureBox12.Margin = new Padding(0);
             pictureBox12.Name = "pictureBox12";
             pictureBox12.Size = new Size(60, 80);
@@ -424,7 +396,7 @@
             // pictureBox14
             // 
             pictureBox14.BackColor = Color.Red;
-            pictureBox14.Location = new Point(1828, 174);
+            pictureBox14.Location = new Point(1829, 117);
             pictureBox14.Margin = new Padding(0);
             pictureBox14.Name = "pictureBox14";
             pictureBox14.Size = new Size(60, 80);
@@ -438,7 +410,7 @@
             pictureBox15.Location = new Point(1997, 515);
             pictureBox15.Margin = new Padding(0);
             pictureBox15.Name = "pictureBox15";
-            pictureBox15.Size = new Size(244, 10);
+            pictureBox15.Size = new Size(394, 10);
             pictureBox15.TabIndex = 37;
             pictureBox15.TabStop = false;
             pictureBox15.Tag = "platform";
@@ -454,21 +426,10 @@
             pictureBox16.TabStop = false;
             pictureBox16.Tag = "enemy";
             // 
-            // pictureBox17
-            // 
-            pictureBox17.BackColor = Color.IndianRed;
-            pictureBox17.Location = new Point(1564, 515);
-            pictureBox17.Margin = new Padding(0);
-            pictureBox17.Name = "pictureBox17";
-            pictureBox17.Size = new Size(244, 10);
-            pictureBox17.TabIndex = 39;
-            pictureBox17.TabStop = false;
-            pictureBox17.Tag = "platform";
-            // 
             // pictureBox18
             // 
             pictureBox18.BackColor = Color.Red;
-            pictureBox18.Location = new Point(1600, 435);
+            pictureBox18.Location = new Point(1557, 276);
             pictureBox18.Margin = new Padding(0);
             pictureBox18.Name = "pictureBox18";
             pictureBox18.Size = new Size(60, 80);
@@ -476,14 +437,28 @@
             pictureBox18.TabStop = false;
             pictureBox18.Tag = "enemy";
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.IndianRed;
+            pictureBox1.BackgroundImage = Properties.Resources.Platform2;
+            pictureBox1.Location = new Point(1517, 356);
+            pictureBox1.Margin = new Padding(0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(291, 33);
+            pictureBox1.TabIndex = 41;
+            pictureBox1.TabStop = false;
+            pictureBox1.Tag = "platform";
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
+            AutoScroll = true;
+            AutoScrollMinSize = new Size(2400, 0);
             BackColor = Color.Black;
             BackgroundImageLayout = ImageLayout.None;
-            ClientSize = new Size(780, 557);
+            ClientSize = new Size(800, 557);
+            Controls.Add(pictureBox1);
             Controls.Add(pictureBox18);
-            Controls.Add(pictureBox17);
             Controls.Add(pictureBox16);
             Controls.Add(pictureBox15);
             Controls.Add(pictureBox14);
@@ -496,14 +471,12 @@
             Controls.Add(txt_Live);
             Controls.Add(BossGun1);
             Controls.Add(BossPicBox);
-            Controls.Add(pictureBox3);
             Controls.Add(KeyPic);
             Controls.Add(pictureBox5);
             Controls.Add(pictureBox8);
             Controls.Add(pictureBox6);
             Controls.Add(pictureBox4);
             Controls.Add(BorderRight);
-            Controls.Add(pictureBox2);
             Controls.Add(enemy2);
             Controls.Add(BorderLeft);
             Controls.Add(plf2);
@@ -531,7 +504,6 @@
             ((System.ComponentModel.ISupportInitialize)BGLv3).EndInit();
             ((System.ComponentModel.ISupportInitialize)BorderLeft).EndInit();
             ((System.ComponentModel.ISupportInitialize)enemy2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)BorderRight).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
@@ -539,7 +511,6 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
             ((System.ComponentModel.ISupportInitialize)plf2).EndInit();
             ((System.ComponentModel.ISupportInitialize)KeyPic).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)BossPicBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)BossGun1).EndInit();
             ((System.ComponentModel.ISupportInitialize)BG).EndInit();
@@ -552,8 +523,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox14).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox15).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox16).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox17).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox18).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -569,7 +540,6 @@
         public PictureBox BGLv2;
         public PictureBox BGLv3;
         private PictureBox BorderLeft;
-        private PictureBox pictureBox2;
         private PictureBox BorderRight;
         private PictureBox pictureBox4;
         private PictureBox pictureBox5;
@@ -577,7 +547,6 @@
         public PictureBox pictureBox8;
         private PictureBox plf2;
         private PictureBox KeyPic;
-        private PictureBox pictureBox3;
         private PictureBox BossPicBox;
         private PictureBox BossGun1;
         private Label txt_Live;
@@ -592,7 +561,7 @@
         public PictureBox pictureBox14;
         private PictureBox pictureBox15;
         public PictureBox pictureBox16;
-        private PictureBox pictureBox17;
         public PictureBox pictureBox18;
+        private PictureBox pictureBox1;
     }
 }
