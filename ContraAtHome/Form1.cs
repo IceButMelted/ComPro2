@@ -37,15 +37,13 @@ namespace ContraAtHome
 
         // Game state
         private int force;
-        private int currentShootCooldown = 0;
-        private bool _IsBossStage = false;
+        private int currentShootCooldown = 30;
 
         //vairable for cal frame
         private int frameCounter = 0;
         private int enemyAnimationCounter = 0;
         private int BossDeathFrameCounter = 0;
 
-        private int frameDeathDuration = 30;
         private int frameDeathCounter = 0;
         private bool deathforward = true;
 
@@ -114,9 +112,9 @@ namespace ContraAtHome
         public GunBoss gunBoss1;
         private bool _IsBossSpawn;
         private bool _IsBossFinishSpaen = false;
-        private bool _IsBossAlive;
         private bool _IsBosHurt = false;
         private bool _BossAction = false;
+        private bool _IsGameStart = false;
 
 
         #endregion
@@ -144,6 +142,8 @@ namespace ContraAtHome
             EnemySpriteLoader();
             BossSpriteLoader();
 
+            //loadMainScreen
+            CreateTileScene();
 
             //LoadSound
             SoundLoader();
@@ -159,10 +159,6 @@ namespace ContraAtHome
             //Set Key
             KeyPic.Location = new Point(this.ClientSize.Width/2 - (KeyPic.Width * 4),KeyPic.Location.Y);
 
-            //Text
-            txt_Live.Text = "Live : " + (player.Live-1);
-            txt_Live.BringToFront();
-
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
             //ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
@@ -170,7 +166,6 @@ namespace ContraAtHome
             Debug.WriteLine($" width :{screenWidth}");
             Debug.WriteLine($" height : {screenHeight}");
 
-            
 
         }
 
@@ -181,50 +176,55 @@ namespace ContraAtHome
             {
                 BGM_Sound.Play();
             }
-            if (player._isDeath) {
-                AnimationPlayerDeath();
-            }
-            else if (!player.IsGameOver())
+            if (_IsGameStart == true)
             {
-                // Only update collections when needed
-                UpdateCachedCollectionsIfNeeded();
-
-                HandlePlayerLogic();
-                HandleCollisions();
-
-                //Boss And Enemy
-                ProcessEnemyActions();
-
-                // Update shoot cooldown
-                if (currentShootCooldown <= SHOOT_COOLDOWN)
-                    currentShootCooldown++;
-
-                AnimationPlayerAlive();
-
-                StartBossAction();
-
-            }
-            else
-            {
-                //Freeze everythings and show GameOverScreen 
-                //then requested to quit or restart(restartProgram)
-                if (!_IsCreatedDeathScene) {
-                    CreatDeathScene(this);
-                    GameOver_Sound.Play();
+                if (player._isDeath)
+                {
+                    AnimationPlayerDeath();
                 }
-                
-            }
-            if (enemyBoss.GetIsFinishDeath()) 
-            {
-                if (!_IsCreatedWinSccen) {
-                    CreateWinScene(this);
-                    BGM_Sound.Close();
-                    GameOver_Sound.Play();
+                else if (!player.IsGameOver())
+                {
+                    // Only update collections when needed
+                    UpdateCachedCollectionsIfNeeded();
+
+                    HandlePlayerLogic();
+                    HandleCollisions();
+
+                    //Boss And Enemy
+                    ProcessEnemyActions();
+
+                    // Update shoot cooldown
+                    if (currentShootCooldown <= SHOOT_COOLDOWN)
+                        currentShootCooldown++;
+
+                    AnimationPlayerAlive();
+
+                    StartBossAction();
 
                 }
+                else
+                {
+                    //Freeze everythings and show GameOverScreen 
+                    //then requested to quit or restart(restartProgram)
+                    if (!_IsCreatedDeathScene)
+                    {
+                        CreatDeathScene(this);
+                        BGM_Sound.Close();
+                        GameOver_Sound.Play();
+                        _IsGameStart = false;
+                    }
+
+                }
+                if (enemyBoss.GetIsFinishDeath())
+                {
+                    if (!_IsCreatedWinSccen)
+                    {
+                        CreateWinScene(this);
+
+
+                    }
+                }
             }
-            if(_IsShowTutTxt == false)
-                txt_tut.Visible = false;
             
         }
 
@@ -286,6 +286,11 @@ namespace ContraAtHome
             };
 
             _IsCreatedWinSccen = true;
+        }
+
+        public void CreateTileScene() {
+            TitleUi.Visible = true;
+            TitleUi.BringToFront();
         }
 
         private void CreateBoss()
@@ -893,8 +898,22 @@ namespace ContraAtHome
 
         private void HandleKeyPresses()
         {
-            if (_IsShowTutTxt && keysPressed.Count > 0) {
-                _IsShowTutTxt = false;
+            if (keysPressed.Contains(Keys.Enter) && _IsGameStart == true && enemyBoss.GetIsFinishDeath())
+            {
+                Debug.WriteLine("RestartGame");
+                Application.Restart();
+            }
+
+            if (_IsShowTutTxt && keysPressed.Contains(Keys.Enter) && _IsGameStart == false) {
+                _IsGameStart = true;
+                TitleUi.Visible = false;
+                TitleUi.Dispose();
+                //Text
+                txt_Live.Text = "Live : " + (player.Live - 1);
+                txt_Live.BringToFront();
+                txt_Objective.Text = "Glitches  Remain : " + enemyCounter;
+                txt_Objective.BringToFront();
+
             }
             if (!player.IsGameOver())
             {
@@ -986,6 +1005,7 @@ namespace ContraAtHome
                     Debug.WriteLine("Quit Game");
                     Application.Exit();
                 }
+               
             }
 
 
@@ -1105,7 +1125,7 @@ namespace ContraAtHome
             if (enemyCounter > 0)
             {
                 // Increment and reset animation counter
-                if (++enemyAnimationCounter >= 10)
+                if (++enemyAnimationCounter >= 2)
                     enemyAnimationCounter = 0;
 
                 bool updateAnimation = (enemyAnimationCounter == 0);
@@ -1191,7 +1211,17 @@ namespace ContraAtHome
                     {
                         RemoveControlWithCacheUpdate(enemy);
                         enemyCounter--;
-                        Debug.WriteLine($"Enemy in scene {enemyCounter}");
+                        //Debug.WriteLine($"Glitches in scene {enemyCounter}");
+                        if (enemyCounter >= 1)
+                        {
+                            txt_Objective.Text = ("Glitches remaing : " + enemyCounter);
+                            txt_Objective.BringToFront();
+                        }
+                        else
+                        {
+                            txt_Objective.Text = "Back To Left Side";
+                            txt_Objective.BringToFront();
+                        }
                     }
                 }
             }
@@ -1205,12 +1235,12 @@ namespace ContraAtHome
                     if (frameCounter % gunBoss1.GetFrameDurationBetween() == 0 && gunBoss1.IsBurstShoot())
                     {
                         SFXPlayer(BossATK_Sound);
-                        ShootBullet(gunBoss1, 15, "basic");
+                        ShootBullet(gunBoss1, 20, "basic");
                     }
                     else if (frameCounter % 50 == 0)
                     {
                         SFXPlayer(BossATK_Sound);
-                        ShootBullet(gunBoss1, 15, "basic");
+                        ShootBullet(gunBoss1, 20, "basic");
                     }
                     PlayeBossAnimation();
                 }
@@ -1321,7 +1351,7 @@ namespace ContraAtHome
 
         private void SetUpPlayer()
         {
-            player = new Player(5, 10, 7, 10, false)
+            player = new Player(2, 10, 7, 10, false)
             {
                 Size = new Size(60, 80),
                 BackColor = ColorDrawing.Transparent,
@@ -1552,13 +1582,5 @@ namespace ContraAtHome
         public const string Down = "down";
         public const string UpRight = "up-right";
         public const string UpLeft = "up-left";
-    }
-
-    public static class PlayerState
-    {
-        public const string Idle = "idle";
-        public const string Running = "running";
-        public const string Jumping = "jumping";
-        public const string Falling = "falling";
     }
 }

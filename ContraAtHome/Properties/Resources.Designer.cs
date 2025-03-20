@@ -113,6 +113,16 @@ namespace ContraAtHome.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap MainMenuScreen {
+            get {
+                object obj = ResourceManager.GetObject("MainMenuScreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Platform1 {
             get {
                 object obj = ResourceManager.GetObject("Platform1", resourceCulture);

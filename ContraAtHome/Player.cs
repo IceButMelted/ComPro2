@@ -23,7 +23,7 @@ namespace ContraAtHome
 
         //state And Animation
         private string state = "idle";
-        private int tickChange = 5;
+        private int tickChange = 3;
         private int currentFrame = 0;
 
         public bool _isPlayerAlive = true;

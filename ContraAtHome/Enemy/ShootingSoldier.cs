@@ -15,7 +15,7 @@ namespace ContraAtHome
     {
         int coolDown = 45;
         int currentCoolDown = 0;
-        int bulletSpeec = 7;
+        int bulletSpeec = 10;
         bool _canShooting = true;
         // Constructor
         public ShootingSoldier(int hp, int speed, params string[] initialTags) : base(hp, speed, initialTags)
