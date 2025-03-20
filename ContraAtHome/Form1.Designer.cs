@@ -183,7 +183,7 @@
             // enemy2
             // 
             enemy2.BackColor = Color.Red;
-            enemy2.Location = new Point(1402, 178);
+            enemy2.Location = new Point(1371, 174);
             enemy2.Margin = new Padding(0);
             enemy2.Name = "enemy2";
             enemy2.Size = new Size(60, 80);
@@ -213,6 +213,7 @@
             BorderRight.TabIndex = 14;
             BorderRight.TabStop = false;
             BorderRight.Tag = "Tag_Border";
+            BorderRight.Visible = false;
             // 
             // pictureBox4
             // 
@@ -412,7 +413,7 @@
             // pictureBox13
             // 
             pictureBox13.BackColor = Color.Red;
-            pictureBox13.Location = new Point(2214, 275);
+            pictureBox13.Location = new Point(2331, 275);
             pictureBox13.Margin = new Padding(0);
             pictureBox13.Name = "pictureBox13";
             pictureBox13.Size = new Size(60, 80);

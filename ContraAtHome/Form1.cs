@@ -162,7 +162,7 @@ namespace ContraAtHome
 
             // Debug info
             ContraToolUtility.DebugCheckTagsAllObject(this);
-            //ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
+            ContraToolUtility.DebugVisualColorPair(enemyPlatformPairs);
             ContraToolUtility.DebugDict(enemyPlatformPairs);
             Debug.WriteLine($" width :{screenWidth}");
             Debug.WriteLine($" height : {screenHeight}");
@@ -1264,7 +1264,7 @@ namespace ContraAtHome
 
         private void SetUpPlayer()
         {
-            player = new Player(2, 10, 7, 10, false)
+            player = new Player(3, 10, 7, 10, false)
             {
                 Size = new Size(60, 80),
                 BackColor = ColorDrawing.Transparent,
