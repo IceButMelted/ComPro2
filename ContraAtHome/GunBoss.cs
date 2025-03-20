@@ -9,7 +9,7 @@ namespace ContraAtHome
     public class GunBoss : PictureBox
     {
         private int counter = 0;
-        private int durationBetween = 10;
+        private int durationBetween = 20;
         private bool BurstShoot = false;
 
         public string facing = "down";   

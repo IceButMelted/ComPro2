@@ -77,6 +77,7 @@ namespace ContraAtHome
         private MediaPlayer PlayerDead_Sound = new MediaPlayer();
         private MediaPlayer PlayerHit_Sound  = new MediaPlayer();
         private MediaPlayer BGM_Sound        = new MediaPlayer();
+        private MediaPlayer WinGone_Sound    = new MediaPlayer();
 
         
 
@@ -211,7 +212,7 @@ namespace ContraAtHome
                     {
                         CreatDeathScene(this);
                         BGM_Sound.Close();
-                        GameOver_Sound.Play();
+                        WinGone_Sound.Play();
                         _IsGameStart = false;
                     }
 
@@ -254,6 +255,9 @@ namespace ContraAtHome
             PlayerHit_Sound.Open(new System.Uri(resourcePath));
             resourcePath = Path.GetFullPath("./Sounds/BGM/MainTheme.mp3");
             BGM_Sound.Open(new System.Uri(resourcePath));
+            resourcePath = Path.GetFullPath("./Sounds/WindowGone.mp3");
+            WinGone_Sound.Open(new System.Uri(resourcePath));
+            
 
 
         }
@@ -908,7 +912,7 @@ namespace ContraAtHome
 
         private void HandleCollisions()
         {
-            if (player._isPlayerAlive)
+            if (player._isPlayerAlive || enemyBoss.Hp < 1)
             {
                 List<Control> controlsToRemove = new List<Control>();
 
@@ -986,6 +990,11 @@ namespace ContraAtHome
                             player.IsInvincible = true;
                             player._isDeath = true;
                             controlsToRemove.Add(bullet);
+                            if (player.Live < 1)
+                            {
+                                BGM_Sound.Stop();
+                                GameOver_Sound.Play();
+                            }
                             txt_Live.Text = "Live : " + (player.Live - 1);
                             // Player hit logic here
                         }
@@ -1132,16 +1141,32 @@ namespace ContraAtHome
                 {
                     enemyBoss.EnemyAction(this);
                     gunBoss1.MoveWithPlayer(player);
-                    if (frameCounter % gunBoss1.GetFrameDurationBetween() == 0 && gunBoss1.IsBurstShoot())
+                    if (enemyBoss.Hp > 10)
                     {
-                        SFXPlayer(BossATK_Sound);
-                        ShootBullet(gunBoss1, 10, "basic");
+                        if (frameCounter % gunBoss1.GetFrameDurationBetween() == 0 && gunBoss1.IsBurstShoot())
+                        {
+                            SFXPlayer(BossATK_Sound);
+                            ShootBullet(gunBoss1, 10, "basic");
+                        }
+                        else if (frameCounter % 50 == 0)
+                        {
+                            SFXPlayer(BossATK_Sound);
+                            ShootBullet(gunBoss1, 10, "basic");
+                        }
                     }
-                    else if (frameCounter % 50 == 0)
-                    {
-                        SFXPlayer(BossATK_Sound);
-                        ShootBullet(gunBoss1, 10, "basic");
+                    else {
+                        if (frameCounter % 30 == 0)
+                        {
+                            SFXPlayer(BossATK_Sound);
+                            ShootBullet(gunBoss1, 15, "basic");
+                        }
+                        else if (frameCounter % 50 == 0)
+                        {
+                            SFXPlayer(BossATK_Sound);
+                            ShootBullet(gunBoss1, 10, "explosive");
+                        }
                     }
+                        
                     PlayeBossAnimation();
                 }
                 else
@@ -1192,13 +1217,17 @@ namespace ContraAtHome
             if (gunBoss == null) return;
 
             ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Purple : ColorDrawing.Red;
-
+            int Y_Axis = bulletType == "explosive" ? (gunBoss.Left + gunBoss.Width / 2) - 75 : gunBoss.Left + gunBoss.Width / 2;
+            
             Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
-                new Point(gunBoss.Left + gunBoss.Width / 2, gunBoss.Top + gunBoss.Height / 2), bulletColor, screenWidth, screenHeight)
+                new Point(Y_Axis, gunBoss.Top + gunBoss.Height / 2), bulletColor, screenWidth, screenHeight)
             {
                 Direction = gunBoss.facing
             };
-            bullet.Size = new Size(20, 20);
+            if(bulletType == "explosive")
+                bullet.Size = new Size(150, 20);
+            else
+                bullet.Size = new Size(20, 20);
             AddControlWithCacheUpdate(bullet);
             bullet.BringToFront();
         }
@@ -1207,7 +1236,7 @@ namespace ContraAtHome
         {
             if (shooter == null || !shooter._IsAlive) return;
 
-            ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Red : ColorDrawing.Purple;
+            ColorDrawing bulletColor = bulletType == "explosive" ? ColorDrawing.Red : ColorDrawing.Red;
 
             Bullet bullet = new Bullet("EnemyBullet", bulletSpeed,
                 new Point(shooter.Left + shooter.Width / 2, shooter.Top + shooter.Height / 2), bulletColor, screenWidth, screenHeight)
@@ -1264,7 +1293,7 @@ namespace ContraAtHome
 
         private void SetUpPlayer()
         {
-            player = new Player(3, 10, 7, 10, false)
+            player = new Player(1, 10, 10, 10, false)
             {
                 Size = new Size(60, 80),
                 BackColor = ColorDrawing.Transparent,
@@ -1470,9 +1499,9 @@ namespace ContraAtHome
 
             // Create appropriate enemy type
             if (ContraToolUtility.RandomNumberRange(1, 11) < 5)
-                enemy = new ShootingSoldier(2, 3) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new ShootingSoldier(1, 3) { Name = $"Enemy{enemyNumber:D2}" };
             else
-                enemy = new RunningSoldier(3, 7) { Name = $"Enemy{enemyNumber:D2}" };
+                enemy = new RunningSoldier(1, 7) { Name = $"Enemy{enemyNumber:D2}" };
 
             enemy.Size = control.Size;
             enemy.Location = control.Location;
