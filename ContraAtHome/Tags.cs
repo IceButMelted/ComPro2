@@ -32,13 +32,6 @@ namespace ContraAtHome
             tags[index] = newTag;
         }
 
-        public void GetTags()
-        {
-            foreach (var tag in tags)
-            {
-                Debug.WriteLine(tag);
-            }
-        }
         public string GetTags(int index) { 
             return (string)tags[index];
         }

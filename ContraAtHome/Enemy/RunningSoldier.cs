@@ -11,7 +11,6 @@ namespace ContraAtHome
         public string lastFacing = "";
         public RunningSoldier(int hp, int speed, params string[] initialTags) : base(hp, speed, initialTags)
         {
-
         }
 
         public override void EnemyAction(Form f)

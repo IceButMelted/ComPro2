@@ -99,7 +99,7 @@ namespace ContraAtHome
         private List<Platform> playerPlatforms = new List<Platform>();
         private Player player;
 
-        //List for better performance
+        //List 
         private List<PictureBox> playerBullets = new List<PictureBox>();
         private List<Enemy> activeEnemies = new List<Enemy>();
         private List<PictureBox> enemyBullets = new List<PictureBox>();
@@ -200,7 +200,7 @@ namespace ContraAtHome
 
                     AnimationPlayerAlive();
 
-                    StartBossAction();
+                    SetUpBoss();
 
                 }
                 else
@@ -228,31 +228,6 @@ namespace ContraAtHome
             }
             
         }
-
-        #region Boss Stage
-        private void StartBossAction() {
-            if (!_IsBossSpawn && _IsLockScreen)
-            {
-                BG.BackgroundImage = Properties.Resources.BG2;
-                _IsBossSpawn = true;
-            }
-            if (_IsBossSpawn && enemyBoss.Location.Y < 0)
-            {
-                PlayeBossAnimation();
-                enemyBoss.Top += 1;
-            }
-            if (_IsBossSpawn && gunBoss1.Location.Y < 0)
-            {
-                gunBoss1.Top += 1;
-            }
-            if (enemyBoss.Location.Y >= 0)
-            {
-                _BossAction = true;
-                _IsBossFinishSpaen= true;
-            }
-        }
-
-        #endregion
 
         //-------------------------------------------------------------------------------------------------------
         #region Sound
@@ -1260,8 +1235,32 @@ namespace ContraAtHome
         }
 
         #endregion
+        //-------------------------------------------------------------------------------------------------------
 
         #region Setup Methods
+
+        private void SetUpBoss()
+        {
+            if (!_IsBossSpawn && _IsLockScreen)
+            {
+                BG.BackgroundImage = Properties.Resources.BG2;
+                _IsBossSpawn = true;
+            }
+            if (_IsBossSpawn && enemyBoss.Location.Y < 0)
+            {
+                PlayeBossAnimation();
+                enemyBoss.Top += 1;
+            }
+            if (_IsBossSpawn && gunBoss1.Location.Y < 0)
+            {
+                gunBoss1.Top += 1;
+            }
+            if (enemyBoss.Location.Y >= 0)
+            {
+                _BossAction = true;
+                _IsBossFinishSpaen = true;
+            }
+        }
 
         private void SetUpPlayer()
         {

@@ -8,17 +8,15 @@ namespace ContraAtHome
     public abstract class Enemy : Tags
     {
         // Properties
-        public int Hp { get; set; }
-        public int Speed { get; set; }
+        public int Hp;
+        public int Speed;
         protected string facing = "left";
 
         public bool _IsAlive;
         //State And Animation
-        protected string state = "idle";
         protected int currentFrame = 0;
         protected int currentDeathFrame = 0;
         protected bool _IsFinishDeath = false;
-
 
         // Constructor
         public Enemy(int hp, int speed, params string[] initialTags)
@@ -46,11 +44,9 @@ namespace ContraAtHome
         public bool GetIsFinishDeath() {
             return _IsFinishDeath;
         }
-
         public void SetFinishDeath() { 
             _IsFinishDeath=true;
         }
-
         public int GetCurrentFrameDeath()
         {
             return currentDeathFrame;
@@ -59,16 +55,6 @@ namespace ContraAtHome
         {
             currentDeathFrame++;
         }
-
-        // Method to attack
-        public void Attack(Player player)
-        {
-            if (Bounds.IntersectsWith(player.Bounds))
-            {
-                Console.WriteLine($"Player hit! Player HP: {player.Live}");
-            }
-        }
-
         // Method to take damage
         public void TakeDamage()
         {
@@ -78,7 +64,6 @@ namespace ContraAtHome
                 _IsAlive=false;
             }
         }
-
         //Method Face Direction
         public void SetFacing(string direction)
         {
@@ -88,16 +73,7 @@ namespace ContraAtHome
         {
             return facing;
         }
-
         //state And Animation Methods
-        public void SetState(string newState)
-        {
-            state = newState;
-        }
-        public string GetState()
-        {
-            return state;
-        }
         public int GetCurrentFrame()
         {
             return currentFrame;
@@ -105,10 +81,6 @@ namespace ContraAtHome
         public void SetCurrentFrame(int frame)
         {
             currentFrame = frame;
-        }
-        public void ResetFrame()
-        {
-            currentFrame = 0;
         }
         public abstract void EnemyAction(Form f);
 
